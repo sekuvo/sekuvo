@@ -31,6 +31,6 @@ Pano, sırların çalınmaya gittiği yerdir. Sekuvo değerleri onun yerine doğ
 • Bilgisayarına yazar — Telefonun Bluetooth klavyeye dönüşür ve sırrı bilgisayardaki imlecin olduğu yere yazar. Bilgisayara hiçbir şey kurulmaz.
 
 Ücretsiz, açık kaynak, GPLv3.
-Google Play kaydı hazırlanıyor. Sekuvo ücretsiz ve GPLv3 — kanıt kodun kendisi.
+Sekuvo ücretsiz ve GPLv3 — kanıt kodun kendisi.
 
 GPLv3 · github.com/afgover/Vault

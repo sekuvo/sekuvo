@@ -31,6 +31,6 @@ The clipboard is where secrets go to be stolen. Sekuvo types values straight to 
 • Types into your computer — Your phone becomes a Bluetooth keyboard and types the secret at the computer's cursor. Nothing is installed on the computer.
 
 Free, open source, GPLv3.
-Google Play listing is in preparation. Sekuvo is free and GPLv3 — the code is the proof.
+Sekuvo is free and GPLv3 — the code is the proof.
 
 GPLv3 · github.com/afgover/Vault

@@ -31,6 +31,6 @@ Clipboard na where dem dey steal secrets. Na why Sekuvo dey type values straight
 • E dey type for your computer — Your phone go become Bluetooth keyboard and e go type the secret for where your computer cursor dey. Nothing no dey install for the computer.
 
 Free, open source, GPLv3.
-Google Play listing dey on the way. Sekuvo free and e dey under GPLv3 — the code na the proof.
+Sekuvo free and e dey under GPLv3 — the code na the proof.
 
 GPLv3 · github.com/afgover/Vault

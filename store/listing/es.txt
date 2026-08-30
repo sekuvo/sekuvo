@@ -31,6 +31,6 @@ El portapapeles es donde los secretos acaban robados. Sekuvo escribe los valores
 • Escribe en tu ordenador — Tu teléfono se convierte en un teclado Bluetooth y escribe el secreto donde está el cursor. En el ordenador no se instala nada.
 
 Gratis, código abierto, GPLv3.
-La ficha de Google Play está en preparación. Sekuvo es gratis y GPLv3 — el código es la prueba.
+Sekuvo es gratis y GPLv3 — el código es la prueba.
 
 GPLv3 · github.com/afgover/Vault

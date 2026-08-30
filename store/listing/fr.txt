@@ -31,6 +31,6 @@ Le presse-papiers est l'endroit où les secrets se font voler. Sekuvo écrit les
 • Écrit sur ton ordinateur — Ton téléphone devient un clavier Bluetooth et saisit le secret à l'emplacement du curseur de l'ordinateur. Rien n'est installé sur l'ordinateur.
 
 Gratuit, open source, GPLv3.
-La fiche Google Play est en préparation. Sekuvo est gratuit et sous GPLv3 — le code en est la preuve.
+Sekuvo est gratuit et sous GPLv3 — le code en est la preuve.
 
 GPLv3 · github.com/afgover/Vault

@@ -31,6 +31,6 @@ Sekuvo 是你的安全密码库：密码、银行卡和笔记，在你的手机�
 • 输入到你的电脑 — 你的手机变成一个蓝牙键盘，把密文输入到电脑光标所在的位置。电脑上不会安装任何东西。
 
 免费、开源、GPLv3。
-Google Play 页面正在准备中。Sekuvo 免费且遵循 GPLv3 — 代码本身就是证明。
+Sekuvo 免费且遵循 GPLv3 — 代码本身就是证明。
 
 GPLv3 · github.com/afgover/Vault

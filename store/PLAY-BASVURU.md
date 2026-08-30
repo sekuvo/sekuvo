@@ -31,7 +31,7 @@ APK yerel test içindir.
 |---|---|---|
 | Uygulama ikonu 512×512 | ✅ | `sekuvo-site/img/icon-512.png` |
 | Öne çıkan görsel 1024×500 | ✅ | `store/feature-graphic-1024x500.png` |
-| Telefon ekran görüntüleri (en az 2) | ✅ 11 adet, 405×900 | `sekuvo-site/img/0*.png`, `1*.png` |
+| Telefon ekran görüntüleri (en az 2) | ✅ 8 adet, 1080×1920 (9:16) | `store/screenshots/` |
 | Liste metinleri (16 dil) | ✅ | `store/listing/*.txt` |
 | Gizlilik politikası URL'si | ✅ | https://sekuvo.com/privacy/ |
 
@@ -83,3 +83,20 @@ Kapalı testten geçirmenin sebebi somut: dil bölmesi kusuru yalnız Play
 dağıtımında ortaya çıkıyordu, yerel APK kurulumunda hiç görünmüyordu.
 Aynı sınıftan başka bir sürprizin üretimde değil test kanalında çıkması
 tercih edilir.
+
+## Durum — 2026-08-30
+
+Konsolda yapıldı ve **incelemeye gönderildi** (29 değişiklik; inceleme
+genellikle ≤7 gün):
+
+- Mağaza girişi: en-US + 14 çeviri (pcm Play'de desteklenmiyor, yalnız o eksik).
+- Grafikler: ikon 512, öne çıkan görsel 1024×500, telefon/7"/10" 8'er görüntü.
+  Görüntüler emülatörde demo kasayla çekildi (FLAG_SECURE debug'da geçici
+  kapatıldı, commit'lenmedi); 1080×2400 → 1080×1920 tuvale yerleştirildi.
+- Kapalı test (Alpha): AAB (1/1.0, çıpa özelliği dahil) yüklendi, 177 ülke,
+  test listesi "CoPilot kapali test" (13 kullanıcı), geri bildirim
+  contact@sekuvo.com.
+- Tek uyarı: yerel hata ayıklama sembolleri (zararsız, bağımlılık kaynaklı).
+
+İnceleme onaylanınca kapalı test yayına girer; **12+ test kullanıcısı
+14 gün** katıldıktan sonra "Üretime başvur" düğmesi açılır.

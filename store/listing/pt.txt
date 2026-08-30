@@ -31,6 +31,6 @@ A área de transferência é onde segredos são roubados. O Sekuvo digita os val
 • Digita no seu computador — Seu telefone vira um teclado Bluetooth e digita o segredo no cursor do computador. Nada é instalado no computador.
 
 Gratuito, código aberto, GPLv3.
-A ficha da Google Play está em preparação. O Sekuvo é gratuito e GPLv3 — o código é a prova.
+O Sekuvo é gratuito e GPLv3 — o código é a prova.
 
 GPLv3 · github.com/afgover/Vault

@@ -31,6 +31,6 @@ Papan klip adalah tempat rahasia dicuri. Karena itu Sekuvo mengetik nilai langsu
 • Mengetik di komputermu — Ponselmu menjadi keyboard Bluetooth dan mengetik rahasia di posisi kursor komputer. Tidak ada yang diinstal di komputer.
 
 Gratis, sumber terbuka, GPLv3.
-Halaman Google Play sedang disiapkan. Sekuvo gratis dan berlisensi GPLv3 — kodenya adalah buktinya.
+Sekuvo gratis dan berlisensi GPLv3 — kodenya adalah buktinya.
 
 GPLv3 · github.com/afgover/Vault

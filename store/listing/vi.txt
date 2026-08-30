@@ -31,6 +31,6 @@ Bộ nhớ tạm là nơi bí mật bị đánh cắp. Đó là lý do Sekuvo g�
 • Nhập trên máy tính của bạn — Điện thoại của bạn trở thành một bàn phím Bluetooth và gõ bí mật vào vị trí con trỏ trên máy tính. Không có gì được cài đặt trên máy tính.
 
 Miễn phí, mã nguồn mở, GPLv3.
-Trang niêm yết trên Google Play đang được chuẩn bị. Sekuvo miễn phí và theo giấy phép GPLv3 — mã nguồn chính là bằng chứng.
+Sekuvo miễn phí và theo giấy phép GPLv3 — mã nguồn chính là bằng chứng.
 
 GPLv3 · github.com/afgover/Vault

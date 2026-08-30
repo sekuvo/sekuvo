@@ -31,6 +31,6 @@ Die Zwischenablage ist der Ort, an dem Geheimnisse gestohlen werden. Deshalb tip
 • Tippt auf deinem Computer — Dein Telefon wird zu einer Bluetooth-Tastatur und tippt das Geheimnis an der Cursorposition des Computers ein. Auf dem Computer wird nichts installiert.
 
 Kostenlos, quelloffen, GPLv3.
-Der Google-Play-Eintrag wird vorbereitet. Sekuvo ist kostenlos und unter GPLv3 lizenziert — der Code ist der Beweis.
+Sekuvo ist kostenlos und unter GPLv3 lizenziert — der Code ist der Beweis.
 
 GPLv3 · github.com/afgover/Vault
