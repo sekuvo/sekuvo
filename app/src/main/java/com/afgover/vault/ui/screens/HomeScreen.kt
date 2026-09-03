@@ -180,6 +180,24 @@ fun HomeScreen(
         }
     }
 
+    // Etiket satırı seçili türe göre daralır: bir tür seçiliyken yalnız O
+    // TÜRDEKİ kayıtlarda geçen etiketler görünür, seçim yokken hepsi. Kaynak
+    // arama sonucu değil `entries` — aramaya göre de daraltmak, kullanıcı
+    // yazarken çip satırının altından kaymasına yol açardı.
+    val gorunenEtiketler = if (filterType == null) tags else {
+        val kullanilan = entries
+            .filter { it.type == filterType }
+            .flatMapTo(mutableSetOf()) { it.tagIds }
+        tags.filter { it.id in kullanilan }
+    }
+
+    // Görünmez süzgeç bırakma: seçili bir etiket tür değişince listeden
+    // düşerse seçimi de düşer. Aksi hâlde liste boşalır ve boşaltan çip
+    // ekranda olmadığı için kullanıcı onu geri alamaz.
+    LaunchedEffect(gorunenEtiketler) {
+        filterTagIds.retainAll { id -> gorunenEtiketler.any { it.id == id } }
+    }
+
     // Kullanıcı sırasında satırlar sürüklenebilir: sürükleme boyunca liste
     // yerelde tutulur (her hareket veritabanına yazılmaz), parmak kalkınca
     // yeni sıra bir kez kaydedilir.
@@ -363,7 +381,7 @@ fun HomeScreen(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                tags.forEach { tag ->
+                gorunenEtiketler.forEach { tag ->
                     TagChip(
                         tag = tag,
                         selected = tag.id in filterTagIds,
