@@ -43,7 +43,7 @@
     <string name="sort_updated_desc">Son güncellenen</string>
     <string name="sort_created_desc">Son eklenen</string>
     <string name="sort_type">Türe göre</string>
-    <string name="sort_manual">Kullanıcı sırası (sürükle)</string>
+    <string name="sort_manual">Öncelik sırası</string>
 
     <!-- Kullanım günlüğü olay türleri -->
     <string name="usage_created">Oluşturuldu</string>
@@ -160,6 +160,8 @@
     <string name="edit_field_notes">Notlar</string>
     <string name="edit_quick_title">Klavyede parolasız kullan</string>
     <string name="edit_quick_desc">Açıkken bu kayıt, kasa kilitliyken de Sekuvo Klavyesi\'nde çıkar. Koruması telefonun ekran kilidi kadardır; şifre gibi hassas bilgiler için kapalı bırak.</string>
+    <string name="edit_priority">Öncelik numarası</string>
+    <string name="edit_priority_desc">1 en üstte. Boş bırakırsan kayıt önceliksiz olur ve sıranın sonunda kalır.</string>
     <string name="edit_tags">Etiketler</string>
     <string name="edit_new_tag">+ Yeni</string>
     <string name="edit_save">Kaydet</string>
@@ -182,10 +184,8 @@
     <string name="home_add_cd">Ekle</string>
     <string name="home_search_hint">Kayıtlarda ara</string>
     <string name="home_manage_tags_cd">Etiketleri yönet</string>
-    <string name="home_manual_hint">Kullanıcı sırası: satırdaki ⠿ kolunu basılı tutup sürükle.</string>
     <string name="home_empty_vault">Kasa hazır — ilk kaydını sağ alttaki + ile ekle.</string>
     <string name="home_empty_filter">Bu filtrelerle eşleşen kayıt yok.</string>
-    <string name="home_drag_cd">Sürükle</string>
     <string name="home_tag_new">Yeni etiket</string>
     <string name="home_tag_edit">Etiketi düzenle</string>
     <string name="home_tag_name">Ad</string>

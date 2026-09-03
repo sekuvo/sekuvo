@@ -42,7 +42,7 @@
     <string name="sort_updated_desc">حال ہی میں تبدیل شدہ</string>
     <string name="sort_created_desc">حال ہی میں شامل کردہ</string>
     <string name="sort_type">قسم کے مطابق</string>
-    <string name="sort_manual">اپنی ترتیب (گھسیٹ کر)</string>
+    <string name="sort_manual">ترجیحی ترتیب</string>
 
     <!-- Usage log event kinds -->
     <string name="usage_created">بنایا گیا</string>
@@ -159,6 +159,8 @@
     <string name="edit_field_notes">نوٹس</string>
     <string name="edit_quick_title">پاس ورڈ کے بغیر کی بورڈ میں استعمال کریں</string>
     <string name="edit_quick_desc">فعال ہونے پر، یہ اندراج والٹ مقفل ہونے پر بھی Sekuvo کی بورڈ میں ظاہر ہوتا ہے۔ اس صورت میں اس کی حفاظت صرف آپ کے فون کے اسکرین لاک جتنی ہے؛ پاس ورڈز جیسی حساس معلومات کے لیے اسے غیر فعال رکھیں۔</string>
+    <string name="edit_priority">ترجیحی نمبر</string>
+    <string name="edit_priority_desc">1 سب سے پہلے آتا ہے۔ خالی چھوڑیں تو اندراج کی کوئی ترجیح نہیں ہوتی اور وہ ترتیب کے آخر میں رہتا ہے۔</string>
     <string name="edit_tags">ٹیگز</string>
     <string name="edit_new_tag">+ نیا</string>
     <string name="edit_save">محفوظ کریں</string>
@@ -181,10 +183,8 @@
     <string name="home_add_cd">شامل کریں</string>
     <string name="home_search_hint">اندراجات تلاش کریں</string>
     <string name="home_manage_tags_cd">ٹیگز کا انتظام</string>
-    <string name="home_manual_hint">اپنی ترتیب: قطار میں ⠿ ہینڈل کو دبائے رکھیں اور گھسیٹیں۔</string>
     <string name="home_empty_vault">آپ کا والٹ تیار ہے — نیچے دائیں طرف + دبا کر پہلا اندراج شامل کریں۔</string>
     <string name="home_empty_filter">ان فلٹرز سے میل کھاتا کوئی اندراج نہیں۔</string>
-    <string name="home_drag_cd">گھسیٹیں</string>
     <string name="home_tag_new">نیا ٹیگ</string>
     <string name="home_tag_edit">ٹیگ میں ترمیم</string>
     <string name="home_tag_name">نام</string>

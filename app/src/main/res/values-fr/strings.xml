@@ -42,7 +42,7 @@
     <string name="sort_updated_desc">Mis à jour récemment</string>
     <string name="sort_created_desc">Ajouté récemment</string>
     <string name="sort_type">Par type</string>
-    <string name="sort_manual">Ordre personnalisé (glisser)</string>
+    <string name="sort_manual">Par priorité</string>
 
     <!-- Usage log event kinds -->
     <string name="usage_created">Créé</string>
@@ -159,6 +159,8 @@
     <string name="edit_field_notes">Notes</string>
     <string name="edit_quick_title">Utiliser au clavier sans mot de passe</string>
     <string name="edit_quick_desc">Si activé, cette entrée apparaît dans le Clavier Sekuvo même quand le coffre est verrouillé. Elle n\'est alors protégée que par le verrouillage d\'écran de ton téléphone ; laisse cette option désactivée pour les données sensibles comme les mots de passe.</string>
+    <string name="edit_priority">Numéro de priorité</string>
+    <string name="edit_priority_desc">1 vient en premier. Laisse vide et l\'entrée n\'a pas de priorité : elle reste à la fin de l\'ordre.</string>
     <string name="edit_tags">Étiquettes</string>
     <string name="edit_new_tag">+ Nouvelle</string>
     <string name="edit_save">Enregistrer</string>
@@ -181,10 +183,8 @@
     <string name="home_add_cd">Ajouter</string>
     <string name="home_search_hint">Rechercher des entrées</string>
     <string name="home_manage_tags_cd">Gérer les étiquettes</string>
-    <string name="home_manual_hint">Ordre personnalisé : maintiens la poignée ⠿ d\'une ligne et fais-la glisser.</string>
     <string name="home_empty_vault">Ton coffre est prêt — ajoute ta première entrée avec le + en bas à droite.</string>
     <string name="home_empty_filter">Aucune entrée ne correspond à ces filtres.</string>
-    <string name="home_drag_cd">Glisser</string>
     <string name="home_tag_new">Nouvelle étiquette</string>
     <string name="home_tag_edit">Modifier l\'étiquette</string>
     <string name="home_tag_name">Nom</string>

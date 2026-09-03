@@ -42,7 +42,7 @@
     <string name="sort_updated_desc">أحدث تحديث</string>
     <string name="sort_created_desc">أحدث إضافة</string>
     <string name="sort_type">حسب النوع</string>
-    <string name="sort_manual">ترتيب مخصّص (بالسحب)</string>
+    <string name="sort_manual">ترتيب الأولوية</string>
 
     <!-- Usage log event kinds -->
     <string name="usage_created">أُنشئت</string>
@@ -159,6 +159,8 @@
     <string name="edit_field_notes">ملاحظات</string>
     <string name="edit_quick_title">استخدام في لوحة المفاتيح دون كلمة مرور</string>
     <string name="edit_quick_desc">عند التفعيل، تظهر هذه المدخلة في لوحة مفاتيح Sekuvo حتى مع قفل الخزنة. عندئذٍ تكون حمايتها بقوة قفل شاشة هاتفك فقط؛ اتركها معطَّلة للبيانات الحسّاسة مثل كلمات المرور.</string>
+    <string name="edit_priority">رقم الأولوية</string>
+    <string name="edit_priority_desc">الرقم 1 يأتي أولًا. اتركه فارغًا فلا تكون للسجل أولوية ويبقى في آخر الترتيب.</string>
     <string name="edit_tags">الوسوم</string>
     <string name="edit_new_tag">+ جديد</string>
     <string name="edit_save">حفظ</string>
@@ -181,10 +183,8 @@
     <string name="home_add_cd">إضافة</string>
     <string name="home_search_hint">البحث في المدخلات</string>
     <string name="home_manage_tags_cd">إدارة الوسوم</string>
-    <string name="home_manual_hint">ترتيب مخصّص: اضغط مطوّلًا على المقبض ⠿ في صف واسحب.</string>
     <string name="home_empty_vault">خزنتك جاهزة — أضف أول مدخلاتك بالضغط على + أسفل اليمين.</string>
     <string name="home_empty_filter">لا مدخلات تطابق هذه المرشِّحات.</string>
-    <string name="home_drag_cd">سحب</string>
     <string name="home_tag_new">وسم جديد</string>
     <string name="home_tag_edit">تعديل الوسم</string>
     <string name="home_tag_name">الاسم</string>

@@ -432,12 +432,13 @@ class VaultViewModel(application: Application) : AndroidViewModel(application) {
         quick: Boolean,
         tagIds: List<Long> = emptyList(),
         noteKind: NoteKind = NoteKind.GENEL,
+        sortIndex: Int = 0,
         onDone: () -> Unit
     ) {
         val key = VaultSession.key() ?: run { lockState = LockState.LOCKED; return }
         viewModelScope.launch {
             try {
-                withContext(Dispatchers.IO) { repo.save(id, type, title, data, quick, key, tagIds, noteKind) }
+                withContext(Dispatchers.IO) { repo.save(id, type, title, data, quick, key, tagIds, noteKind, sortIndex) }
                 onDone()
             } catch (e: VaultRepository.EntryTooLargeException) {
                 // Ekran açık kalır, girilenler durur; kullanıcı kısaltıp yeniden dener.
@@ -538,13 +539,6 @@ class VaultViewModel(application: Application) : AndroidViewModel(application) {
                 else str(R.string.vm_quick_off)
             )
             onDone()
-        }
-    }
-
-    /** Sürükleme bitince yeni kullanıcı sırasını kaydeder. */
-    fun saveManualOrder(idsInOrder: List<Long>) {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) { repo.applyManualOrder(idsInOrder) }
         }
     }
 

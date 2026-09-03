@@ -42,7 +42,7 @@
     <string name="sort_updated_desc">最近更新</string>
     <string name="sort_created_desc">最近添加</string>
     <string name="sort_type">按类型</string>
-    <string name="sort_manual">自定义顺序（拖动）</string>
+    <string name="sort_manual">按优先级</string>
 
     <!-- Usage log event kinds -->
     <string name="usage_created">已创建</string>
@@ -159,6 +159,8 @@
     <string name="edit_field_notes">备注</string>
     <string name="edit_quick_title">在键盘中免密码使用</string>
     <string name="edit_quick_desc">开启后，即使密码库锁定，此条目也会显示在 Sekuvo 键盘中。此时它仅受手机锁屏保护；对于密码等敏感数据请保持关闭。</string>
+    <string name="edit_priority">优先级编号</string>
+    <string name="edit_priority_desc">1 排在最前。留空则该条目没有优先级，留在排序的末尾。</string>
     <string name="edit_tags">标签</string>
     <string name="edit_new_tag">+ 新建</string>
     <string name="edit_save">保存</string>
@@ -181,10 +183,8 @@
     <string name="home_add_cd">添加</string>
     <string name="home_search_hint">搜索条目</string>
     <string name="home_manage_tags_cd">管理标签</string>
-    <string name="home_manual_hint">自定义顺序：长按行上的 ⠿ 手柄并拖动。</string>
     <string name="home_empty_vault">你的密码库已就绪 — 点击右下角的 + 添加第一个条目。</string>
     <string name="home_empty_filter">没有符合这些筛选条件的条目。</string>
-    <string name="home_drag_cd">拖动</string>
     <string name="home_tag_new">新建标签</string>
     <string name="home_tag_edit">编辑标签</string>
     <string name="home_tag_name">名称</string>

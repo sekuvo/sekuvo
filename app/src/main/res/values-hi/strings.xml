@@ -42,7 +42,7 @@
     <string name="sort_updated_desc">हाल में अपडेट किया गया</string>
     <string name="sort_created_desc">हाल में जोड़ा गया</string>
     <string name="sort_type">प्रकार अनुसार</string>
-    <string name="sort_manual">कस्टम क्रम (खींचें)</string>
+    <string name="sort_manual">प्राथमिकता क्रम</string>
 
     <!-- Usage log event kinds -->
     <string name="usage_created">बनाया गया</string>
@@ -159,6 +159,8 @@
     <string name="edit_field_notes">नोट्स</string>
     <string name="edit_quick_title">बिना पासवर्ड कीबोर्ड पर इस्तेमाल करें</string>
     <string name="edit_quick_desc">चालू होने पर, यह एंट्री तिजोरी लॉक रहते भी Sekuvo कीबोर्ड में दिखती है। तब इसकी सुरक्षा केवल आपके फ़ोन के स्क्रीन लॉक जितनी रहती है; पासवर्ड जैसे संवेदनशील डेटा के लिए इसे बंद रखें।</string>
+    <string name="edit_priority">प्राथमिकता संख्या</string>
+    <string name="edit_priority_desc">1 सबसे ऊपर आता है। खाली छोड़ें तो प्रविष्टि की कोई प्राथमिकता नहीं होती और वह क्रम के अंत में रहती है।</string>
     <string name="edit_tags">टैग</string>
     <string name="edit_new_tag">+ नया</string>
     <string name="edit_save">सहेजें</string>
@@ -181,10 +183,8 @@
     <string name="home_add_cd">जोड़ें</string>
     <string name="home_search_hint">एंट्री खोजें</string>
     <string name="home_manage_tags_cd">टैग प्रबंधित करें</string>
-    <string name="home_manual_hint">कस्टम क्रम: किसी पंक्ति पर ⠿ हैंडल दबाकर रखें और खींचें।</string>
     <string name="home_empty_vault">आपकी तिजोरी तैयार है — नीचे दाईं ओर + से अपनी पहली एंट्री जोड़ें।</string>
     <string name="home_empty_filter">इन फ़िल्टरों से कोई एंट्री मेल नहीं खाती।</string>
-    <string name="home_drag_cd">खींचें</string>
     <string name="home_tag_new">नया टैग</string>
     <string name="home_tag_edit">टैग संपादित करें</string>
     <string name="home_tag_name">नाम</string>

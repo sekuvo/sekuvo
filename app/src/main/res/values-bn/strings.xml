@@ -42,7 +42,7 @@
     <string name="sort_updated_desc">সম্প্রতি আপডেট হয়েছে</string>
     <string name="sort_created_desc">সম্প্রতি যোগ হয়েছে</string>
     <string name="sort_type">টাইপ অনুযায়ী</string>
-    <string name="sort_manual">কাস্টম ক্রম (টেনে সাজান)</string>
+    <string name="sort_manual">অগ্রাধিকার ক্রম</string>
 
     <!-- Usage log event kinds -->
     <string name="usage_created">তৈরি হয়েছে</string>
@@ -159,6 +159,8 @@
     <string name="edit_field_notes">নোট</string>
     <string name="edit_quick_title">পাসওয়ার্ড ছাড়াই কীবোর্ডে ব্যবহার করুন</string>
     <string name="edit_quick_desc">চালু থাকলে, ভল্ট লক থাকলেও এই এন্ট্রিটি Sekuvo কীবোর্ডে দেখা যাবে। তখন এটি শুধু ফোনের স্ক্রিন লক দিয়ে সুরক্ষিত থাকে; পাসওয়ার্ডের মতো স্পর্শকাতর তথ্যের জন্য এটি বন্ধ রাখুন।</string>
+    <string name="edit_priority">অগ্রাধিকার নম্বর</string>
+    <string name="edit_priority_desc">১ সবার আগে আসে। খালি রাখলে এন্ট্রির কোনো অগ্রাধিকার থাকে না এবং সেটি ক্রমের শেষে থাকে।</string>
     <string name="edit_tags">ট্যাগ</string>
     <string name="edit_new_tag">+ নতুন</string>
     <string name="edit_save">সংরক্ষণ করুন</string>
@@ -181,10 +183,8 @@
     <string name="home_add_cd">যোগ করুন</string>
     <string name="home_search_hint">এন্ট্রি খুঁজুন</string>
     <string name="home_manage_tags_cd">ট্যাগ পরিচালনা করুন</string>
-    <string name="home_manual_hint">কাস্টম ক্রম: কোনো সারির ⠿ হাতল চেপে ধরে টেনে সাজান।</string>
     <string name="home_empty_vault">আপনার ভল্ট প্রস্তুত — নিচে ডানদিকের + দিয়ে প্রথম এন্ট্রিটি যোগ করুন।</string>
     <string name="home_empty_filter">এই ফিল্টারে কোনো এন্ট্রি মেলেনি।</string>
-    <string name="home_drag_cd">টেনে সাজান</string>
     <string name="home_tag_new">নতুন ট্যাগ</string>
     <string name="home_tag_edit">ট্যাগ এডিট করুন</string>
     <string name="home_tag_name">নাম</string>

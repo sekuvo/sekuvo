@@ -42,7 +42,7 @@
     <string name="sort_updated_desc">Zuletzt geändert</string>
     <string name="sort_created_desc">Zuletzt hinzugefügt</string>
     <string name="sort_type">Nach Typ</string>
-    <string name="sort_manual">Eigene Reihenfolge (ziehen)</string>
+    <string name="sort_manual">Nach Priorität</string>
 
     <!-- Usage log event kinds -->
     <string name="usage_created">Erstellt</string>
@@ -159,6 +159,8 @@
     <string name="edit_field_notes">Notizen</string>
     <string name="edit_quick_title">Ohne Passwort in der Tastatur verwenden</string>
     <string name="edit_quick_desc">Wenn aktiviert, erscheint dieser Eintrag in der Sekuvo-Tastatur, auch wenn der Tresor gesperrt ist. Er ist dann nur durch die Bildschirmsperre deines Telefons geschützt; lass dies für sensible Daten wie Passwörter deaktiviert.</string>
+    <string name="edit_priority">Prioritätsnummer</string>
+    <string name="edit_priority_desc">1 steht ganz oben. Leer lassen heißt: kein Vorrang — der Eintrag bleibt am Ende der Reihenfolge.</string>
     <string name="edit_tags">Tags</string>
     <string name="edit_new_tag">+ Neu</string>
     <string name="edit_save">Speichern</string>
@@ -181,10 +183,8 @@
     <string name="home_add_cd">Hinzufügen</string>
     <string name="home_search_hint">Einträge suchen</string>
     <string name="home_manage_tags_cd">Tags verwalten</string>
-    <string name="home_manual_hint">Eigene Reihenfolge: den Griff ⠿ einer Zeile gedrückt halten und ziehen.</string>
     <string name="home_empty_vault">Dein Tresor ist bereit — füge deinen ersten Eintrag mit + unten rechts hinzu.</string>
     <string name="home_empty_filter">Keine Einträge entsprechen diesen Filtern.</string>
-    <string name="home_drag_cd">Ziehen</string>
     <string name="home_tag_new">Neues Tag</string>
     <string name="home_tag_edit">Tag bearbeiten</string>
     <string name="home_tag_name">Name</string>

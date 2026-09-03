@@ -44,5 +44,20 @@ fun List<DecryptedEntry>.sortedBy(sort: EntrySort): List<DecryptedEntry> = when 
     EntrySort.UPDATED_DESC -> sortedByDescending { it.updatedAt }
     EntrySort.CREATED_DESC -> sortedByDescending { it.createdAt }
     EntrySort.TYPE -> sortedWith(compareBy({ it.type.ordinal }, { it.title.lowercase() }))
-    EntrySort.MANUAL -> sortedWith(compareBy({ it.sortIndex }, { it.title.lowercase() }))
+    EntrySort.MANUAL -> sortedWith(compareBy({ priorityKey(it.sortIndex) }, { it.title.lowercase() }))
 }
+
+/**
+ * Öncelik sırasının tek kuralı: **numara verilmiş kayıtlar 1, 2, 3… diye
+ * önce; numarasızlar en sonda** (aralarında başlığa göre).
+ *
+ * Numarasızlık `0` ile temsil edilir — ayrı bir "yok" durumu tutmak yerine,
+ * çünkü sütun zaten `NOT NULL DEFAULT 0` ve yedekten dönen eski kayıtlar da
+ * o değeri taşıyor. Sıfırı olduğu gibi sıralamak numarasız her kaydı listenin
+ * BAŞINA toplardı; kullanıcının öne çıkardığı birkaç kaydın tam tersi.
+ *
+ * Kural burada tek kopya duruyor çünkü iki tüketicisi var: ana liste ve
+ * Vault Klavyesi. İkisinin ayrışması, klavyede kurulan alışkanlığın
+ * uygulamada bozulması demek olurdu.
+ */
+fun priorityKey(sortIndex: Int): Int = if (sortIndex <= 0) Int.MAX_VALUE else sortIndex

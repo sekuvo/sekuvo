@@ -42,7 +42,7 @@
     <string name="sort_updated_desc">Cập nhật gần đây</string>
     <string name="sort_created_desc">Thêm gần đây</string>
     <string name="sort_type">Theo loại</string>
-    <string name="sort_manual">Thứ tự tùy chỉnh (kéo thả)</string>
+    <string name="sort_manual">Thứ tự ưu tiên</string>
 
     <!-- Usage log event kinds -->
     <string name="usage_created">Đã tạo</string>
@@ -159,6 +159,8 @@
     <string name="edit_field_notes">Ghi chú</string>
     <string name="edit_quick_title">Dùng trên bàn phím không cần mật khẩu</string>
     <string name="edit_quick_desc">Nếu bật, mục này sẽ xuất hiện trong Bàn phím Sekuvo ngay cả khi kho lưu trữ đang khóa. Khi đó, nó chỉ được bảo vệ bởi khóa màn hình điện thoại của bạn; hãy để tắt đối với dữ liệu nhạy cảm như mật khẩu.</string>
+    <string name="edit_priority">Số ưu tiên</string>
+    <string name="edit_priority_desc">1 đứng đầu. Để trống thì mục không có ưu tiên và nằm ở cuối thứ tự.</string>
     <string name="edit_tags">Thẻ</string>
     <string name="edit_new_tag">+ Mới</string>
     <string name="edit_save">Lưu</string>
@@ -181,10 +183,8 @@
     <string name="home_add_cd">Thêm</string>
     <string name="home_search_hint">Tìm kiếm mục</string>
     <string name="home_manage_tags_cd">Quản lý thẻ</string>
-    <string name="home_manual_hint">Thứ tự tùy chỉnh: giữ tay cầm ⠿ của một hàng rồi kéo.</string>
     <string name="home_empty_vault">Kho lưu trữ của bạn đã sẵn sàng — hãy thêm mục đầu tiên bằng nút + ở góc dưới bên phải.</string>
     <string name="home_empty_filter">Không có mục nào khớp với các bộ lọc này.</string>
-    <string name="home_drag_cd">Kéo</string>
     <string name="home_tag_new">Thẻ mới</string>
     <string name="home_tag_edit">Chỉnh sửa thẻ</string>
     <string name="home_tag_name">Tên</string>

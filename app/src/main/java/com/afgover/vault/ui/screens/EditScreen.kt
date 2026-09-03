@@ -96,6 +96,10 @@ fun EditScreen(
     val selectedTagIds = remember { mutableStateListOf<Long>() }
     var addTagDialog by remember { mutableStateOf(false) }
     var noteKind by remember { mutableStateOf(NoteKind.GENEL) }
+    // Öncelik metin olarak tutulur: boş alan "numarasız" demek ve bunu 0 ile
+    // Int arasında gidip gelerek anlatmak, kullanıcının sildiği alanı sessizce
+    // "0" yazmaya çevirirdi.
+    var oncelik by remember { mutableStateOf("") }
     // Şifre alanının yüklendiği andaki değeri: değişirse passwordChangedAt tazelenir.
     var originalPassword by remember { mutableStateOf("") }
     var originalPasswordChangedAt by remember { mutableStateOf(0L) }
@@ -120,7 +124,7 @@ fun EditScreen(
     // farklıysa onay iste.
     fun snapshot(): String = listOf(
         title, username, password, url, cardholder, cardNumber, expiry, cvv, iban,
-        notes, fullName, phone, email, address, quick.toString(), noteKind.name,
+        notes, fullName, phone, email, address, quick.toString(), noteKind.name, oncelik,
         selectedTagIds.sorted().joinToString(","),
         customFields.joinToString("|") { it.label + "=" + it.value }
     ).joinToString(String(charArrayOf('\u0001')))
@@ -185,6 +189,7 @@ fun EditScreen(
             quick = quick,
             tagIds = selectedTagIds.toList(),
             noteKind = noteKind,
+            sortIndex = oncelik.toIntOrNull() ?: 0,
             onDone = { kaydedildi = true; onBack() }
         )
     }
@@ -212,6 +217,7 @@ fun EditScreen(
                 selectedTagIds.clear()
                 selectedTagIds.addAll(e.tagIds)
                 noteKind = e.noteKind
+                oncelik = if (e.sortIndex > 0) e.sortIndex.toString() else ""
                 originalPassword = e.data.password
                 originalPasswordChangedAt = e.data.passwordChangedAt
                 originalHistory.clear()
@@ -543,6 +549,19 @@ fun EditScreen(
                 }
                 Switch(checked = quick, onCheckedChange = { quick = it })
             }
+
+            Spacer(Modifier.height(16.dp))
+            OutlinedTextField(
+                value = oncelik,
+                // Yalnız rakam: eksi ya da harf giren bir alan, sıralamayı
+                // sessizce numarasıza düşürürdü.
+                onValueChange = { yeni -> oncelik = yeni.filter { it.isDigit() }.take(4) },
+                label = { Text(stringResource(R.string.edit_priority)) },
+                supportingText = { Text(stringResource(R.string.edit_priority_desc)) },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth()
+            )
 
             Spacer(Modifier.height(16.dp))
             Text(stringResource(R.string.edit_tags), style = MaterialTheme.typography.titleSmall)

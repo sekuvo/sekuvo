@@ -42,7 +42,7 @@
     <string name="sort_updated_desc">Wey dem change last last</string>
     <string name="sort_created_desc">Wey dem add last last</string>
     <string name="sort_type">By type</string>
-    <string name="sort_manual">Order wey you set (drag am)</string>
+    <string name="sort_manual">Priority order</string>
 
     <!-- Usage log event kinds -->
     <string name="usage_created">Dem create am</string>
@@ -159,6 +159,8 @@
     <string name="edit_field_notes">Notes</string>
     <string name="edit_quick_title">Use am for keyboard without password</string>
     <string name="edit_quick_desc">If you turn am on, dis entry go show for Sekuvo Keyboard even if the vault dey lock. For dat case, na only your phone lock screen dey protect am; leave am off for sensitive data like password.</string>
+    <string name="edit_priority">Priority number</string>
+    <string name="edit_priority_desc">1 dey come first. If you leave am empty, di entry no get priority — e go stay for di end of di order.</string>
     <string name="edit_tags">Tags</string>
     <string name="edit_new_tag">+ New</string>
     <string name="edit_save">Save</string>
@@ -181,10 +183,8 @@
     <string name="home_add_cd">Add</string>
     <string name="home_search_hint">Search entries</string>
     <string name="home_manage_tags_cd">Manage tags</string>
-    <string name="home_manual_hint">Order wey you set: hold the ⠿ handle for one row and drag am.</string>
     <string name="home_empty_vault">Your vault don ready — add your first entry with the + wey dey bottom right.</string>
     <string name="home_empty_filter">No entry match dis filter dem.</string>
-    <string name="home_drag_cd">Drag</string>
     <string name="home_tag_new">New tag</string>
     <string name="home_tag_edit">Edit tag</string>
     <string name="home_tag_name">Name</string>

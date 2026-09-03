@@ -49,7 +49,7 @@
     <string name="sort_updated_desc">Recently updated</string>
     <string name="sort_created_desc">Recently added</string>
     <string name="sort_type">By type</string>
-    <string name="sort_manual">Custom order (drag)</string>
+    <string name="sort_manual">Priority order</string>
 
     <!-- Usage log event kinds -->
     <string name="usage_created">Created</string>
@@ -166,6 +166,8 @@
     <string name="edit_field_notes">Notes</string>
     <string name="edit_quick_title">Use on the keyboard without a password</string>
     <string name="edit_quick_desc">When on, this entry appears in the Sekuvo Keyboard even while the vault is locked. It is then protected only by your phone\'s screen lock; leave it off for sensitive data such as passwords.</string>
+    <string name="edit_priority">Priority number</string>
+    <string name="edit_priority_desc">1 comes first. Leave it empty and the entry has no priority — it stays at the end of the order.</string>
     <string name="edit_tags">Tags</string>
     <string name="edit_new_tag">+ New</string>
     <string name="edit_save">Save</string>
@@ -188,10 +190,8 @@
     <string name="home_add_cd">Add</string>
     <string name="home_search_hint">Search entries</string>
     <string name="home_manage_tags_cd">Manage tags</string>
-    <string name="home_manual_hint">Custom order: press and hold the ⠿ handle on a row and drag.</string>
     <string name="home_empty_vault">Your vault is ready — add your first entry with the + at the bottom right.</string>
     <string name="home_empty_filter">No entries match these filters.</string>
-    <string name="home_drag_cd">Drag</string>
     <string name="home_tag_new">New tag</string>
     <string name="home_tag_edit">Edit tag</string>
     <string name="home_tag_name">Name</string>

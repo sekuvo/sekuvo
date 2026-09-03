@@ -42,7 +42,7 @@
     <string name="sort_updated_desc">最近更新した順</string>
     <string name="sort_created_desc">最近追加した順</string>
     <string name="sort_type">種類別</string>
-    <string name="sort_manual">手動の順序（ドラッグ）</string>
+    <string name="sort_manual">優先順</string>
 
     <!-- Usage log event kinds -->
     <string name="usage_created">作成</string>
@@ -159,6 +159,8 @@
     <string name="edit_field_notes">メモ</string>
     <string name="edit_quick_title">パスワードなしでキーボードから使う</string>
     <string name="edit_quick_desc">有効にすると、保管庫がロックされていてもこのアイテムはSekuvoキーボードに表示されます。この場合、保護レベルは端末の画面ロックのみになります。パスワードなど機密性の高いデータでは無効のままにしてください。</string>
+    <string name="edit_priority">優先番号</string>
+    <string name="edit_priority_desc">1 が先頭です。空のままにすると優先度なしとなり、並び順の最後に残ります。</string>
     <string name="edit_tags">タグ</string>
     <string name="edit_new_tag">+ 新規</string>
     <string name="edit_save">保存</string>
@@ -181,10 +183,8 @@
     <string name="home_add_cd">追加</string>
     <string name="home_search_hint">アイテムを検索</string>
     <string name="home_manage_tags_cd">タグを管理</string>
-    <string name="home_manual_hint">手動の順序: 行の⠿ハンドルを長押ししてドラッグします。</string>
     <string name="home_empty_vault">保管庫の準備ができました — 右下の+で最初のアイテムを追加してください。</string>
     <string name="home_empty_filter">このフィルターに一致するアイテムはありません。</string>
-    <string name="home_drag_cd">ドラッグ</string>
     <string name="home_tag_new">新しいタグ</string>
     <string name="home_tag_edit">タグを編集</string>
     <string name="home_tag_name">名前</string>

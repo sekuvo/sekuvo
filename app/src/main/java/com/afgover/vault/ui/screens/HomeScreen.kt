@@ -7,7 +7,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,7 +24,6 @@ import androidx.compose.material.icons.automirrored.filled.Sort
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Badge
 import androidx.compose.material.icons.filled.Casino
-import androidx.compose.material.icons.filled.DragHandle
 import androidx.compose.material.icons.filled.Terminal
 import androidx.compose.material.icons.filled.VpnKey
 import androidx.compose.material.icons.filled.Fingerprint
@@ -67,15 +65,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.afgover.vault.data.NoteKind
 import com.afgover.vault.data.EntrySort
+import com.afgover.vault.data.priorityKey
 import com.afgover.vault.data.EntryType
-import com.afgover.vault.ui.EntryListItem
 import com.afgover.vault.ui.VaultViewModel
 import androidx.compose.ui.res.stringResource
 import com.afgover.vault.R
@@ -136,6 +133,28 @@ fun TypeBadge(type: EntryType, kind: NoteKind = NoteKind.GENEL, size: Int = 42) 
     }
 }
 
+/**
+ * Öncelik numarası rozeti. Tür etiketinin yanında durur, başlığın değil:
+ * başlık kaydın adıdır, bu ikisi kaydın listedeki YERİNİ anlatır
+ * (kullanıcı kararı). Numarasız kayıtta hiç çizilmez — sıfır göstermek,
+ * "önceliği yok" ile "önceliği 0" arasında olmayan bir fark uydururdu.
+ */
+@Composable
+fun PriorityBadge(oncelik: Int) {
+    Box(
+        modifier = Modifier
+            .clip(RoundedCornerShape(6.dp))
+            .background(MaterialTheme.colorScheme.secondaryContainer)
+            .padding(horizontal = 6.dp, vertical = 1.dp)
+    ) {
+        Text(
+            oncelik.toString(),
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSecondaryContainer
+        )
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
@@ -175,7 +194,7 @@ fun HomeScreen(
                 compareBy({ it.type.ordinal }, { it.title.lowercase() })
             )
             EntrySort.MANUAL -> list.sortedWith(
-                compareBy({ it.sortIndex }, { it.title.lowercase() })
+                compareBy({ priorityKey(it.sortIndex) }, { it.title.lowercase() })
             )
         }
     }
@@ -197,16 +216,6 @@ fun HomeScreen(
     LaunchedEffect(gorunenEtiketler) {
         filterTagIds.retainAll { id -> gorunenEtiketler.any { it.id == id } }
     }
-
-    // Kullanıcı sırasında satırlar sürüklenebilir: sürükleme boyunca liste
-    // yerelde tutulur (her hareket veritabanına yazılmaz), parmak kalkınca
-    // yeni sıra bir kez kaydedilir.
-    val manuel = viewModel.sort == EntrySort.MANUAL &&
-        query.isBlank() && filterType == null && filterTagIds.isEmpty()
-    var surukleniyor by remember { mutableStateOf<Long?>(null) }
-    var yerelSira by remember { mutableStateOf<List<EntryListItem>>(emptyList()) }
-    LaunchedEffect(filtered, manuel) { if (manuel) yerelSira = filtered }
-    val gosterilen = if (manuel && yerelSira.isNotEmpty()) yerelSira else filtered
 
     Scaffold(
         topBar = {
@@ -400,14 +409,6 @@ fun HomeScreen(
             }
             Spacer(Modifier.height(4.dp))
 
-            if (manuel) {
-                Text(
-                    stringResource(R.string.home_manual_hint),
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(bottom = 4.dp)
-                )
-            }
             if (filtered.isEmpty()) {
                 Column(
                     modifier = Modifier
@@ -432,13 +433,10 @@ fun HomeScreen(
                 }
             } else {
                 LazyColumn {
-                    items(gosterilen, key = { it.id }) { item ->
-                        val aktif = surukleniyor == item.id
+                    items(filtered, key = { it.id }) { item ->
                         Card(
                             colors = CardDefaults.cardColors(
-                                containerColor = if (aktif)
-                                    MaterialTheme.colorScheme.surfaceContainerHighest
-                                else MaterialTheme.colorScheme.surfaceContainer
+                                containerColor = MaterialTheme.colorScheme.surfaceContainer
                             ),
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -448,74 +446,42 @@ fun HomeScreen(
                         ) {
                             Row(
                                 modifier = Modifier.padding(
-                                    start = if (manuel) 4.dp else 14.dp,
-                                    end = 14.dp, top = 12.dp, bottom = 12.dp
+                                    start = 14.dp, end = 14.dp, top = 12.dp, bottom = 12.dp
                                 ),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                if (manuel) {
-                                    Icon(
-                                        Icons.Filled.DragHandle,
-                                        contentDescription = stringResource(R.string.home_drag_cd),
-                                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                                        modifier = Modifier
-                                            .padding(end = 6.dp)
-                                            .size(24.dp)
-                                            .pointerInput(item.id, gosterilen.size) {
-                                                var birikim = 0f
-                                                detectDragGestures(
-                                                    onDragStart = { surukleniyor = item.id },
-                                                    onDragEnd = {
-                                                        surukleniyor = null
-                                                        viewModel.saveManualOrder(
-                                                            yerelSira.map { it.id }
-                                                        )
-                                                    },
-                                                    onDragCancel = { surukleniyor = null }
-                                                ) { change, drag ->
-                                                    change.consume()
-                                                    birikim += drag.y
-                                                    val satir = 76.dp.toPx()
-                                                    if (kotlin.math.abs(birikim) >= satir) {
-                                                        val yon = if (birikim > 0) 1 else -1
-                                                        birikim -= yon * satir
-                                                        val mevcut = yerelSira
-                                                            .indexOfFirst { it.id == item.id }
-                                                        val hedef = mevcut + yon
-                                                        if (mevcut >= 0 && hedef in yerelSira.indices) {
-                                                            yerelSira = yerelSira.toMutableList()
-                                                                .apply { add(hedef, removeAt(mevcut)) }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                    )
-                                }
                                 TypeBadge(item.type, kind = item.noteKind)
                                 Spacer(Modifier.width(14.dp))
                                 Column(Modifier.weight(1f)) {
+                                    Text(
+                                        item.title,
+                                        style = MaterialTheme.typography.titleMedium,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                    Spacer(Modifier.height(2.dp))
+                                    // İkinci satır kaydın "nereye ait olduğunu" toplar:
+                                    // türü, öncelik numarası ve etiketleri. Başlık böylece
+                                    // yalnız başlık kalıyor ve uzun adlar erken kırpılmıyor
+                                    // (kullanıcı kararı).
                                     Row(verticalAlignment = Alignment.CenterVertically) {
                                         Text(
-                                            item.title,
-                                            style = MaterialTheme.typography.titleMedium,
-                                            maxLines = 1,
-                                            overflow = TextOverflow.Ellipsis,
-                                            modifier = Modifier.weight(1f, fill = false)
+                                            item.type.label(),
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
                                         )
+                                        if (item.sortIndex > 0) {
+                                            Spacer(Modifier.width(6.dp))
+                                            PriorityBadge(item.sortIndex)
+                                        }
                                         item.tagIds.forEach { tid ->
                                             tags.find { it.id == tid }?.let {
                                                 Spacer(Modifier.width(6.dp))
-                                                // Başlık titleMedium (16sp) — nokta da o boyda.
-                                                TagDot(it.color, size = 16)
+                                                // Alt satır bodySmall (14sp) — nokta da o boyda.
+                                                TagDot(it.color, size = 14)
                                             }
                                         }
                                     }
-                                    Spacer(Modifier.height(2.dp))
-                                    Text(
-                                        item.type.label(),
-                                        style = MaterialTheme.typography.bodySmall,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                                    )
                                 }
                                 if (item.quick) {
                                     Text(

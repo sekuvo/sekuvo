@@ -42,7 +42,7 @@
     <string name="sort_updated_desc">Atualizados recentemente</string>
     <string name="sort_created_desc">Adicionados recentemente</string>
     <string name="sort_type">Por tipo</string>
-    <string name="sort_manual">Ordem personalizada (arrastar)</string>
+    <string name="sort_manual">Ordem por prioridade</string>
 
     <!-- Usage log event kinds -->
     <string name="usage_created">Criado</string>
@@ -159,6 +159,8 @@
     <string name="edit_field_notes">Notas</string>
     <string name="edit_quick_title">Usar no teclado sem senha</string>
     <string name="edit_quick_desc">Se ativado, este item aparece no Teclado Sekuvo mesmo com o cofre bloqueado. Ele fica então protegido apenas pelo bloqueio de tela do telefone; deixe desativado para dados sensíveis como senhas.</string>
+    <string name="edit_priority">Número de prioridade</string>
+    <string name="edit_priority_desc">1 vem primeiro. Deixe vazio e o item fica sem prioridade, no fim da ordem.</string>
     <string name="edit_tags">Etiquetas</string>
     <string name="edit_new_tag">+ Nova</string>
     <string name="edit_save">Salvar</string>
@@ -181,10 +183,8 @@
     <string name="home_add_cd">Adicionar</string>
     <string name="home_search_hint">Pesquisar itens</string>
     <string name="home_manage_tags_cd">Gerenciar etiquetas</string>
-    <string name="home_manual_hint">Ordem personalizada: mantenha pressionada a alça ⠿ de uma linha e arraste.</string>
     <string name="home_empty_vault">Seu cofre está pronto — adicione o primeiro item com o + no canto inferior direito.</string>
     <string name="home_empty_filter">Nenhum item corresponde a estes filtros.</string>
-    <string name="home_drag_cd">Arrastar</string>
     <string name="home_tag_new">Nova etiqueta</string>
     <string name="home_tag_edit">Editar etiqueta</string>
     <string name="home_tag_name">Nome</string>

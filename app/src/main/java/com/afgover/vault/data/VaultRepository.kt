@@ -101,7 +101,8 @@ class VaultRepository(
         quick: Boolean,
         key: SecretKey,
         tagIds: List<Long> = emptyList(),
-        noteKind: NoteKind = NoteKind.GENEL
+        noteKind: NoteKind = NoteKind.GENEL,
+        sortIndex: Int = 0
     ) {
         val plain = data.bytes()
         checkSize(title, plain)
@@ -120,8 +121,9 @@ class VaultRepository(
                     quickBlob = quickBlob,
                     tags = TagIds.serialize(tagIds),
                     noteKind = noteKind.name,
-                    // Yeni kayıt kullanıcı sırasında en sona düşer.
-                    sortIndex = (dao.getAll().maxOfOrNull { it.sortIndex } ?: 0) + 1
+                    // Öncelik kullanıcının girdiği sayıdır; girmediyse 0 =
+                    // numarasız ve kayıt sıranın sonunda kalır (priorityKey).
+                    sortIndex = sortIndex
                 )
             )
             usage.record(UsageEvent(newId, UsageKind.OLUSTURULDU, now))
@@ -137,9 +139,7 @@ class VaultRepository(
                     quickBlob = quickBlob,
                     tags = TagIds.serialize(tagIds),
                     noteKind = noteKind.name,
-                    // Düzenlemede kullanıcı sırası KORUNUR: eskiden her kayıtta
-                    // max+1'e taşınıyordu, elle kurulan sıra bozuluyordu (denetim).
-                    sortIndex = existing.sortIndex
+                    sortIndex = sortIndex
                 )
             )
             usage.record(UsageEvent(id, UsageKind.DEGISTIRILDI, now))
@@ -218,14 +218,6 @@ class VaultRepository(
     suspend fun delete(id: Long) {
         VaultSession.key()?.let { usage.deleteFor(id, it) }
         dao.deleteById(id)
-    }
-
-    /** Kullanıcı sırasını verilen id dizilimine göre yeniden yazar. */
-    suspend fun applyManualOrder(idsInOrder: List<Long>) {
-        val byId = dao.getAll().associateBy { it.id }
-        idsInOrder.forEachIndexed { index, id ->
-            byId[id]?.let { if (it.sortIndex != index) dao.update(it.copy(sortIndex = index)) }
-        }
     }
 
     // ---- Etiketler ----
