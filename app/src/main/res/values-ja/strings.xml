@@ -406,7 +406,7 @@
     <string name="vm_current_password_wrong">現在のパスワードが違います</string>
     <string name="vm_quick_on">パスワードなしでキーボードから使用可能</string>
     <string name="vm_quick_off">ロック解除までキーボードに表示されません</string>
-    <string name="vm_copied">%1$sをコピーしました（45秒後に消去されます）</string>
+    <string name="vm_copied">%1$sをコピーしました · クリップボードは45秒後、またはアプリに戻ったときに消去されます</string>
     <string name="vm_backup_password_too_short">バックアップパスワードは8文字以上必要です</string>
     <string name="vm_file_open_failed">ファイルを開けませんでした</string>
     <string name="vm_backup_saved">バックアップを保存しました</string>

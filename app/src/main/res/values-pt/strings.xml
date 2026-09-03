@@ -406,7 +406,7 @@
     <string name="vm_current_password_wrong">A senha atual está incorreta</string>
     <string name="vm_quick_on">Utilizável no teclado sem senha</string>
     <string name="vm_quick_off">Oculto no teclado até você desbloquear</string>
-    <string name="vm_copied">%1$s copiado (será apagado em 45 segundos)</string>
+    <string name="vm_copied">%1$s copiado · a área de transferência é limpa em 45 s ou ao voltar ao app</string>
     <string name="vm_backup_password_too_short">A senha de backup deve ter pelo menos 8 caracteres</string>
     <string name="vm_file_open_failed">Não foi possível abrir o arquivo</string>
     <string name="vm_backup_saved">Backup salvo</string>

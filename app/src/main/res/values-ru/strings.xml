@@ -406,7 +406,7 @@
     <string name="vm_current_password_wrong">Текущий пароль неверен</string>
     <string name="vm_quick_on">Доступно в клавиатуре без пароля</string>
     <string name="vm_quick_off">Скрыто в клавиатуре до разблокировки</string>
-    <string name="vm_copied">%1$s скопировано (будет очищено через 45 секунд)</string>
+    <string name="vm_copied">%1$s скопировано · буфер очистится через 45 с или при возврате в приложение</string>
     <string name="vm_backup_password_too_short">Пароль резервной копии должен содержать не менее 8 символов</string>
     <string name="vm_file_open_failed">Не удалось открыть файл</string>
     <string name="vm_backup_saved">Резервная копия сохранена</string>

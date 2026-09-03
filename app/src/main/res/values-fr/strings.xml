@@ -406,7 +406,7 @@
     <string name="vm_current_password_wrong">Le mot de passe actuel est incorrect</string>
     <string name="vm_quick_on">Utilisable au clavier sans mot de passe</string>
     <string name="vm_quick_off">Masqué au clavier jusqu\'au déverrouillage</string>
-    <string name="vm_copied">%1$s copié (sera effacé dans 45 secondes)</string>
+    <string name="vm_copied">%1$s copié · le presse-papiers s\'efface dans 45 s ou au retour dans l\'app</string>
     <string name="vm_backup_password_too_short">Le mot de passe de sauvegarde doit contenir au moins 8 caractères</string>
     <string name="vm_file_open_failed">Impossible d\'ouvrir le fichier</string>
     <string name="vm_backup_saved">Sauvegarde enregistrée</string>

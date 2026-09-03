@@ -406,7 +406,7 @@
     <string name="vm_current_password_wrong">La contraseña actual es incorrecta</string>
     <string name="vm_quick_on">Utilizable en el teclado sin contraseña</string>
     <string name="vm_quick_off">Oculta en el teclado hasta que desbloquees</string>
-    <string name="vm_copied">%1$s copiado (se borrará en 45 segundos)</string>
+    <string name="vm_copied">%1$s copiado · el portapapeles se borra en 45 s o al volver a la app</string>
     <string name="vm_backup_password_too_short">La contraseña de copia debe tener al menos 8 caracteres</string>
     <string name="vm_file_open_failed">No se pudo abrir el archivo</string>
     <string name="vm_backup_saved">Copia guardada</string>

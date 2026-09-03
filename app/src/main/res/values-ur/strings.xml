@@ -406,7 +406,7 @@
     <string name="vm_current_password_wrong">موجودہ پاس ورڈ غلط ہے</string>
     <string name="vm_quick_on">پاس ورڈ کے بغیر کی بورڈ میں استعمال کے قابل</string>
     <string name="vm_quick_off">تالا کھلنے تک کی بورڈ میں چھپا ہوا</string>
-    <string name="vm_copied">%1$s کاپی ہو گیا (45 سیکنڈ میں صاف ہو جائے گا)</string>
+    <string name="vm_copied">%1$s کاپی ہو گیا · کلپ بورڈ 45 سیکنڈ میں یا ایپ پر واپسی پر صاف ہو گا</string>
     <string name="vm_backup_password_too_short">بیک اپ پاس ورڈ کم از کم 8 حروف کا ہونا چاہیے</string>
     <string name="vm_file_open_failed">فائل نہیں کھل سکی</string>
     <string name="vm_backup_saved">بیک اپ محفوظ ہو گیا</string>

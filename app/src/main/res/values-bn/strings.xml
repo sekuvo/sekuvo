@@ -406,7 +406,7 @@
     <string name="vm_current_password_wrong">বর্তমান পাসওয়ার্ডটি ভুল</string>
     <string name="vm_quick_on">পাসওয়ার্ড ছাড়াই কীবোর্ডে ব্যবহারযোগ্য</string>
     <string name="vm_quick_off">আনলক না করা পর্যন্ত কীবোর্ডে লুকানো</string>
-    <string name="vm_copied">%1$s কপি হয়েছে (৪৫ সেকেন্ডে মুছে যাবে)</string>
+    <string name="vm_copied">%1$s কপি হয়েছে · ক্লিপবোর্ড ৪৫ সেকেন্ডে বা অ্যাপে ফিরলে মুছে যাবে</string>
     <string name="vm_backup_password_too_short">ব্যাকআপ পাসওয়ার্ড অন্তত ৮ অক্ষরের হতে হবে</string>
     <string name="vm_file_open_failed">ফাইলটি খোলা যায়নি</string>
     <string name="vm_backup_saved">ব্যাকআপ সংরক্ষিত হয়েছে</string>

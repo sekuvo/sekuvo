@@ -406,7 +406,7 @@
     <string name="vm_current_password_wrong">当前密码错误</string>
     <string name="vm_quick_on">可在键盘中免密码使用</string>
     <string name="vm_quick_off">解锁前在键盘中隐藏</string>
-    <string name="vm_copied">已复制 %1$s（45 秒后自动清除）</string>
+    <string name="vm_copied">已复制 %1$s · 剪贴板将在 45 秒后或返回应用时清除</string>
     <string name="vm_backup_password_too_short">备份密码必须至少为 8 个字符</string>
     <string name="vm_file_open_failed">无法打开文件</string>
     <string name="vm_backup_saved">备份已保存</string>

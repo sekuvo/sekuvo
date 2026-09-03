@@ -406,7 +406,7 @@
     <string name="vm_current_password_wrong">Mật khẩu hiện tại sai</string>
     <string name="vm_quick_on">Có thể dùng trên bàn phím không cần mật khẩu</string>
     <string name="vm_quick_off">Ẩn khỏi bàn phím cho đến khi mở khóa</string>
-    <string name="vm_copied">Đã sao chép %1$s (sẽ bị xóa sau 45 giây)</string>
+    <string name="vm_copied">Đã sao chép %1$s · bộ nhớ tạm sẽ xóa sau 45 giây hoặc khi bạn quay lại ứng dụng</string>
     <string name="vm_backup_password_too_short">Mật khẩu sao lưu phải có ít nhất 8 ký tự</string>
     <string name="vm_file_open_failed">Không thể mở tệp</string>
     <string name="vm_backup_saved">Đã lưu bản sao lưu</string>

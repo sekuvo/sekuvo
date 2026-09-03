@@ -5,7 +5,9 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.os.SystemClock
 import androidx.core.content.ContextCompat
+import com.afgover.vault.core.ClipClearPolicy
 import com.afgover.vault.core.KeyManager
 import com.afgover.vault.core.VaultSession
 import com.afgover.vault.data.UsageLogRepository
@@ -27,25 +29,44 @@ class VaultApp : Application() {
     private val screenOffReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             VaultSession.lock()
-            clearSensitiveClip()
+            temizleDuyarliPano(ClipClearPolicy.An.EKRAN_KAPANDI)
         }
     }
 
     /**
-     * Panoda bizim kopyaladığımız duyarlı bir değer duruyorsa siler. 45 sn'lik
-     * gecikmeli temizlik süreç ölünce çalışmıyordu; ekran kapanır kapanmaz
-     * (kasa kilidiyle aynı an) temizlemek hem daha erken hem sürece bağlı değil
-     * (denetim). Yalnız kendi işaretimizi taşıyan panoya dokunulur.
+     * Panoya duyarlı bir değer konduğunda çağrılır: silme kararının süre
+     * hesabı buradan başlar. Damga süreç kapsamındadır — Activity ölse de
+     * yaşar, çünkü panonun kendisi de öyle.
      */
-    private fun clearSensitiveClip() {
-        try {
+    @Volatile
+    private var panoDamgasi: Long = 0L
+
+    fun duyarliPanoyuIsaretle() {
+        panoDamgasi = SystemClock.elapsedRealtime()
+    }
+
+    /**
+     * Panoda **bizim** işaretimizi taşıyan duyarlı bir değer duruyorsa siler.
+     * Karar [ClipClearPolicy]'de; burada yalnız sistemle konuşulur.
+     *
+     * Dönüş değeri silmenin **gerçekten olduğunu** söyler. Bu gerekli, çünkü
+     * Android 10'dan beri odakta olmayan uygulamanın pano yazması sessizce
+     * reddediliyor: çağrı başarıyla döner, pano değişmez. Silme sonrası
+     * işareti yeniden okumak, "sildim" ile "silebildim"i ayıran tek şey.
+     */
+    fun temizleDuyarliPano(an: ClipClearPolicy.An): Boolean {
+        return try {
             val cm = getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
             val bizim = cm.primaryClipDescription?.extras?.getBoolean(CLIP_MARKER) == true
-            if (bizim) {
-                if (android.os.Build.VERSION.SDK_INT >= 28) cm.clearPrimaryClip()
-                else cm.setPrimaryClip(android.content.ClipData.newPlainText("", ""))
-            }
+            val gecen = SystemClock.elapsedRealtime() - panoDamgasi
+            if (!ClipClearPolicy.shouldClear(an, bizim, gecen)) return false
+            if (android.os.Build.VERSION.SDK_INT >= 28) cm.clearPrimaryClip()
+            else cm.setPrimaryClip(android.content.ClipData.newPlainText("", ""))
+            val kaldi = cm.primaryClipDescription?.extras?.getBoolean(CLIP_MARKER) == true
+            if (!kaldi) panoDamgasi = 0L
+            !kaldi
         } catch (_: Exception) {
+            false
         }
     }
 
@@ -67,7 +88,7 @@ class VaultApp : Application() {
             val durum = dm.getDisplay(Display.DEFAULT_DISPLAY)?.state ?: Display.STATE_OFF
             if (durum != Display.STATE_ON) {
                 VaultSession.lock()
-                clearSensitiveClip()
+                temizleDuyarliPano(ClipClearPolicy.An.EKRAN_KAPANDI)
             }
         }
     }

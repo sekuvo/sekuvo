@@ -406,7 +406,7 @@
     <string name="vm_current_password_wrong">The current password wrong</string>
     <string name="vm_quick_on">You fit use am for keyboard without password</string>
     <string name="vm_quick_off">E dey hide for keyboard until you unlock am</string>
-    <string name="vm_copied">%1$s don copy (e go clear after 45 seconds)</string>
+    <string name="vm_copied">%1$s don copy · clipboard go clear after 45 seconds or when you come back to di app</string>
     <string name="vm_backup_password_too_short">Backup password must get at least 8 character</string>
     <string name="vm_file_open_failed">The file no fit open</string>
     <string name="vm_backup_saved">Backup don save</string>

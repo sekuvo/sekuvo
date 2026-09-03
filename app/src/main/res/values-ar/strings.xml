@@ -406,7 +406,7 @@
     <string name="vm_current_password_wrong">كلمة المرور الحالية خاطئة</string>
     <string name="vm_quick_on">قابلة للاستخدام في لوحة المفاتيح دون كلمة مرور</string>
     <string name="vm_quick_off">مخفية في لوحة المفاتيح حتى تفتح القفل</string>
-    <string name="vm_copied">نُسخ %1$s (سيُمسح خلال 45 ثانية)</string>
+    <string name="vm_copied">نُسخ %1$s · تُمسح الحافظة خلال 45 ثانية أو عند العودة إلى التطبيق</string>
     <string name="vm_backup_password_too_short">يجب أن تتكوّن كلمة مرور النسخة من 8 محارف على الأقل</string>
     <string name="vm_file_open_failed">تعذّر فتح الملف</string>
     <string name="vm_backup_saved">حُفظت النسخة الاحتياطية</string>

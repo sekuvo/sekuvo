@@ -19,6 +19,7 @@ import androidx.lifecycle.viewModelScope
 import com.afgover.vault.R
 import com.afgover.vault.VaultApp
 import com.afgover.vault.backup.BackupManager
+import com.afgover.vault.core.ClipClearPolicy
 import com.afgover.vault.core.VaultSession
 import com.afgover.vault.data.DecryptedEntry
 import com.afgover.vault.data.EntryData
@@ -562,6 +563,11 @@ class VaultViewModel(application: Application) : AndroidViewModel(application) {
      * [label] ekranda gösterilen (çevrilmiş) ad, [stableName] ise günlüğe
      * yazılan dile bağlı olmayan ad. İkisi ayrı: günlük dil değiştiğinde
      * ikiye bölünmemeli (yerelleştirme).
+     *
+     * Buradaki sayaç yalnız **uygulama ekranda kalırsa** iş görür; kullanıcı
+     * çıkarsa Android odak kısıtı silmeyi sessizce reddeder ([ClipClearPolicy]).
+     * O durumda temizlik, odağın geri döndüğü ana ertelenir
+     * (`MainActivity.onWindowFocusChanged`) — verilen söz de buna göre yazılı.
      */
     fun copyToClipboard(
         label: String,
@@ -572,24 +578,21 @@ class VaultViewModel(application: Application) : AndroidViewModel(application) {
         val cm = getApplication<Application>()
             .getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         val clip = ClipData.newPlainText(label, value)
-        // İşaretle: bizim panomuz olduğunu ekran kapanınca tanıyıp temizleyelim
-        // (45 sn'lik iş süreç ölünce çalışmıyordu — denetim). Duyarlı bayrağı
-        // 33+ önizlemeyi de gizler.
+        // İşaretle: temizlik sırası geldiğinde panodakinin BİZİM değerimiz
+        // olduğunu buradan tanıyoruz — kullanıcı sonradan başka bir şey
+        // kopyaladıysa ona dokunulmuyor. Duyarlı bayrağı 33+ önizlemeyi gizler.
         clip.description.extras = PersistableBundle().apply {
             putBoolean(VaultApp.CLIP_MARKER, true)
             if (Build.VERSION.SDK_INT >= 33) putBoolean(ClipDescription.EXTRA_IS_SENSITIVE, true)
         }
         cm.setPrimaryClip(clip)
+        app.duyarliPanoyuIsaretle()
         toast(str(R.string.vm_copied, label))
         entryId?.let { logUsage(it, UsageKind.KOPYALANDI, stableName ?: label) }
         clipboardClearJob?.cancel()
         clipboardClearJob = viewModelScope.launch {
-            delay(45_000)
-            try {
-                if (Build.VERSION.SDK_INT >= 28) cm.clearPrimaryClip()
-                else cm.setPrimaryClip(ClipData.newPlainText("", ""))
-            } catch (_: Exception) {
-            }
+            delay(ClipClearPolicy.BEKLEME_MS)
+            app.temizleDuyarliPano(ClipClearPolicy.An.SAYAC)
         }
     }
 

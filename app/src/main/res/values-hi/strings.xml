@@ -406,7 +406,7 @@
     <string name="vm_current_password_wrong">मौजूदा पासवर्ड ग़लत है</string>
     <string name="vm_quick_on">बिना पासवर्ड कीबोर्ड पर इस्तेमाल हो सकती है</string>
     <string name="vm_quick_off">अनलॉक करने तक कीबोर्ड पर छिपी रहती है</string>
-    <string name="vm_copied">%1$s कॉपी हुआ (45 सेकंड में मिट जाएगा)</string>
+    <string name="vm_copied">%1$s कॉपी हुआ · क्लिपबोर्ड 45 सेकंड में या ऐप पर लौटने पर साफ़ होगा</string>
     <string name="vm_backup_password_too_short">बैकअप पासवर्ड कम से कम 8 अक्षर का होना चाहिए</string>
     <string name="vm_file_open_failed">फ़ाइल नहीं खुल सकी</string>
     <string name="vm_backup_saved">बैकअप सहेजा गया</string>

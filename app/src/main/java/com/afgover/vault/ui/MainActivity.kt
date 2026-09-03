@@ -33,6 +33,8 @@ import com.afgover.vault.core.VaultSession
 import android.os.Build
 import android.view.Display
 import com.afgover.vault.core.ScreenLockPolicy
+import com.afgover.vault.core.ClipClearPolicy
+import com.afgover.vault.VaultApp
 
 class MainActivity : FragmentActivity() {
 
@@ -68,6 +70,24 @@ class MainActivity : FragmentActivity() {
     override fun onResume() {
         super.onResume()
         viewModel.refreshLockState()
+    }
+
+    /**
+     * Odak bize geri döndüğünde panoda kalan duyarlı değeri temizle.
+     *
+     * Temizliğin **garanti** çalıştığı tek an burası. Android 10'dan beri
+     * odakta olmayan uygulama panoya dokunamıyor; kullanıcı kopyalayıp
+     * uygulamadan çıktığında 45 saniyelik sayaç sessizce reddediliyordu ve
+     * değer panoda kalıyordu (ölçüldü — hiç silinmemişti).
+     *
+     * `onResume` değil `onWindowFocusChanged`: `onResume` pencere odağı
+     * verilmeden önce koşar, yani sistemin izin kontrolü o noktada henüz
+     * geçmez. Odağın kaybedildiği an ise kasten kullanılmıyor — kopyalamanın
+     * amacı değeri başka bir uygulamaya yapıştırmak.
+     */
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) VaultApp.from(this).temizleDuyarliPano(ClipClearPolicy.An.DONUS)
     }
 
     /**

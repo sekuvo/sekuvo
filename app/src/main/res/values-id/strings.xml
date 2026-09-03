@@ -406,7 +406,7 @@
     <string name="vm_current_password_wrong">Kata sandi saat ini salah</string>
     <string name="vm_quick_on">Bisa digunakan di keyboard tanpa kata sandi</string>
     <string name="vm_quick_off">Disembunyikan di keyboard sampai brankas dibuka</string>
-    <string name="vm_copied">%1$s disalin (akan dihapus dalam 45 detik)</string>
+    <string name="vm_copied">%1$s disalin · papan klip dihapus dalam 45 detik atau saat kembali ke aplikasi</string>
     <string name="vm_backup_password_too_short">Kata sandi cadangan harus terdiri dari minimal 8 karakter</string>
     <string name="vm_file_open_failed">File tidak bisa dibuka</string>
     <string name="vm_backup_saved">Cadangan disimpan</string>

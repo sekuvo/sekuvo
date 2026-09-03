@@ -413,7 +413,7 @@
     <string name="vm_current_password_wrong">Current password is wrong</string>
     <string name="vm_quick_on">Usable on the keyboard without a password</string>
     <string name="vm_quick_off">Hidden on the keyboard until you unlock</string>
-    <string name="vm_copied">%1$s copied (will be cleared in 45 seconds)</string>
+    <string name="vm_copied">%1$s copied · clipboard clears in 45 s, or when you return to the app</string>
     <string name="vm_backup_password_too_short">The backup password must be at least 8 characters</string>
     <string name="vm_file_open_failed">Could not open the file</string>
     <string name="vm_backup_saved">Backup saved</string>

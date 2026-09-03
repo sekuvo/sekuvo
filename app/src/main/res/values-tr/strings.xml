@@ -407,7 +407,7 @@
     <string name="vm_current_password_wrong">Mevcut parola yanlış</string>
     <string name="vm_quick_on">Klavyede parolasız kullanılabilir</string>
     <string name="vm_quick_off">Klavyede kilit açmadan görünmez</string>
-    <string name="vm_copied">%1$s kopyalandı (45 sn sonra silinecek)</string>
+    <string name="vm_copied">%1$s kopyalandı · pano 45 sn içinde, en geç uygulamaya dönünce temizlenir</string>
     <string name="vm_backup_password_too_short">Yedek parolası en az 8 karakter olmalı</string>
     <string name="vm_file_open_failed">Dosya açılamadı</string>
     <string name="vm_backup_saved">Yedek kaydedildi</string>
