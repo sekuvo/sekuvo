@@ -93,7 +93,10 @@ Full policy: https://sekuvo.com/privacy/
 
 ## License
 
-[GPLv3](LICENSE) — derivatives must remain open under the same license.
+[GPLv3](LICENSE) — derivatives must remain open under the same license — with an
+[additional permission](LICENSE-EXCEPTION.md) under GPL section 7 that allows conveying
+the work through app stores whose terms conflict with the GPL, as long as the
+source stays public under GPLv3.
 
 Contributions need a DCO sign-off and a relicensing grant — [CONTRIBUTING.md](CONTRIBUTING.md)
 explains what that is and why a single-maintainer GPL project asks for it.

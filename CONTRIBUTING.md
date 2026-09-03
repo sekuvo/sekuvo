@@ -15,7 +15,8 @@ wrote the change, or you have the right to submit it under this project's
 license.
 
 **2. Relicensing grant.** By submitting a contribution you license it under
-GPLv3 like the rest of the project, **and** you grant the project maintainer a
+GPLv3 with the section 7 additional permission in `LICENSE-EXCEPTION.md`, like
+the rest of the project, **and** you grant the project maintainer a
 perpetual, worldwide, irrevocable, royalty-free right to also distribute your
 contribution under other license terms. You keep your copyright. Contributions
 without this grant are not merged into `main`; if you do not want to grant it,
@@ -26,7 +27,9 @@ say so in the pull request and we will talk first.
 GPLv3 binds licensees, not the copyright holder. As long as every line in the
 repository is either the maintainer's own or covered by the grant above, the
 source stays GPLv3 for everyone and the maintainer can still publish a binary
-under different terms where a store requires it. VLC was pulled from the App
+under different terms where a store requires it. The section 7 permission
+covers the App Store case on its own; the grant is the backstop for any channel
+that permission does not name. VLC was pulled from the App
 Store in 2011 because one contributor's GPL-licensed code had no such grant;
 it took a relicensing of the whole codebase to return. The moment a single
 contribution lands here without the grant, that door closes the same way —

@@ -307,7 +307,9 @@ adb logcat -b crash -d                 # tampon boş kalmalı
 ## Lisans
 
 GPLv3 — [LICENSE](LICENSE). Kodu alan herkes türevini de aynı lisansla açık
-tutmak zorundadır.
+tutmak zorundadır. Üstüne GPL §7 kapsamında bir
+[ek izin](LICENSE-EXCEPTION.md) var: şartları GPL ile çelişen uygulama
+mağazalarından dağıtıma, kaynak GPLv3 ile herkese açık kaldığı sürece izin verir.
 
 Katkılar DCO imzası ve yeniden lisanslama izni ister — ne olduğu ve tek
 bakımcılı bir GPL projesinin bunu neden istediği [CONTRIBUTING.md](CONTRIBUTING.md)'de.
