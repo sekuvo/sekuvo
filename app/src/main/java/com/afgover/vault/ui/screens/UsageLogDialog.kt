@@ -31,15 +31,42 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.afgover.vault.R
+import android.content.Context
 import com.afgover.vault.data.UsageEvent
 import com.afgover.vault.ui.VaultViewModel
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+
+/**
+ * Kullanım günlüğündeki hedefin EKRANDA görünen adı.
+ *
+ * Günlükte hedef, yazıldığı hâliyle saklanır: uygulama için paket kimliği
+ * (`com.example.mail`), otomatik doldurma için alan adı (`github.com`).
+ * Kimliği saklamak doğru — uygulama adını değiştirebilir, paket kimliği
+ * değişmez ve iki uygulama aynı adı taşıyabilir. Ama kimlik OKUNACAK bir şey
+ * değil; `UsageEvent` belgesi de hedefi "uygulamanın adı" diye tarif ediyor.
+ * Çeviri bu yüzden ekranda yapılıyor, kayıtta değil: eski satırlar da düzelir.
+ *
+ * @return gösterilecek ad; **null ise hedef hiç yazılmaz** — Sekuvo'nun kendi
+ *   paketi böyle: değer uygulamadan hiç çıkmamışsa "nereye gitti" sorusunun
+ *   cevabı yoktur ve kendi adımızı yazmak günlüğü gürültüyle doldurur
+ *   (kullanıcı kararı). Adı çözülemeyen paket (kaldırılmış uygulama, sistemin
+ *   görünürlük kısıtı) ham kimliğiyle kalır: eksik bilgi vermektense
+ *   okunması zor bilgi vermek yeğdir.
+ */
+fun usageTargetLabel(context: Context, target: String): String? {
+    if (target == context.packageName) return null
+    return runCatching {
+        val pm = context.packageManager
+        pm.getApplicationLabel(pm.getApplicationInfo(target, 0)).toString()
+    }.getOrDefault(target)
+}
 
 /**
  * Tüm kullanım günlüğü: hangi kaydın hangi alanı, ne zaman, nereye gitti.
@@ -67,7 +94,17 @@ fun UsageLogDialog(viewModel: VaultViewModel, onDismiss: () -> Unit) {
     }
 
     val titles = remember(entries) { entries.associate { it.id to it.title } }
-    val targets = remember(events) { events.mapNotNull { it.target }.distinct().sorted() }
+    val ctx = LocalContext.current
+    // Paket adı çözümü ucuz değil; satır başına değil, hedef başına bir kez.
+    val hedefAdlari = remember(events, ctx) {
+        events.mapNotNull { it.target }.distinct()
+            .associateWith { usageTargetLabel(ctx, it) }
+    }
+    // Kendi paketimiz süzgeç çipi olarak da çıkmaz: seçilebilir bir "hedef"
+    // olarak durması, olmayan bir gidişi varmış gibi gösterirdi.
+    val targets = remember(hedefAdlari) {
+        hedefAdlari.filterValues { it != null }.keys.sortedBy { hedefAdlari[it] }
+    }
     val shown = remember(events, target) {
         if (target == null) events else events.filter { it.target == target }
     }
@@ -139,7 +176,7 @@ fun UsageLogDialog(viewModel: VaultViewModel, onDismiss: () -> Unit) {
                             SecimCipi(
                                 secili = target == t,
                                 onClick = { target = t },
-                                label = t,
+                                label = hedefAdlari[t] ?: t,
                                 modifier = Modifier.padding(end = 8.dp)
                             )
                         }
@@ -164,7 +201,7 @@ fun UsageLogDialog(viewModel: VaultViewModel, onDismiss: () -> Unit) {
                         Text(
                             stringResource(
                                 R.string.log_entries_to_target,
-                                secilenHedef,
+                                hedefAdlari[secilenHedef] ?: secilenHedef,
                                 kayitlar.joinToString(", ")
                             ),
                             style = MaterialTheme.typography.bodyMedium,
@@ -180,7 +217,9 @@ fun UsageLogDialog(viewModel: VaultViewModel, onDismiss: () -> Unit) {
                                 append(" · ").append(titles[ev.entryId] ?: deletedLabel)
                                 append(" · ").append(stringResource(ev.kind.labelRes))
                                 ev.fieldLabel?.let { append(" (").append(it).append(")") }
-                                ev.target?.let { append(" → ").append(it) }
+                                ev.target?.let { h ->
+                                    hedefAdlari[h]?.let { append(" → ").append(it) }
+                                }
                             },
                             style = MaterialTheme.typography.bodySmall,
                             modifier = Modifier.padding(bottom = 2.dp)

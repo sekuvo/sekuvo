@@ -69,6 +69,7 @@ fun DetailScreen(
     onEdit: (Long, EntryType) -> Unit,
     onBack: () -> Unit
 ) {
+    val ctx = androidx.compose.ui.platform.LocalContext.current
     var entry by remember { mutableStateOf<DecryptedEntry?>(null) }
     val tags by viewModel.tags.collectAsState()
     var btField by remember { mutableStateOf<BtHedef?>(null) }
@@ -306,7 +307,9 @@ fun DetailScreen(
                             append(df.format(java.util.Date(ev.at)))
                             append(" · ").append(stringResource(ev.kind.labelRes))
                             ev.fieldLabel?.let { append(" (").append(it).append(")") }
-                            ev.target?.let { append(" → ").append(it) }
+                            ev.target?.let { h ->
+                                usageTargetLabel(ctx, h)?.let { append(" → ").append(it) }
+                            }
                         },
                         style = MaterialTheme.typography.bodySmall
                     )
