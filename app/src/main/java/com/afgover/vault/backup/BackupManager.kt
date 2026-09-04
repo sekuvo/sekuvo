@@ -5,7 +5,9 @@ import com.afgover.vault.core.Crypto
 import com.afgover.vault.data.DecryptedEntry
 import com.afgover.vault.data.EntryData
 import com.afgover.vault.data.EntryType
+import com.afgover.vault.data.TagDef
 import com.afgover.vault.data.TagEntity
+import com.afgover.vault.data.TagIcons
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.InputStream
@@ -54,7 +56,7 @@ object BackupManager {
     /** İçe aktarma sonucu: kayıtlar + yedekteki etiket renkleri (ad → ARGB). */
     data class ImportResult(
         val entries: List<DecryptedEntry>,
-        val tagColors: Map<String, Int>
+        val tagDefs: Map<String, TagDef>
     )
 
     /**
@@ -105,7 +107,12 @@ object BackupManager {
         if (usedTags.isNotEmpty()) {
             payload.put("tagDefs", JSONArray().apply {
                 usedTags.forEach {
-                    put(JSONObject().put("name", it.name).put("color", it.color))
+                    val def = JSONObject().put("name", it.name).put("color", it.color)
+                    // İkonsuz etiket için alan hiç yazılmaz: eski sürümün
+                    // okuyucusu bilmediği alanı zaten atlar, dosya da
+                    // gereksiz büyümez.
+                    if (it.icon.isNotEmpty()) def.put("icon", it.icon)
+                    put(def)
                 }
             })
         }
@@ -227,15 +234,19 @@ object BackupManager {
                 )
             }
         }
-        val tagColors = buildMap {
+        val tagDefs = buildMap {
             payload.optJSONArray("tagDefs")?.let { defs ->
                 for (i in 0 until defs.length()) {
                     val d = defs.optJSONObject(i) ?: continue
                     val name = d.optString("name")
-                    if (name.isNotEmpty() && d.has("color")) put(name, d.getInt("color"))
+                    // İkon alanı olmayan (bu sürümden eski) yedekler ikonsuz
+                    // döner; tanınmayan anahtar da normalize ile düşer.
+                    if (name.isNotEmpty() && d.has("color")) {
+                        put(name, TagDef(d.getInt("color"), TagIcons.normalize(d.optString("icon"))))
+                    }
                 }
             }
         }
-        return ImportResult(entries, tagColors)
+        return ImportResult(entries, tagDefs)
     }
 }

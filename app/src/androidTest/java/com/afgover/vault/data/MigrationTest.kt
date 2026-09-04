@@ -205,4 +205,93 @@ class MigrationTest {
             }
         }
     }
+
+    /**
+     * Sürüm 6 veritabanı — üretimde 5→6 göçünün bıraktığı hâl. Tablo tanımları
+     * eski sürümün APK'sinden birebir okundu, elle yazılmadı: göçün sınandığı
+     * şema, kullanıcının telefonunda gerçekten duran şema olsun diye.
+     */
+    private fun v6VeritabaniKur() {
+        val db = SQLiteDatabase.openOrCreateDatabase(context.getDatabasePath(dbName), null)
+        db.execSQL(
+            "CREATE TABLE IF NOT EXISTS `entries` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                "`type` TEXT NOT NULL, `title` TEXT NOT NULL, `blob` BLOB NOT NULL, " +
+                "`createdAt` INTEGER NOT NULL, `updatedAt` INTEGER NOT NULL, `quick` INTEGER NOT NULL, " +
+                "`quickBlob` BLOB, `tags` TEXT NOT NULL, `noteKind` TEXT NOT NULL, " +
+                "`sortIndex` INTEGER NOT NULL, `anchor` INTEGER NOT NULL)"
+        )
+        db.execSQL(
+            "CREATE TABLE IF NOT EXISTS `tags` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                "`name` TEXT NOT NULL, `color` INTEGER NOT NULL)"
+        )
+        db.execSQL(
+            "CREATE TABLE IF NOT EXISTS `usage_log` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                "`blob` BLOB NOT NULL)"
+        )
+        db.execSQL(
+            "CREATE TABLE IF NOT EXISTS `usage_buffer` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                "`blob` BLOB NOT NULL)"
+        )
+        db.execSQL("CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)")
+        // Kimlik karması yükseltme yolunda karşılaştırılmaz — Room göçten sonra
+        // kendisi yazar. Satırın VARLIĞI, veritabanının Room'a ait olduğunu
+        // göstermeye yeter.
+        db.execSQL(
+            "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, ?)",
+            arrayOf("ab5bbcac67b485d6d6fa24eeb18920e1")
+        )
+        db.execSQL("INSERT INTO tags (name, color) VALUES ('finans', -1710619)")
+        db.execSQL(
+            "INSERT INTO entries (type, title, blob, createdAt, updatedAt, quick, tags, " +
+                "noteKind, sortIndex, anchor) " +
+                "VALUES ('LOGIN', 'v6 kaydı', x'0A0B0C', 1, 2, 0, '[1]', 'GENEL', 7, 0)"
+        )
+        db.version = 6
+        db.close()
+    }
+
+    /**
+     * 6→7 (etiket ikonu) — bu göç ROOM ÜZERİNDEN açılarak sınanır, ham
+     * yardımcıyla değil.
+     *
+     * Sebep: bu göçteki asıl risk `ALTER TABLE` değil, Room'un göçten sonra
+     * yaptığı şema doğrulaması. Sütunu eklemeyi unutmak ya da tipini kaydırmak
+     * "Room cannot verify the data integrity" ile uygulamayı AÇILIŞTA
+     * öldürür — ve bu, yalnız var olan bir v6 veritabanı Room'la açılırken
+     * ortaya çıkar. Ham yardımcı o doğrulamayı hiç çalıştırmaz, yani yeşil
+     * kalıp kullanıcının kasasını kilitleyebilirdi.
+     */
+    @Test
+    fun goc6dan7ye_ikonKolonunuEklerVeRoomSemayiDogrular() {
+        v6VeritabaniKur()
+
+        val room = androidx.room.Room
+            .databaseBuilder(context, VaultDatabase::class.java, dbName)
+            .addMigrations(VaultDatabase.MIGRATION_6_7)
+            .build()
+
+        try {
+            val etiketler = kotlinx.coroutines.runBlocking { room.tagDao().getAll() }
+            assertEquals(1, etiketler.size)
+            assertEquals("finans", etiketler[0].name)
+            assertEquals(-1710619, etiketler[0].color)
+            // Yeni sütun boş doğar: mevcut etiketler kendilerine ikon uydurmaz.
+            assertEquals("", etiketler[0].icon)
+
+            // Kayıt tablosuna hiç dokunulmadı.
+            val kayitlar = kotlinx.coroutines.runBlocking { room.entryDao().getAll() }
+            assertEquals(1, kayitlar.size)
+            assertEquals("v6 kaydı", kayitlar[0].title)
+            assertEquals(7, kayitlar[0].sortIndex)
+
+            // Sütun gerçekten yazılabilir; salt okunur bir yama değil.
+            kotlinx.coroutines.runBlocking {
+                room.tagDao().update(etiketler[0].copy(icon = "bank"))
+                assertEquals("bank", room.tagDao().getAll()[0].icon)
+            }
+            assertEquals(7, room.openHelper.readableDatabase.version)
+        } finally {
+            room.close()
+        }
+    }
 }

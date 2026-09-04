@@ -674,8 +674,8 @@ fun EditScreen(
         TagEditDialog(
             initial = null,
             onDismiss = { addTagDialog = false },
-            onSave = { name, color ->
-                viewModel.addTag(name, color) { newId -> selectedTagIds.add(newId) }
+            onSave = { name, color, icon ->
+                viewModel.addTag(name, color, icon) { newId -> selectedTagIds.add(newId) }
                 addTagDialog = false
             }
         )

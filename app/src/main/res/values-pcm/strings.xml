@@ -188,6 +188,7 @@
     <string name="home_tag_new">New tag</string>
     <string name="home_tag_edit">Edit tag</string>
     <string name="home_tag_name">Name</string>
+    <string name="home_tag_icon">Icon</string>
     <string name="home_selected_color">Color wey you select</string>
     <string name="home_save">Save</string>
     <string name="home_cancel">Cancel</string>
@@ -205,6 +206,7 @@
     <string name="ime_unlock_all">🔓 Unlock (for all entries)</string>
     <string name="ime_no_quick_entries">No entry wey dem mark for quick access.</string>
     <string name="ime_no_entries">No entry dey.</string>
+    <string name="ime_no_everyday">No everyday entry dey.</string>
     <string name="ime_no_match">No entry match "%1$s".</string>
     <string name="ime_back_to_list">← %1$s</string>
     <string name="ime_search_hint">Search…</string>

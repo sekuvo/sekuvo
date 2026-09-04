@@ -189,6 +189,7 @@
     <string name="home_tag_new">Yeni etiket</string>
     <string name="home_tag_edit">Etiketi düzenle</string>
     <string name="home_tag_name">Ad</string>
+    <string name="home_tag_icon">İkon</string>
     <string name="home_selected_color">Seçili renk</string>
     <string name="home_save">Kaydet</string>
     <string name="home_cancel">Vazgeç</string>
@@ -206,6 +207,7 @@
     <string name="ime_unlock_all">🔓 Kilidi aç (tümü için)</string>
     <string name="ime_no_quick_entries">Hızlı erişim işaretli kayıt yok.</string>
     <string name="ime_no_entries">Kayıt yok.</string>
+    <string name="ime_no_everyday">Gündelik kayıt yok.</string>
     <string name="ime_no_match">\"%1$s\" ile eşleşen kayıt yok.</string>
     <string name="ime_back_to_list">← %1$s</string>
     <string name="ime_search_hint">Ara…</string>

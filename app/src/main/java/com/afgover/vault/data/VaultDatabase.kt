@@ -14,7 +14,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         UsageLogEntity::class,
         UsageBufferEntity::class
     ],
-    version = 6,
+    version = 7,
     exportSchema = false
 )
 abstract class VaultDatabase : RoomDatabase() {
@@ -100,6 +100,17 @@ abstract class VaultDatabase : RoomDatabase() {
             }
         }
 
+        /**
+         * Etiket ikonu. Boş dizge = ikonsuz, yani mevcut etiketler bugüne dek
+         * göründükleri gibi (yalnız renk noktası) kalır; hiçbir etiket kendine
+         * ikon uydurmaz.
+         */
+        internal val MIGRATION_6_7 = object : Migration(6, 7) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE tags ADD COLUMN icon TEXT NOT NULL DEFAULT ''")
+            }
+        }
+
         fun get(context: Context): VaultDatabase =
             instance ?: synchronized(this) {
                 instance ?: Room.databaseBuilder(
@@ -110,7 +121,7 @@ abstract class VaultDatabase : RoomDatabase() {
                     // Yıkıcı geçiş YOK: şema değişince veriler silinmemeli.
                     .addMigrations(
                         MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4,
-                        MIGRATION_4_5, MIGRATION_5_6
+                        MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7
                     )
                     .build()
                     .also { instance = it }

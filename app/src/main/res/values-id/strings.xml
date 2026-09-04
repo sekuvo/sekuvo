@@ -188,6 +188,7 @@
     <string name="home_tag_new">Label baru</string>
     <string name="home_tag_edit">Ubah label</string>
     <string name="home_tag_name">Nama</string>
+    <string name="home_tag_icon">Ikon</string>
     <string name="home_selected_color">Warna terpilih</string>
     <string name="home_save">Simpan</string>
     <string name="home_cancel">Batal</string>
@@ -205,6 +206,7 @@
     <string name="ime_unlock_all">🔓 Buka kunci (untuk semua entri)</string>
     <string name="ime_no_quick_entries">Tidak ada entri yang ditandai untuk akses cepat.</string>
     <string name="ime_no_entries">Tidak ada entri.</string>
+    <string name="ime_no_everyday">Tidak ada entri sehari-hari.</string>
     <string name="ime_no_match">Tidak ada entri yang cocok dengan "%1$s".</string>
     <string name="ime_back_to_list">← %1$s</string>
     <string name="ime_search_hint">Cari…</string>

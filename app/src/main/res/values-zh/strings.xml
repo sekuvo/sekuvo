@@ -188,6 +188,7 @@
     <string name="home_tag_new">新建标签</string>
     <string name="home_tag_edit">编辑标签</string>
     <string name="home_tag_name">名称</string>
+    <string name="home_tag_icon">图标</string>
     <string name="home_selected_color">已选颜色</string>
     <string name="home_save">保存</string>
     <string name="home_cancel">取消</string>
@@ -205,6 +206,7 @@
     <string name="ime_unlock_all">🔓 解锁（查看所有条目）</string>
     <string name="ime_no_quick_entries">没有标记为快速访问的条目。</string>
     <string name="ime_no_entries">没有条目。</string>
+    <string name="ime_no_everyday">没有日常条目。</string>
     <string name="ime_no_match">没有与“%1$s”匹配的条目。</string>
     <string name="ime_back_to_list">← %1$s</string>
     <string name="ime_search_hint">搜索…</string>

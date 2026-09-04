@@ -188,6 +188,7 @@
     <string name="home_tag_new">新しいタグ</string>
     <string name="home_tag_edit">タグを編集</string>
     <string name="home_tag_name">名前</string>
+    <string name="home_tag_icon">アイコン</string>
     <string name="home_selected_color">選択した色</string>
     <string name="home_save">保存</string>
     <string name="home_cancel">キャンセル</string>
@@ -205,6 +206,7 @@
     <string name="ime_unlock_all">🔓 ロックを解除（すべてのアイテム）</string>
     <string name="ime_no_quick_entries">クイックアクセスに設定されたアイテムはありません。</string>
     <string name="ime_no_entries">アイテムがありません。</string>
+    <string name="ime_no_everyday">日常の項目はありません。</string>
     <string name="ime_no_match">「%1$s」に一致するアイテムはありません。</string>
     <string name="ime_back_to_list">← %1$s</string>
     <string name="ime_search_hint">検索…</string>

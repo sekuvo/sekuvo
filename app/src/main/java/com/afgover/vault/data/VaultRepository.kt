@@ -224,8 +224,8 @@ class VaultRepository(
 
     fun observeTags(): Flow<List<TagEntity>> = tagDao.observeAll()
 
-    suspend fun addTag(name: String, color: Int): Long =
-        tagDao.insert(TagEntity(name = name.trim(), color = color))
+    suspend fun addTag(name: String, color: Int, icon: String = ""): Long =
+        tagDao.insert(TagEntity(name = name.trim(), color = color, icon = TagIcons.normalize(icon)))
 
     suspend fun updateTag(tag: TagEntity) = tagDao.update(tag)
 
@@ -248,8 +248,8 @@ class VaultRepository(
      * da tek transaction'dadır; yarıda kesilen bir içe aktarma kasayı boş
      * bırakamaz (denetim: kritik veri kaybı yolu).
      */
-    suspend fun replaceAll(entries: List<DecryptedEntry>, key: SecretKey, tagColors: Map<String, Int> = emptyMap()) {
-        val resolve = tagNameResolver(entries, tagColors)
+    suspend fun replaceAll(entries: List<DecryptedEntry>, key: SecretKey, tagDefs: Map<String, TagDef> = emptyMap()) {
+        val resolve = tagNameResolver(entries, tagDefs)
         val hazir = entries.map { it.toEntity(key, resolve(it)) }
         db.withTransaction {
             dao.deleteAll()
@@ -263,28 +263,30 @@ class VaultRepository(
     }
 
     /** İçe aktarma: yedektekileri mevcut kayıtların yanına ekler. */
-    suspend fun addAll(entries: List<DecryptedEntry>, key: SecretKey, tagColors: Map<String, Int> = emptyMap()) {
-        val resolve = tagNameResolver(entries, tagColors)
+    suspend fun addAll(entries: List<DecryptedEntry>, key: SecretKey, tagDefs: Map<String, TagDef> = emptyMap()) {
+        val resolve = tagNameResolver(entries, tagDefs)
         dao.insertAll(entries.map { it.toEntity(key, resolve(it)) })
     }
 
     /**
      * Yedekteki etiket ADLARINI bu cihazın id'lerine çözer; olmayan etiket
-     * oluşturulur (id'ler cihaza özgüdür, yedek ad taşır). Renk yedekteki
-     * tanımdan ([BackupManager] tagDefs), yoksa paletten gelir.
+     * oluşturulur (id'ler cihaza özgüdür, yedek ad taşır). Renk ve ikon
+     * yedekteki tanımdan ([BackupManager] tagDefs), renk yoksa paletten gelir.
      */
     private suspend fun tagNameResolver(
         entries: List<DecryptedEntry>,
-        tagColors: Map<String, Int>
+        tagDefs: Map<String, TagDef>
     ): (DecryptedEntry) -> List<Long> {
         val wanted = entries.flatMap { it.tagNames }.distinct()
         if (wanted.isEmpty()) return { it.tagIds }
         val byName = tagDao.getAll().associateBy { it.name.lowercase() }.toMutableMap()
         wanted.forEach { name ->
             if (name.lowercase() !in byName) {
-                val color = tagColors[name] ?: TagPalette.colorFor(byName.size)
-                val id = tagDao.insert(TagEntity(name = name, color = color))
-                byName[name.lowercase()] = TagEntity(id, name, color)
+                val def = tagDefs[name]
+                val color = def?.color ?: TagPalette.colorFor(byName.size)
+                val icon = TagIcons.normalize(def?.icon)
+                val id = tagDao.insert(TagEntity(name = name, color = color, icon = icon))
+                byName[name.lowercase()] = TagEntity(id, name, color, icon)
             }
         }
         return { e -> e.tagNames.mapNotNull { byName[it.lowercase()]?.id } }

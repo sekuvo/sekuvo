@@ -188,6 +188,7 @@
     <string name="home_tag_new">وسم جديد</string>
     <string name="home_tag_edit">تعديل الوسم</string>
     <string name="home_tag_name">الاسم</string>
+    <string name="home_tag_icon">أيقونة</string>
     <string name="home_selected_color">اللون المختار</string>
     <string name="home_save">حفظ</string>
     <string name="home_cancel">إلغاء</string>
@@ -205,6 +206,7 @@
     <string name="ime_unlock_all">🔓 فتح القفل (لكل المدخلات)</string>
     <string name="ime_no_quick_entries">لا مدخلات معلَّمة للوصول السريع.</string>
     <string name="ime_no_entries">لا مدخلات.</string>
+    <string name="ime_no_everyday">لا توجد سجلات يومية.</string>
     <string name="ime_no_match">لا مدخلات تطابق «%1$s».</string>
     <string name="ime_back_to_list">← %1$s</string>
     <string name="ime_search_hint">بحث…</string>

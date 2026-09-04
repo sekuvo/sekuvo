@@ -129,7 +129,7 @@ fun DetailScreen(
                 ) {
                     entryTags.forEach { tag ->
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            TagDot(tag.color, size = 13)
+                            TagDot(tag.color, tag.icon, size = 13)
                             Spacer(Modifier.padding(2.dp))
                             Text(tag.name, style = MaterialTheme.typography.labelMedium)
                         }

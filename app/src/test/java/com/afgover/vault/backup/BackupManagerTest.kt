@@ -4,6 +4,7 @@ import com.afgover.vault.data.CustomField
 import com.afgover.vault.data.DecryptedEntry
 import com.afgover.vault.data.EntryData
 import com.afgover.vault.data.EntryType
+import com.afgover.vault.data.TagDef
 import com.afgover.vault.data.TagEntity
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
@@ -60,7 +61,7 @@ class BackupManagerTest {
         assertEquals(100, banka.createdAt)
         // Etiket adla taşınır, id cihaza özgüdür
         assertEquals(listOf("finans"), banka.tagNames)
-        assertEquals(mapOf("finans" to 0xFFE57373.toInt()), sonuc.tagColors)
+        assertEquals(mapOf("finans" to TagDef(0xFFE57373.toInt())), sonuc.tagDefs)
         assertTrue(sonuc.entries[1].quick)
     }
 
@@ -114,7 +115,7 @@ class BackupManagerTest {
             disaVer(tags = emptyList()).byteInputStream(), password
         )
         assertTrue(sonuc.entries.all { it.tagNames.isEmpty() })
-        assertTrue(sonuc.tagColors.isEmpty())
+        assertTrue(sonuc.tagDefs.isEmpty())
     }
 
     @Test

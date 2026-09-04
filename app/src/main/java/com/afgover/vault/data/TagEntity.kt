@@ -18,8 +18,25 @@ data class TagEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val name: String,
     /** ARGB; palet [TagPalette] içinden seçilir. */
-    val color: Int
+    val color: Int,
+    /**
+     * İkon anahtarı ([TagIcons]); boş = ikonsuz, yalnız renk noktası.
+     *
+     * Kaynak kimliği (`R.drawable...`) değil ANAHTAR saklanır: sayı derlemeden
+     * derlemeye kayar, isim kalıcıdır — yedekten dönen etiket yıllar sonra da
+     * doğru ikonu bulur. Tanınmayan anahtar sessizce ikonsuza düşer.
+     */
+    val icon: String = ""
 )
+
+/**
+ * Yedek dosyasında taşınan etiket görünümü: renk + ikon.
+ *
+ * İkisi tek yerde durur çünkü ikisi de aynı soruya cevap veriyor — "bu etiket
+ * nasıl görünüyordu". Ayrı iki harita taşımak, birinin güncellenip diğerinin
+ * unutulduğu bir geri yükleme hatasına açık kapı bırakırdı.
+ */
+data class TagDef(val color: Int, val icon: String = "")
 
 /** Etiket renk paleti (ARGB). Seçim ekranı da içe aktarma da buradan alır. */
 object TagPalette {
@@ -35,6 +52,31 @@ object TagPalette {
     )
 
     fun colorFor(index: Int): Int = colors[index.mod(colors.size)]
+}
+
+/**
+ * Etiket ikonu paleti: yirmi anahtar, kasada gerçekten tekrar eden kümeler için.
+ *
+ * Sayı bilinçli olarak kapalı tutuluyor — ikon seçimi bir tarama işi değil,
+ * bir bakışta tanıma işi. Anahtarlar İngilizce ve KALICI: ekranda çevrilen bir
+ * şey değil, veritabanında duran bir kimlik.
+ *
+ * Görsel eşleme [com.afgover.vault.ui.screens.tagIcon] içinde; veri katmanı
+ * Compose'a bağımlı olmasın diye ikonun kendisi burada durmuyor.
+ */
+object TagIcons {
+    /** Palet sırası ekranda göründüğü sıradır. */
+    val keys: List<String> = listOf(
+        "work", "home", "person", "group",
+        "bank", "card", "shopping", "mail",
+        "cloud", "server", "code", "key",
+        "shield", "wifi", "game", "media",
+        "music", "school", "health", "travel"
+    )
+
+    /** Bilinmeyen anahtar (eski/ileri sürüm yedeği) ikonsuza düşer. */
+    fun normalize(key: String?): String =
+        if (key != null && key in keys) key else ""
 }
 
 /** Kayıtların `tags` sütunundaki JSON id listesi için ortak çözümleyici. */

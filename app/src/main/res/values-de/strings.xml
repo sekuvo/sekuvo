@@ -188,6 +188,7 @@
     <string name="home_tag_new">Neues Tag</string>
     <string name="home_tag_edit">Tag bearbeiten</string>
     <string name="home_tag_name">Name</string>
+    <string name="home_tag_icon">Symbol</string>
     <string name="home_selected_color">Ausgewählte Farbe</string>
     <string name="home_save">Speichern</string>
     <string name="home_cancel">Abbrechen</string>
@@ -205,6 +206,7 @@
     <string name="ime_unlock_all">🔓 Entsperren (für alle Einträge)</string>
     <string name="ime_no_quick_entries">Keine Einträge für den Schnellzugriff markiert.</string>
     <string name="ime_no_entries">Keine Einträge.</string>
+    <string name="ime_no_everyday">Keine Alltagseinträge.</string>
     <string name="ime_no_match">Keine Einträge entsprechen „%1$s".</string>
     <string name="ime_back_to_list">← %1$s</string>
     <string name="ime_search_hint">Suchen…</string>

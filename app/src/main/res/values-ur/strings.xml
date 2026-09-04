@@ -188,6 +188,7 @@
     <string name="home_tag_new">نیا ٹیگ</string>
     <string name="home_tag_edit">ٹیگ میں ترمیم</string>
     <string name="home_tag_name">نام</string>
+    <string name="home_tag_icon">آئیکن</string>
     <string name="home_selected_color">منتخب رنگ</string>
     <string name="home_save">محفوظ کریں</string>
     <string name="home_cancel">منسوخ کریں</string>
@@ -205,6 +206,7 @@
     <string name="ime_unlock_all">🔓 تالا کھولیں (تمام اندراجات کے لیے)</string>
     <string name="ime_no_quick_entries">فوری رسائی کے لیے نشان زدہ کوئی اندراج نہیں۔</string>
     <string name="ime_no_entries">کوئی اندراج نہیں۔</string>
+    <string name="ime_no_everyday">کوئی روزمرہ اندراج نہیں۔</string>
     <string name="ime_no_match">«%1$s» سے میل کھاتا کوئی اندراج نہیں۔</string>
     <string name="ime_back_to_list">← %1$s</string>
     <string name="ime_search_hint">تلاش کریں…</string>

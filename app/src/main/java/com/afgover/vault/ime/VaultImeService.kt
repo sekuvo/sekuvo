@@ -21,6 +21,7 @@ import com.afgover.vault.data.DecryptedEntry
 import com.afgover.vault.data.UsageEvent
 import com.afgover.vault.data.UsageKind
 import com.afgover.vault.data.EntrySort
+import com.afgover.vault.data.EntryType
 import com.afgover.vault.data.sortedBy
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -93,6 +94,18 @@ class VaultImeService : InputMethodService() {
     private var locked: Boolean = true
     private var selected: DecryptedEntry? = null
 
+    /**
+     * "Gündelik" süzgeci: yalnız [EntryType.EVERYDAY] kayıtları göster.
+     *
+     * Klavyede en sık aranan şey ad, telefon, e-posta, adres — yani formların
+     * istediği gündelik bilgiler; parolalar zaten otomatik doldurmadan geliyor.
+     * Süzgeç klavye kapanınca sıfırlanmaz, çünkü bir formu doldururken klavye
+     * birkaç kez açılıp kapanıyor ve seçimi her seferinde yeniden yapmak
+     * özelliğin kendisini götürürdü.
+     */
+    private var everydayOnly: Boolean = false
+    private var everydayButton: Button? = null
+
 
     private fun dp(value: Int): Int =
         (value * resources.displayMetrics.density).toInt()
@@ -126,6 +139,16 @@ class VaultImeService : InputMethodService() {
             textSize = 16f
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
         })
+        // Gündelik süzgeci Sekuvo adının hemen yanında: listeyi daraltan tek
+        // düğme, aramadan önce gelir çünkü çoğu durumda aramanın yerine geçer.
+        everydayButton = flatButton(yerel().getString(R.string.type_everyday)) {
+            everydayOnly = !everydayOnly
+            selected = null
+            applyEverydayLook()
+            render()
+        }
+        header.addView(everydayButton)
+        applyEverydayLook()
         header.addView(flatButton("🔍") { toggleSearch() })
         header.addView(flatButton(yerel().getString(R.string.ime_switch_keyboard)) { switchBackToKeyboard() })
         // Basılı tutunca sistem klavyesindeki gibi silmeye devam eder.
@@ -224,10 +247,14 @@ class VaultImeService : InputMethodService() {
         locked = key == null
         scope.launch {
             val repo = (application as VaultApp).repository
-            val sort = EntrySort.read(this@VaultImeService)
             entries = withContext(Dispatchers.IO) {
                 (if (key == null) repo.getQuickDecrypted() else repo.getVisibleDecrypted(key))
-                    .sortedBy(sort)
+                    // Klavye HER ZAMAN öncelik numarasına göre dizer, uygulama
+                    // listesinin sırasına bakmaksızın (kullanıcı kararı):
+                    // burada aranan şey "hangi kayda en sık uzanıyorum",
+                    // ve cevabı kullanıcının verdiği numara veriyor. Süzgeç
+                    // açıkken de kapalıyken de aynı kural işler.
+                    .sortedBy(EntrySort.MANUAL)
             }
             render()
         }
@@ -260,7 +287,14 @@ class VaultImeService : InputMethodService() {
 
         val matches = filtered()
         if (matches.isEmpty()) {
-            content.addView(hint(yerel().getString(R.string.ime_no_match, query)))
+            // Arama boşken eşleşme yoksa sebep süzgeçtir; kullanıcıya boş bir
+            // arama sonucu göstermek yanlış yere baktırırdı.
+            content.addView(
+                hint(
+                    if (query.isEmpty()) yerel().getString(R.string.ime_no_everyday)
+                    else yerel().getString(R.string.ime_no_match, query)
+                )
+            )
             return
         }
         matches.forEach { content.addView(entryButton(it)) }
@@ -309,11 +343,15 @@ class VaultImeService : InputMethodService() {
             render()
         }
 
-    /** Başlık, kullanıcı adı ve adres üzerinde arama; Türkçe harfler eşitlenir. */
+    /**
+     * Önce tür süzgeci (Gündelik), sonra arama. Sıra önemli: süzgeç açıkken
+     * arama da yalnız gündelik kayıtlarda gezsin, kapatınca hepsinde.
+     */
     private fun filtered(): List<DecryptedEntry> {
-        if (query.isEmpty()) return entries
+        val base = if (everydayOnly) entries.filter { it.type == EntryType.EVERYDAY } else entries
+        if (query.isEmpty()) return base
         val needle = normalize(query)
-        return entries.filter { entry ->
+        return base.filter { entry ->
             normalize(entry.title).contains(needle) ||
                 normalize(entry.data.username).contains(needle) ||
                 normalize(entry.data.url).contains(needle)
@@ -412,6 +450,17 @@ class VaultImeService : InputMethodService() {
         textSize = 12f
         setTypeface(null, Typeface.BOLD)
         setPadding(dp(8), dp(8), dp(8), dp(2))
+    }
+
+    /**
+     * Süzgecin açık olduğu düğmenin KENDİSİNDE görünür: ayrı bir gösterge
+     * satırı klavyenin zaten dar olan yüksekliğinden çalardı.
+     */
+    private fun applyEverydayLook() {
+        everydayButton?.apply {
+            setTextColor(color(if (everydayOnly) R.color.ime_accent else R.color.ime_text))
+            setTypeface(null, if (everydayOnly) Typeface.BOLD else Typeface.NORMAL)
+        }
     }
 
     private fun flatButton(label: String, onClick: () -> Unit): Button =

@@ -188,6 +188,7 @@
     <string name="home_tag_new">Новая метка</string>
     <string name="home_tag_edit">Изменить метку</string>
     <string name="home_tag_name">Название</string>
+    <string name="home_tag_icon">Значок</string>
     <string name="home_selected_color">Выбранный цвет</string>
     <string name="home_save">Сохранить</string>
     <string name="home_cancel">Отмена</string>
@@ -205,6 +206,7 @@
     <string name="ime_unlock_all">🔓 Разблокировать (для всех записей)</string>
     <string name="ime_no_quick_entries">Нет записей, отмеченных для быстрого доступа.</string>
     <string name="ime_no_entries">Нет записей.</string>
+    <string name="ime_no_everyday">Нет повседневных записей.</string>
     <string name="ime_no_match">Нет записей, соответствующих «%1$s».</string>
     <string name="ime_back_to_list">← %1$s</string>
     <string name="ime_search_hint">Поиск…</string>

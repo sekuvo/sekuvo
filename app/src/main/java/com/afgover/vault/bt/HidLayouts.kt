@@ -52,7 +52,14 @@ object HidLayouts {
      * kullanılamaz hâle gelirdi.
      */
     fun enabledLayouts(storedDisabled: String?): List<Layout> {
-        val kapali = storedDisabled.orEmpty().split(",").mapNotNull { ad ->
+        // Hiç dokunulmamış kurulum: yalnız ABD İngilizcesi açık gelir
+        // (kullanıcı kararı). Yirmi bir düzenin tamamını açık başlatmak, düzen
+        // seçme listesini ilk kullanımda okunmaz kılıyordu; kullanıcıların
+        // büyük kısmı tek bir düzen kullanıyor ve gerekeni sonradan açıyor.
+        // Ayrımı `null` yapar: kullanıcı listeye bir kez dokunduğunda
+        // (hepsini açsa bile) tercihi yazılır ve buraya bir daha düşmez.
+        if (storedDisabled == null) return listOf(Layout.US)
+        val kapali = storedDisabled.split(",").mapNotNull { ad ->
             runCatching { Layout.valueOf(ad.trim()) }.getOrNull()
         }.toSet()
         // Sıra HER ZAMAN enum sırasıdır: tercih, açma-kapama geçmişine göre
@@ -79,9 +86,14 @@ object HidLayouts {
      */
     fun readLayout(stored: String?, enabled: List<Layout> = Layout.entries): Layout {
         val secili = when (stored) {
-            null -> Layout.TR_Q
+            // Seçilmemişse ABD İngilizcesi: açık düzenlerin varsayılanıyla
+            // aynı olsun (kullanıcı kararı). Eskiden burası Türkçe Q'ydu;
+            // açık liste US'e daralınca seçim zaten oraya düşüyordu, ikisini
+            // ayrı bırakmak "Türkçe'yi açınca kendiliğinden seçili oluyor"
+            // gibi sürprizli bir davranış üretirdi.
+            null -> Layout.US
             "TR" -> Layout.TR_Q       // eski sürümlerin adı
-            else -> runCatching { Layout.valueOf(stored) }.getOrDefault(Layout.TR_Q)
+            else -> runCatching { Layout.valueOf(stored) }.getOrDefault(Layout.US)
         }
         // Kullanıcı bu düzeni ayarlardan kapattıysa açık olanlardan birine düş;
         // yoksa aktarım ekranında görünmeyen bir düzen seçili kalırdı.

@@ -170,10 +170,10 @@ class VaultViewModel(application: Application) : AndroidViewModel(application) {
     val tags: StateFlow<List<TagEntity>> = repo.observeTags()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
-    fun addTag(name: String, color: Int, onDone: (Long) -> Unit = {}) {
+    fun addTag(name: String, color: Int, icon: String = "", onDone: (Long) -> Unit = {}) {
         if (name.isBlank()) return
         viewModelScope.launch {
-            val id = withContext(Dispatchers.IO) { repo.addTag(name, color) }
+            val id = withContext(Dispatchers.IO) { repo.addTag(name, color, icon) }
             onDone(id)
         }
     }
@@ -672,8 +672,8 @@ class VaultViewModel(application: Application) : AndroidViewModel(application) {
                     // Boş zarfta HİÇBİR depo işlemi yapma: 'Tümünü değiştir' ile
                     // boş zarf, kasanın tamamını silerdi (denetim: kritik).
                     if (imported.entries.isEmpty()) return@withContext 0
-                    if (replace) repo.replaceAll(imported.entries, key, imported.tagColors)
-                    else repo.addAll(imported.entries, key, imported.tagColors)
+                    if (replace) repo.replaceAll(imported.entries, key, imported.tagDefs)
+                    else repo.addAll(imported.entries, key, imported.tagDefs)
                     imported.entries.size
                 }
                 if (count == 0) {
@@ -723,8 +723,8 @@ class VaultViewModel(application: Application) : AndroidViewModel(application) {
                         ?: throw Exception(str(R.string.vm_file_open_failed))
                     val imported = BackupManager.import(input, password.toCharArray())
                     if (imported.entries.isEmpty()) return@withContext 0
-                    if (replace) repo.replaceAll(imported.entries, key, imported.tagColors)
-                    else repo.addAll(imported.entries, key, imported.tagColors)
+                    if (replace) repo.replaceAll(imported.entries, key, imported.tagDefs)
+                    else repo.addAll(imported.entries, key, imported.tagDefs)
                     imported.entries.size
                 }
                 if (count == 0) {

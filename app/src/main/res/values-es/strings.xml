@@ -188,6 +188,7 @@
     <string name="home_tag_new">Nueva etiqueta</string>
     <string name="home_tag_edit">Editar etiqueta</string>
     <string name="home_tag_name">Nombre</string>
+    <string name="home_tag_icon">Icono</string>
     <string name="home_selected_color">Color elegido</string>
     <string name="home_save">Guardar</string>
     <string name="home_cancel">Cancelar</string>
@@ -205,6 +206,7 @@
     <string name="ime_unlock_all">🔓 Desbloquear (para todas las entradas)</string>
     <string name="ime_no_quick_entries">Ninguna entrada marcada para acceso rápido.</string>
     <string name="ime_no_entries">Sin entradas.</string>
+    <string name="ime_no_everyday">No hay entradas cotidianas.</string>
     <string name="ime_no_match">Ninguna entrada coincide con «%1$s».</string>
     <string name="ime_back_to_list">← %1$s</string>
     <string name="ime_search_hint">Buscar…</string>

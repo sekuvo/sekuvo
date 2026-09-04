@@ -188,6 +188,7 @@
     <string name="home_tag_new">Thẻ mới</string>
     <string name="home_tag_edit">Chỉnh sửa thẻ</string>
     <string name="home_tag_name">Tên</string>
+    <string name="home_tag_icon">Biểu tượng</string>
     <string name="home_selected_color">Màu đã chọn</string>
     <string name="home_save">Lưu</string>
     <string name="home_cancel">Hủy</string>
@@ -205,6 +206,7 @@
     <string name="ime_unlock_all">🔓 Mở khóa (cho tất cả các mục)</string>
     <string name="ime_no_quick_entries">Không có mục nào được đánh dấu để truy cập nhanh.</string>
     <string name="ime_no_entries">Không có mục nào.</string>
+    <string name="ime_no_everyday">Không có mục hằng ngày.</string>
     <string name="ime_no_match">Không có mục nào khớp với "%1$s".</string>
     <string name="ime_back_to_list">← %1$s</string>
     <string name="ime_search_hint">Tìm kiếm…</string>

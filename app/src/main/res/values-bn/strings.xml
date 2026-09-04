@@ -188,6 +188,7 @@
     <string name="home_tag_new">নতুন ট্যাগ</string>
     <string name="home_tag_edit">ট্যাগ এডিট করুন</string>
     <string name="home_tag_name">নাম</string>
+    <string name="home_tag_icon">আইকন</string>
     <string name="home_selected_color">বেছে নেওয়া রঙ</string>
     <string name="home_save">সংরক্ষণ করুন</string>
     <string name="home_cancel">বাতিল</string>
@@ -205,6 +206,7 @@
     <string name="ime_unlock_all">🔓 আনলক করুন (সব এন্ট্রির জন্য)</string>
     <string name="ime_no_quick_entries">দ্রুত অ্যাক্সেসের জন্য কোনো এন্ট্রি চিহ্নিত নেই।</string>
     <string name="ime_no_entries">কোনো এন্ট্রি নেই।</string>
+    <string name="ime_no_everyday">কোনো দৈনন্দিন এন্ট্রি নেই।</string>
     <string name="ime_no_match">“%1$s”-এর সাথে কোনো এন্ট্রি মেলেনি।</string>
     <string name="ime_back_to_list">← %1$s</string>
     <string name="ime_search_hint">খুঁজুন…</string>

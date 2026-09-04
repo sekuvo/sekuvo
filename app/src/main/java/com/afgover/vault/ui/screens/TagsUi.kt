@@ -1,22 +1,50 @@
 package com.afgover.vault.ui.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBalance
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Cloud
+import androidx.compose.material.icons.filled.Code
+import androidx.compose.material.icons.filled.CreditCard
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Dns
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Flight
+import androidx.compose.material.icons.filled.Groups
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.LocalHospital
+import androidx.compose.material.icons.filled.Movie
+import androidx.compose.material.icons.filled.MusicNote
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.School
+import androidx.compose.material.icons.filled.Shield
+import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material.icons.filled.SportsEsports
+import androidx.compose.material.icons.filled.VpnKey
+import androidx.compose.material.icons.filled.Wifi
+import androidx.compose.material.icons.filled.Work
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
@@ -38,6 +66,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.afgover.vault.R
 import com.afgover.vault.data.TagEntity
+import com.afgover.vault.data.TagIcons
 import com.afgover.vault.data.TagPalette
 import com.afgover.vault.ui.VaultViewModel
 
@@ -82,17 +111,64 @@ fun SecimCipi(
 }
 
 /**
- * Etiket rengi noktası. Ölçü, yanında durduğu yazının punto'suyla eşleşir:
- * 10dp'lik nokta başlık yanında kaybolup rengi okunmaz kılıyordu.
+ * [TagIcons] anahtarının çizime dönüşmesi. Anahtar tanınmıyorsa null —
+ * çağıran taraf o zaman düz renk noktasına düşer, hiçbir yerde boşluk kalmaz.
+ *
+ * Eşleme veri katmanında değil burada: `TagEntity` Compose'a bağımlı olmamalı,
+ * yoksa yedekleme ve testler bir çizim kütüphanesini sürüklerdi.
+ */
+fun tagIcon(key: String): ImageVector? = when (key) {
+    "work" -> Icons.Filled.Work
+    "home" -> Icons.Filled.Home
+    "person" -> Icons.Filled.Person
+    "group" -> Icons.Filled.Groups
+    "bank" -> Icons.Filled.AccountBalance
+    "card" -> Icons.Filled.CreditCard
+    "shopping" -> Icons.Filled.ShoppingCart
+    "mail" -> Icons.Filled.Email
+    "cloud" -> Icons.Filled.Cloud
+    "server" -> Icons.Filled.Dns
+    "code" -> Icons.Filled.Code
+    "key" -> Icons.Filled.VpnKey
+    "shield" -> Icons.Filled.Shield
+    "wifi" -> Icons.Filled.Wifi
+    "game" -> Icons.Filled.SportsEsports
+    "media" -> Icons.Filled.Movie
+    "music" -> Icons.Filled.MusicNote
+    "school" -> Icons.Filled.School
+    "health" -> Icons.Filled.LocalHospital
+    "travel" -> Icons.Filled.Flight
+    else -> null
+}
+
+/**
+ * Etiket işareti: ikon seçilmişse ETİKET RENGİNDE ikon, seçilmemişse renk
+ * noktası. Ölçü, yanında durduğu yazının punto'suyla eşleşir: 10dp'lik nokta
+ * başlık yanında kaybolup rengi okunmaz kılıyordu.
+ *
+ * İkon rengin YERİNE değil, rengiyle çiziliyor — renk etiketin kimliği olarak
+ * kalsın, ikon üstüne bir okuma kolaylığı eklesin diye (kullanıcı kararı).
  */
 @Composable
-fun TagDot(color: Int, size: Int = 14) {
-    Spacer(
-        Modifier
-            .size(size.dp)
-            .clip(CircleShape)
-            .background(Color(color))
-    )
+fun TagDot(color: Int, icon: String = "", size: Int = 14) {
+    val vector = tagIcon(icon)
+    if (vector == null) {
+        Spacer(
+            Modifier
+                .size(size.dp)
+                .clip(CircleShape)
+                .background(Color(color))
+        )
+    } else {
+        Icon(
+            vector,
+            contentDescription = null,
+            tint = Color(color),
+            // İkon aynı kutuda noktadan küçük görünür; birkaç dp büyütmek
+            // ikisini aynı ağırlıkta gösteriyor.
+            modifier = Modifier.size((size + 3).dp)
+        )
+    }
 }
 
 /** Seçilebilir etiket çipi — filtre satırı ve düzenleme ekranı aynı görünümü kullanır. */
@@ -102,19 +178,21 @@ fun TagChip(tag: TagEntity, selected: Boolean, onToggle: () -> Unit) {
         selected = selected,
         onClick = onToggle,
         label = { Text(tag.name) },
-        leadingIcon = { TagDot(tag.color) }
+        leadingIcon = { TagDot(tag.color, tag.icon) }
     )
 }
 
-/** Ad + palet rengiyle etiket oluşturma/düzenleme. */
+/** Ad + palet rengi + (isteğe bağlı) ikonla etiket oluşturma/düzenleme. */
+@OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
 @Composable
 fun TagEditDialog(
     initial: TagEntity?,
     onDismiss: () -> Unit,
-    onSave: (name: String, color: Int) -> Unit
+    onSave: (name: String, color: Int, icon: String) -> Unit
 ) {
     var name by remember { mutableStateOf(initial?.name ?: "") }
     var color by remember { mutableStateOf(initial?.color ?: TagPalette.colors[0]) }
+    var icon by remember { mutableStateOf(initial?.icon ?: "") }
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -160,11 +238,43 @@ fun TagEditDialog(
                         }
                     }
                 }
+
+                Spacer(Modifier.height(16.dp))
+                Text(
+                    stringResource(R.string.home_tag_icon),
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Spacer(Modifier.height(6.dp))
+                // İkon seçili rengiyle önizlenir: seçim anında etiketin
+                // listede nasıl görüneceği görülsün, iki adım sonra değil.
+                FlowRow(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(max = 190.dp)
+                        .verticalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(2.dp)
+                ) {
+                    IkonSecenegi(
+                        secili = icon.isEmpty(),
+                        renk = color,
+                        anahtar = "",
+                        onClick = { icon = "" }
+                    )
+                    TagIcons.keys.forEach { k ->
+                        IkonSecenegi(
+                            secili = icon == k,
+                            renk = color,
+                            anahtar = k,
+                            onClick = { icon = if (icon == k) "" else k }
+                        )
+                    }
+                }
             }
         },
         confirmButton = {
             TextButton(
-                onClick = { if (name.isNotBlank()) onSave(name.trim(), color) },
+                onClick = { if (name.isNotBlank()) onSave(name.trim(), color, icon) },
                 enabled = name.isNotBlank()
             ) { Text(stringResource(R.string.home_save)) }
         },
@@ -172,6 +282,29 @@ fun TagEditDialog(
             TextButton(onClick = onDismiss) { Text(stringResource(R.string.home_cancel)) }
         }
     )
+}
+
+/**
+ * İkon paletindeki tek kare. Boş anahtar "ikonsuz" seçeneğidir ve renk
+ * noktasını gösterir — "ikon yok"u anlatmanın en dolaysız yolu, kaydın
+ * listede zaten alacağı görüntü.
+ */
+@Composable
+private fun IkonSecenegi(secili: Boolean, renk: Int, anahtar: String, onClick: () -> Unit) {
+    Box(
+        modifier = Modifier
+            .padding(2.dp)
+            .size(40.dp)
+            .clip(RoundedCornerShape(10.dp))
+            .background(
+                if (secili) MaterialTheme.colorScheme.primary.copy(alpha = 0.18f)
+                else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+            )
+            .clickable(onClick = onClick),
+        contentAlignment = Alignment.Center
+    ) {
+        TagDot(renk, anahtar, size = 20)
+    }
 }
 
 /** Etiket yönetimi: listele, ekle, düzenle, sil. */
@@ -196,7 +329,7 @@ fun TagManageDialog(viewModel: VaultViewModel, tags: List<TagEntity>, onDismiss:
                                 .padding(vertical = 4.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            TagDot(tag.color, size = 16)
+                            TagDot(tag.color, tag.icon, size = 16)
                             Spacer(Modifier.width(12.dp))
                             Text(
                                 tag.name,
@@ -234,8 +367,8 @@ fun TagManageDialog(viewModel: VaultViewModel, tags: List<TagEntity>, onDismiss:
         TagEditDialog(
             initial = null,
             onDismiss = { adding = false },
-            onSave = { name, color ->
-                viewModel.addTag(name, color)
+            onSave = { name, color, icon ->
+                viewModel.addTag(name, color, icon)
                 adding = false
             }
         )
@@ -244,8 +377,8 @@ fun TagManageDialog(viewModel: VaultViewModel, tags: List<TagEntity>, onDismiss:
         TagEditDialog(
             initial = tag,
             onDismiss = { editing = null },
-            onSave = { name, color ->
-                viewModel.updateTag(tag.copy(name = name, color = color))
+            onSave = { name, color, icon ->
+                viewModel.updateTag(tag.copy(name = name, color = color, icon = icon))
                 editing = null
             }
         )

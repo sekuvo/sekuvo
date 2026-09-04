@@ -12,10 +12,37 @@ import org.junit.Test
  */
 class LayoutSelectionTest {
 
+    /**
+     * Hiç dokunulmamış kurulumda yalnız ABD İngilizcesi açıktır (kullanıcı
+     * kararı): yirmi bir düzen açık gelince liste ilk kullanımda okunmuyordu.
+     * Kullanıcı listeye bir kez dokunduğunda tercihi yazılır — hepsini açmak
+     * boş dizge olarak saklanır ve "hiç dokunulmamış"tan ayrılır, yoksa
+     * "hepsini aç" bir sonraki açılışta tek düzene geri düşerdi.
+     */
     @Test
-    fun `tercih yoksa hepsi acik - kimsenin duzeni gizlenmez`() {
-        assertEquals(HidLayouts.Layout.entries, HidLayouts.enabledLayouts(null))
+    fun `tercih yokken yalniz US acik - dokunulmus tercih aynen korunur`() {
+        assertEquals(listOf(HidLayouts.Layout.US), HidLayouts.enabledLayouts(null))
         assertEquals(HidLayouts.Layout.entries, HidLayouts.enabledLayouts(""))
+    }
+
+    /**
+     * Seçili düzenin varsayılanı da US: açık liste US'e daralmışken seçim
+     * başka bir düzende kalırsa, kullanıcı o düzeni sonradan açtığı anda
+     * seçim kendiliğinden oraya kayardı.
+     */
+    @Test
+    fun `secili duzen varsayilani US`() {
+        assertEquals(HidLayouts.Layout.US, HidLayouts.readLayout(null))
+        assertEquals(
+            HidLayouts.Layout.US,
+            HidLayouts.readLayout(null, HidLayouts.enabledLayouts(null))
+        )
+        // Eski sürümlerin "TR" adı hâlâ Türkçe Q'ya çözülür: bir kez seçilmiş
+        // tercih varsayılan değişti diye kaybolmamalı.
+        assertEquals(
+            HidLayouts.Layout.TR_Q,
+            HidLayouts.readLayout("TR", HidLayouts.Layout.entries)
+        )
     }
 
     @Test

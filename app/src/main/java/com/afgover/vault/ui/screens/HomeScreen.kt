@@ -134,10 +134,11 @@ fun TypeBadge(type: EntryType, kind: NoteKind = NoteKind.GENEL, size: Int = 42) 
 }
 
 /**
- * Öncelik numarası rozeti. Tür etiketinin yanında durur, başlığın değil:
- * başlık kaydın adıdır, bu ikisi kaydın listedeki YERİNİ anlatır
- * (kullanıcı kararı). Numarasız kayıtta hiç çizilmez — sıfır göstermek,
- * "önceliği yok" ile "önceliği 0" arasında olmayan bir fark uydururdu.
+ * Öncelik numarası rozeti. Satırın sağ ucunda, şimşeğin sağında durur
+ * (kullanıcı kararı): numaralar tek bir kenara dizilince liste yukarıdan
+ * aşağı taranabiliyor, başlık uzunluğuna göre kayan bir noktada değil.
+ * Numarasız kayıtta hiç çizilmez — sıfır göstermek, "önceliği yok" ile
+ * "önceliği 0" arasında olmayan bir fark uydururdu.
  */
 @Composable
 fun PriorityBadge(oncelik: Int) {
@@ -470,25 +471,32 @@ fun HomeScreen(
                                             style = MaterialTheme.typography.bodySmall,
                                             color = MaterialTheme.colorScheme.onSurfaceVariant
                                         )
-                                        if (item.sortIndex > 0) {
-                                            Spacer(Modifier.width(6.dp))
-                                            PriorityBadge(item.sortIndex)
-                                        }
                                         item.tagIds.forEach { tid ->
                                             tags.find { it.id == tid }?.let {
                                                 Spacer(Modifier.width(6.dp))
                                                 // Alt satır bodySmall (14sp) — nokta da o boyda.
-                                                TagDot(it.color, size = 14)
+                                                TagDot(it.color, it.icon, size = 14)
                                             }
                                         }
                                     }
                                 }
+                                // Satırın SAĞ UCU: önce şimşek, sonra numara
+                                // (kullanıcı kararı). İkisi de kaydın kendisi
+                                // değil ayarı olduğu için başlıktan uzakta,
+                                // sabit bir yerde duruyorlar; göz numarayı hep
+                                // aynı kenarda buluyor. Şimşek eskiden iki
+                                // satırı birden kaplıyordu, artık numarayla
+                                // aynı yükseklikte ve küçültülmüş.
                                 if (item.quick) {
                                     Text(
                                         "⚡",
-                                        style = MaterialTheme.typography.titleMedium,
+                                        style = MaterialTheme.typography.bodyMedium,
                                         modifier = Modifier.padding(start = 8.dp)
                                     )
+                                }
+                                if (item.sortIndex > 0) {
+                                    Spacer(Modifier.width(8.dp))
+                                    PriorityBadge(item.sortIndex)
                                 }
                             }
                         }

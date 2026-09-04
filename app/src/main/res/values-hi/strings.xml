@@ -188,6 +188,7 @@
     <string name="home_tag_new">नया टैग</string>
     <string name="home_tag_edit">टैग संपादित करें</string>
     <string name="home_tag_name">नाम</string>
+    <string name="home_tag_icon">आइकन</string>
     <string name="home_selected_color">चुना गया रंग</string>
     <string name="home_save">सहेजें</string>
     <string name="home_cancel">रद्द करें</string>
@@ -205,6 +206,7 @@
     <string name="ime_unlock_all">🔓 अनलॉक करें (सभी एंट्री के लिए)</string>
     <string name="ime_no_quick_entries">त्वरित पहुँच के लिए कोई एंट्री चिह्नित नहीं है।</string>
     <string name="ime_no_entries">कोई एंट्री नहीं।</string>
+    <string name="ime_no_everyday">कोई रोज़मर्रा प्रविष्टि नहीं।</string>
     <string name="ime_no_match">«%1$s» से कोई एंट्री मेल नहीं खाती।</string>
     <string name="ime_back_to_list">← %1$s</string>
     <string name="ime_search_hint">खोजें…</string>
