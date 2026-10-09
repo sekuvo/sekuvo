@@ -95,6 +95,12 @@
     <string name="bt_preparing">Preparando o teclado Bluetooth…</string>
     <string name="bt_pick_computer">Escolha seu computador (ele já deve estar pareado com o telefone via Bluetooth):</string>
     <string name="bt_no_bonded_devices">Nenhum dispositivo pareado. Pareie com seu computador nas configurações de Bluetooth do telefone e tente de novo.</string>
+    <string name="bt_no_computers">Nenhum computador entre os dispositivos pareados. Mostre todos os dispositivos abaixo ou marque com estrela o que você usa.</string>
+    <string name="bt_show_all_devices">Mostrar todos os dispositivos (mais %1$d)</string>
+    <string name="bt_show_computers_only">Mostrar só computadores</string>
+    <string name="bt_last_used">Usado por último</string>
+    <string name="bt_star">Adicionar aos favoritos</string>
+    <string name="bt_unstar">Remover dos favoritos</string>
     <string name="bt_connecting">Conectando a %1$s…</string>
     <string name="bt_connected">✓ %1$s conectado</string>
     <string name="bt_layout_heading">Layout de teclado do SEU COMPUTADOR (não o do telefone):</string>

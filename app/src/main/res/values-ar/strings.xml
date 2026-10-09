@@ -95,6 +95,12 @@
     <string name="bt_preparing">جارٍ تجهيز لوحة مفاتيح البلوتوث…</string>
     <string name="bt_pick_computer">اختر حاسوبك (يجب أن يكون مقترنًا بالفعل بالهاتف عبر البلوتوث):</string>
     <string name="bt_no_bonded_devices">لا توجد أجهزة مقترنة. اقترن بحاسوبك من إعدادات بلوتوث الهاتف ثم حاول مجددًا.</string>
+    <string name="bt_no_computers">لا يوجد حاسوب بين الأجهزة المقترنة. اعرض كل الأجهزة أدناه، أو ضع نجمة على الجهاز الذي تستخدمه.</string>
+    <string name="bt_show_all_devices">عرض كل الأجهزة (%1$d أخرى)</string>
+    <string name="bt_show_computers_only">عرض الحواسيب فقط</string>
+    <string name="bt_last_used">آخر استخدام</string>
+    <string name="bt_star">إضافة إلى المفضلة</string>
+    <string name="bt_unstar">إزالة من المفضلة</string>
     <string name="bt_connecting">جارٍ الاتصال بـ %1$s…</string>
     <string name="bt_connected">✓ %1$s متصل</string>
     <string name="bt_layout_heading">تخطيط لوحة مفاتيح حاسوبك (لا الهاتف):</string>

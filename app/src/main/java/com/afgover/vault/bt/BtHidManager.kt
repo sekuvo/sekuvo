@@ -223,6 +223,13 @@ object BtHidManager {
             adapter?.bondedDevices?.map { deviceName(it) to it }?.sortedBy { it.first }
         } ?: emptyList()
 
+    /** Cihazın türü (ikon ve bilgisayar süzgeci için); okunamazsa [BtCihazTuru.DIGER]. */
+    fun deviceType(device: BluetoothDevice): BtCihazTuru =
+        safe { BtCihazTuru.sinifindan(device.bluetoothClass) } ?: BtCihazTuru.DIGER
+
+    /** Cihazın kalıcı kimliği (yıldız ve son kullanılan kaydı için). */
+    fun deviceAddress(device: BluetoothDevice): String = safe { device.address }.orEmpty()
+
     @RequiresApi(28)
     fun connect(device: BluetoothDevice) {
         _lastError.value = null

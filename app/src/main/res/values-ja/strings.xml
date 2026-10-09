@@ -95,6 +95,12 @@
     <string name="bt_preparing">Bluetoothキーボードを準備しています…</string>
     <string name="bt_pick_computer">お使いのコンピューターを選択してください（あらかじめBluetoothで端末とペアリングしておく必要があります）:</string>
     <string name="bt_no_bonded_devices">ペアリング済みの端末がありません。端末のBluetooth設定からコンピューターとペアリングして、もう一度お試しください。</string>
+    <string name="bt_no_computers">ペアリング済みの端末にコンピューターがありません。下からすべての端末を表示するか、使用する端末にスターを付けてください。</string>
+    <string name="bt_show_all_devices">すべての端末を表示（ほか%1$d台）</string>
+    <string name="bt_show_computers_only">コンピューターのみ表示</string>
+    <string name="bt_last_used">前回使用</string>
+    <string name="bt_star">お気に入りに追加</string>
+    <string name="bt_unstar">お気に入りから削除</string>
     <string name="bt_connecting">%1$sに接続しています…</string>
     <string name="bt_connected">✓ %1$sに接続しました</string>
     <string name="bt_layout_heading">あなたのコンピューター（端末ではありません）のキーボードレイアウト:</string>

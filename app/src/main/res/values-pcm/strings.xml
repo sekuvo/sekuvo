@@ -95,6 +95,12 @@
     <string name="bt_preparing">We dey prepare Bluetooth keyboard…</string>
     <string name="bt_pick_computer">Choose your computer (e must already pair with the phone through Bluetooth):</string>
     <string name="bt_no_bonded_devices">No device wey pair dey. Pair your computer from the phone Bluetooth settings, then try again.</string>
+    <string name="bt_no_computers">No computer dey among the device wey pair. Show all device for down, or star the one wey you dey use.</string>
+    <string name="bt_show_all_devices">Show all device (%1$d more)</string>
+    <string name="bt_show_computers_only">Show computer only</string>
+    <string name="bt_last_used">Last one wey you use</string>
+    <string name="bt_star">Add am to favourite</string>
+    <string name="bt_unstar">Comot am from favourite</string>
     <string name="bt_connecting">E dey connect to %1$s…</string>
     <string name="bt_connected">✓ %1$s don connect</string>
     <string name="bt_layout_heading">The keyboard layout of YOUR COMPUTER (no be the phone own):</string>

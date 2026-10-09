@@ -95,6 +95,12 @@
     <string name="bt_preparing">Подготовка клавиатуры Bluetooth…</string>
     <string name="bt_pick_computer">Выберите свой компьютер (он должен быть уже сопряжён с телефоном по Bluetooth):</string>
     <string name="bt_no_bonded_devices">Нет сопряжённых устройств. Сопрягите телефон с компьютером в настройках Bluetooth телефона и попробуйте снова.</string>
+    <string name="bt_no_computers">Среди сопряжённых устройств нет компьютеров. Покажите все устройства ниже или отметьте звёздочкой то, которым пользуетесь.</string>
+    <string name="bt_show_all_devices">Показать все устройства (ещё %1$d)</string>
+    <string name="bt_show_computers_only">Показать только компьютеры</string>
+    <string name="bt_last_used">Последнее использованное</string>
+    <string name="bt_star">Добавить в избранное</string>
+    <string name="bt_unstar">Удалить из избранного</string>
     <string name="bt_connecting">Подключение к %1$s…</string>
     <string name="bt_connected">✓ %1$s подключён</string>
     <string name="bt_layout_heading">Раскладка клавиатуры ВАШЕГО КОМПЬЮТЕРА (не телефона):</string>

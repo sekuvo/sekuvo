@@ -95,6 +95,12 @@
     <string name="bt_preparing">正在准备蓝牙键盘…</string>
     <string name="bt_pick_computer">选择你的电脑（必须已通过蓝牙与手机配对）：</string>
     <string name="bt_no_bonded_devices">没有已配对的设备。请先在手机的蓝牙设置中与电脑配对，然后重试。</string>
+    <string name="bt_no_computers">已配对的设备中没有电脑。可在下方显示所有设备，或为你使用的设备加星标。</string>
+    <string name="bt_show_all_devices">显示所有设备（另有 %1$d 个）</string>
+    <string name="bt_show_computers_only">仅显示电脑</string>
+    <string name="bt_last_used">上次使用</string>
+    <string name="bt_star">添加到收藏</string>
+    <string name="bt_unstar">从收藏中移除</string>
     <string name="bt_connecting">正在连接 %1$s…</string>
     <string name="bt_connected">✓ 已连接 %1$s</string>
     <string name="bt_layout_heading">你电脑的键盘布局（不是手机的）：</string>

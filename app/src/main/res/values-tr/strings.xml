@@ -96,6 +96,12 @@
     <string name="bt_preparing">Bluetooth klavye hazırlanıyor…</string>
     <string name="bt_pick_computer">Bilgisayarını seç (önce telefonla Bluetooth\'tan eşleştirilmiş olmalı):</string>
     <string name="bt_no_bonded_devices">Eşleştirilmiş cihaz yok. Telefonun Bluetooth ayarlarından bilgisayarınla eşleştir, sonra tekrar dene.</string>
+    <string name="bt_no_computers">Eşleşmiş cihazlar arasında bilgisayar yok. Aşağıdan tüm cihazları göster ya da kullandığını yıldızla.</string>
+    <string name="bt_show_all_devices">Tüm cihazları göster (%1$d tane daha)</string>
+    <string name="bt_show_computers_only">Yalnız bilgisayarları göster</string>
+    <string name="bt_last_used">Son kullanılan</string>
+    <string name="bt_star">Favorilere ekle</string>
+    <string name="bt_unstar">Favorilerden çıkar</string>
     <string name="bt_connecting">%1$s cihazına bağlanılıyor…</string>
     <string name="bt_connected">✓ %1$s bağlı</string>
     <string name="bt_layout_heading">BİLGİSAYARIN klavye düzeni (telefonun değil):</string>

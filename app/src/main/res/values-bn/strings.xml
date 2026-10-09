@@ -95,6 +95,12 @@
     <string name="bt_preparing">ব্লুটুথ কীবোর্ড প্রস্তুত হচ্ছে…</string>
     <string name="bt_pick_computer">আপনার কম্পিউটার বেছে নিন (এটি আগে থেকেই ফোনের সাথে ব্লুটুথে জোড়া থাকতে হবে):</string>
     <string name="bt_no_bonded_devices">কোনো জোড়া লাগানো ডিভাইস নেই। ফোনের ব্লুটুথ সেটিংস থেকে কম্পিউটারের সাথে জোড়া লাগান, তারপর আবার চেষ্টা করুন।</string>
+    <string name="bt_no_computers">জোড়া লাগানো ডিভাইসগুলোর মধ্যে কোনো কম্পিউটার নেই। নিচে সব ডিভাইস দেখান, অথবা যেটি ব্যবহার করেন সেটিতে তারা চিহ্ন দিন।</string>
+    <string name="bt_show_all_devices">সব ডিভাইস দেখান (আরও %1$dটি)</string>
+    <string name="bt_show_computers_only">শুধু কম্পিউটার দেখান</string>
+    <string name="bt_last_used">সর্বশেষ ব্যবহৃত</string>
+    <string name="bt_star">প্রিয়তে যোগ করুন</string>
+    <string name="bt_unstar">প্রিয় থেকে সরান</string>
     <string name="bt_connecting">%1$s-এর সাথে সংযুক্ত হচ্ছে…</string>
     <string name="bt_connected">✓ %1$s সংযুক্ত হয়েছে</string>
     <string name="bt_layout_heading">আপনার কম্পিউটারের কীবোর্ড লেআউট (ফোনের নয়):</string>

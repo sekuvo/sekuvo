@@ -15,7 +15,23 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bluetooth
+import androidx.compose.material.icons.filled.DesktopWindows
+import androidx.compose.material.icons.filled.Laptop
+import androidx.compose.material.icons.filled.Smartphone
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedCard
+import androidx.compose.ui.Alignment
+import com.afgover.vault.bt.BtCihaz
+import com.afgover.vault.bt.BtCihazListesi
+import com.afgover.vault.bt.BtCihazTuru
 import androidx.compose.material3.Button
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -63,7 +79,7 @@ private fun sureMetni(context: Context, ms: Long): String {
 
 /**
  * Seçilen değeri Bluetooth klavye olarak bilgisayara yazar.
- * Akış: izin → HID kaydı → eşleşmiş cihaz seç → bağlan → 3 sn geri sayım → yaz.
+ * Akış: izin → HID kaydı → eşleşmiş cihaz seç → bağlan → 1 sn geri sayım → yaz.
  *
  * Uzun sırlarda (5.000+ karakter) yazma dakikalar sürebildiği için hız
  * seçilebilir; hızın bu bilgisayarda güvenli olduğu "hız testi" ile ölçülür.
@@ -152,6 +168,16 @@ fun BtTypeDialog(
         )
     }
     var countdown by remember { mutableIntStateOf(0) }
+    // Cihaz listesi: yıldız değişince yeniden okunsun diye sürüm sayacı.
+    var listeSurumu by remember { mutableIntStateOf(0) }
+    var tumCihazlar by remember { mutableStateOf(false) }
+    // Bağlantı kurulunca "son kullanılan" olarak kaydedilecek cihaz.
+    var secilenAdres by remember { mutableStateOf<String?>(null) }
+    LaunchedEffect(state) {
+        if (state is BtHidManager.State.Connected) {
+            secilenAdres?.let { BtCihazListesi.kullanildi(prefs, it) }
+        }
+    }
     var typing by remember { mutableStateOf(false) }
 
     // Uzun yazma dakikalar sürebiliyor ve kullanıcı bilgisayara bakar; ekran
@@ -275,17 +301,56 @@ fun BtTypeDialog(
                             style = MaterialTheme.typography.bodySmall
                         )
                         Spacer(Modifier.height(8.dp))
-                        val devices = remember(state) { BtHidManager.bondedDevices() }
-                        if (devices.isEmpty()) {
+                        val eslesmis = remember(state) {
+                            BtHidManager.bondedDevices().associate { (_, d) -> BtHidManager.deviceAddress(d) to d }
+                        }
+                        val cihazlar = remember(state, listeSurumu) {
+                            val yildizli = BtCihazListesi.yildizlilar(prefs)
+                            val son = BtCihazListesi.sonKullanilanlar(prefs)
+                            BtCihazListesi.sirala(
+                                BtHidManager.bondedDevices().map { (ad, d) ->
+                                    val adres = BtHidManager.deviceAddress(d)
+                                    BtCihaz(ad, adres, BtHidManager.deviceType(d), adres in yildizli, son.indexOf(adres))
+                                }
+                            )
+                        }
+                        if (cihazlar.isEmpty()) {
                             Text(stringResource(R.string.bt_no_bonded_devices))
                         }
-                        devices.forEach { (name, device) ->
-                            OutlinedButton(
-                                onClick = { BtHidManager.connect(device) },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 2.dp)
-                            ) { Text(name) }
+                        // Kulaklık, saat, araba listeyi kalabalıklaştırıyordu:
+                        // varsayılan liste bilgisayarlar + kullanıcının seçtikleri.
+                        val gorunen = if (tumCihazlar) cihazlar else cihazlar.filter { it.varsayilandaGorunur }
+                        val gizli = cihazlar.size - cihazlar.count { it.varsayilandaGorunur }
+                        if (gorunen.isEmpty() && cihazlar.isNotEmpty()) {
+                            Text(
+                                stringResource(R.string.bt_no_computers),
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                        }
+                        val enSon = cihazlar.firstOrNull { it.sonKullanimSirasi == 0 }?.adres
+                        gorunen.forEach { cihaz ->
+                            CihazSatiri(
+                                cihaz = cihaz,
+                                sonKullanilan = cihaz.adres == enSon,
+                                onSec = {
+                                    eslesmis[cihaz.adres]?.let { d ->
+                                        secilenAdres = cihaz.adres
+                                        BtHidManager.connect(d)
+                                    }
+                                },
+                                onYildiz = {
+                                    BtCihazListesi.yildizDegistir(prefs, cihaz.adres)
+                                    listeSurumu++
+                                }
+                            )
+                        }
+                        if (gizli > 0) {
+                            TextButton(onClick = { tumCihazlar = !tumCihazlar }) {
+                                Text(
+                                    if (tumCihazlar) stringResource(R.string.bt_show_computers_only)
+                                    else stringResource(R.string.bt_show_all_devices, gizli)
+                                )
+                            }
                         }
                     }
 
@@ -501,4 +566,57 @@ fun BtTypeDialog(
             }
         }
     )
+}
+
+/** Cihaz listesinde tek satır: tür ikonu · ad (+ "son kullanılan") · yıldız. */
+@Composable
+private fun CihazSatiri(
+    cihaz: BtCihaz,
+    sonKullanilan: Boolean,
+    onSec: () -> Unit,
+    onYildiz: () -> Unit
+) {
+    OutlinedCard(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 3.dp)
+            .clickable(onClick = onSec)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(start = 12.dp, top = 4.dp, bottom = 4.dp)
+        ) {
+            Icon(
+                when (cihaz.tur) {
+                    BtCihazTuru.DIZUSTU -> Icons.Filled.Laptop
+                    BtCihazTuru.MASAUSTU -> Icons.Filled.DesktopWindows
+                    BtCihazTuru.TELEFON -> Icons.Filled.Smartphone
+                    BtCihazTuru.DIGER -> Icons.Filled.Bluetooth
+                },
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary
+            )
+            Spacer(Modifier.width(12.dp))
+            Column(Modifier.weight(1f)) {
+                Text(cihaz.ad, style = MaterialTheme.typography.bodyLarge)
+                if (sonKullanilan) {
+                    Text(
+                        stringResource(R.string.bt_last_used),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
+            IconButton(onClick = onYildiz) {
+                Icon(
+                    if (cihaz.yildizli) Icons.Filled.Star else Icons.Filled.StarBorder,
+                    contentDescription = stringResource(
+                        if (cihaz.yildizli) R.string.bt_unstar else R.string.bt_star
+                    ),
+                    tint = if (cihaz.yildizli) MaterialTheme.colorScheme.primary
+                    else MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
+    }
 }

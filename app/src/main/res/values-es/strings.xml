@@ -95,6 +95,12 @@
     <string name="bt_preparing">Preparando el teclado Bluetooth…</string>
     <string name="bt_pick_computer">Elige tu ordenador (debe estar ya emparejado con el teléfono por Bluetooth):</string>
     <string name="bt_no_bonded_devices">No hay dispositivos emparejados. Empareja con tu ordenador desde los ajustes de Bluetooth del teléfono e inténtalo de nuevo.</string>
+    <string name="bt_no_computers">No hay ningún ordenador entre los dispositivos emparejados. Muestra todos los dispositivos abajo o marca con una estrella el que usas.</string>
+    <string name="bt_show_all_devices">Mostrar todos los dispositivos (%1$d más)</string>
+    <string name="bt_show_computers_only">Mostrar solo ordenadores</string>
+    <string name="bt_last_used">Usado por última vez</string>
+    <string name="bt_star">Añadir a favoritos</string>
+    <string name="bt_unstar">Quitar de favoritos</string>
     <string name="bt_connecting">Conectando con %1$s…</string>
     <string name="bt_connected">✓ %1$s conectado</string>
     <string name="bt_layout_heading">Distribución de teclado de TU ORDENADOR (no la del teléfono):</string>

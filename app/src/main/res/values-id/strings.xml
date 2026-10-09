@@ -95,6 +95,12 @@
     <string name="bt_preparing">Menyiapkan keyboard Bluetooth…</string>
     <string name="bt_pick_computer">Pilih komputermu (harus sudah dipasangkan dengan ponsel melalui Bluetooth):</string>
     <string name="bt_no_bonded_devices">Tidak ada perangkat yang dipasangkan. Pasangkan komputermu dari pengaturan Bluetooth ponsel, lalu coba lagi.</string>
+    <string name="bt_no_computers">Tidak ada komputer di antara perangkat yang dipasangkan. Tampilkan semua perangkat di bawah, atau beri bintang pada yang kamu pakai.</string>
+    <string name="bt_show_all_devices">Tampilkan semua perangkat (%1$d lagi)</string>
+    <string name="bt_show_computers_only">Tampilkan komputer saja</string>
+    <string name="bt_last_used">Terakhir dipakai</string>
+    <string name="bt_star">Tambahkan ke favorit</string>
+    <string name="bt_unstar">Hapus dari favorit</string>
     <string name="bt_connecting">Menghubungkan ke %1$s…</string>
     <string name="bt_connected">✓ %1$s terhubung</string>
     <string name="bt_layout_heading">Tata letak keyboard KOMPUTERMU (bukan ponsel):</string>

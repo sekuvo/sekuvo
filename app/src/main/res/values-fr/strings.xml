@@ -95,6 +95,12 @@
     <string name="bt_preparing">Préparation du clavier Bluetooth…</string>
     <string name="bt_pick_computer">Choisis ton ordinateur (il doit déjà être appairé au téléphone par Bluetooth) :</string>
     <string name="bt_no_bonded_devices">Aucun appareil appairé. Appaire ton ordinateur depuis les paramètres Bluetooth du téléphone, puis réessaie.</string>
+    <string name="bt_no_computers">Aucun ordinateur parmi les appareils appairés. Affiche tous les appareils ci-dessous, ou mets une étoile sur celui que tu utilises.</string>
+    <string name="bt_show_all_devices">Afficher tous les appareils (%1$d de plus)</string>
+    <string name="bt_show_computers_only">Afficher seulement les ordinateurs</string>
+    <string name="bt_last_used">Dernier utilisé</string>
+    <string name="bt_star">Ajouter aux favoris</string>
+    <string name="bt_unstar">Retirer des favoris</string>
     <string name="bt_connecting">Connexion à %1$s…</string>
     <string name="bt_connected">✓ %1$s connecté</string>
     <string name="bt_layout_heading">Disposition du clavier de TON ORDINATEUR (pas celle du téléphone) :</string>

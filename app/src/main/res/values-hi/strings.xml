@@ -95,6 +95,12 @@
     <string name="bt_preparing">ब्लूटूथ कीबोर्ड तैयार हो रहा है…</string>
     <string name="bt_pick_computer">अपना कंप्यूटर चुनें (वह फ़ोन के साथ पहले से ब्लूटूथ पेयर होना चाहिए):</string>
     <string name="bt_no_bonded_devices">कोई पेयर किया डिवाइस नहीं। फ़ोन की ब्लूटूथ सेटिंग्स से कंप्यूटर के साथ पेयर करें और फिर कोशिश करें।</string>
+    <string name="bt_no_computers">पेयर किए डिवाइसों में कोई कंप्यूटर नहीं है। नीचे सभी डिवाइस दिखाएँ, या जिसे आप इस्तेमाल करते हैं उस पर स्टार लगाएँ।</string>
+    <string name="bt_show_all_devices">सभी डिवाइस दिखाएँ (%1$d और)</string>
+    <string name="bt_show_computers_only">सिर्फ़ कंप्यूटर दिखाएँ</string>
+    <string name="bt_last_used">पिछली बार इस्तेमाल किया</string>
+    <string name="bt_star">पसंदीदा में जोड़ें</string>
+    <string name="bt_unstar">पसंदीदा से हटाएँ</string>
     <string name="bt_connecting">%1$s से जुड़ रहा है…</string>
     <string name="bt_connected">✓ %1$s जुड़ा</string>
     <string name="bt_layout_heading">आपके कंप्यूटर का कीबोर्ड लेआउट (फ़ोन का नहीं):</string>

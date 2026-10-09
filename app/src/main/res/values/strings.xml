@@ -102,6 +102,12 @@
     <string name="bt_preparing">Preparing the Bluetooth keyboard…</string>
     <string name="bt_pick_computer">Pick your computer (it must already be paired with the phone over Bluetooth):</string>
     <string name="bt_no_bonded_devices">No paired devices. Pair with your computer from the phone\'s Bluetooth settings, then try again.</string>
+    <string name="bt_no_computers">No computers among the paired devices. Show all devices below, or star the one you use.</string>
+    <string name="bt_show_all_devices">Show all devices (%1$d more)</string>
+    <string name="bt_show_computers_only">Show computers only</string>
+    <string name="bt_last_used">Last used</string>
+    <string name="bt_star">Add to favorites</string>
+    <string name="bt_unstar">Remove from favorites</string>
     <string name="bt_connecting">Connecting to %1$s…</string>
     <string name="bt_connected">✓ %1$s connected</string>
     <string name="bt_layout_heading">YOUR COMPUTER\'S keyboard layout (not the phone\'s):</string>

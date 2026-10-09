@@ -95,6 +95,12 @@
     <string name="bt_preparing">Bluetooth-Tastatur wird vorbereitet…</string>
     <string name="bt_pick_computer">Wähle deinen Computer (er muss bereits per Bluetooth mit dem Telefon gekoppelt sein):</string>
     <string name="bt_no_bonded_devices">Keine gekoppelten Geräte. Koppele deinen Computer über die Bluetooth-Einstellungen des Telefons und versuche es erneut.</string>
+    <string name="bt_no_computers">Unter den gekoppelten Geräten ist kein Computer. Zeige unten alle Geräte an oder markiere das Gerät, das du nutzt, mit einem Stern.</string>
+    <string name="bt_show_all_devices">Alle Geräte anzeigen (%1$d weitere)</string>
+    <string name="bt_show_computers_only">Nur Computer anzeigen</string>
+    <string name="bt_last_used">Zuletzt verwendet</string>
+    <string name="bt_star">Zu Favoriten hinzufügen</string>
+    <string name="bt_unstar">Aus Favoriten entfernen</string>
     <string name="bt_connecting">Verbindung zu %1$s wird hergestellt…</string>
     <string name="bt_connected">✓ %1$s verbunden</string>
     <string name="bt_layout_heading">Tastaturlayout DEINES COMPUTERS (nicht des Telefons):</string>

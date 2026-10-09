@@ -95,6 +95,12 @@
     <string name="bt_preparing">بلوٹوتھ کی بورڈ تیار کیا جا رہا ہے…</string>
     <string name="bt_pick_computer">اپنا کمپیوٹر منتخب کریں (یہ پہلے سے فون کے ساتھ بلوٹوتھ کے ذریعے جوڑا ہونا چاہیے):</string>
     <string name="bt_no_bonded_devices">کوئی جوڑا شدہ ڈیوائس نہیں۔ فون کی بلوٹوتھ سیٹنگز سے کمپیوٹر کے ساتھ جوڑا بنائیں اور دوبارہ کوشش کریں۔</string>
+    <string name="bt_no_computers">جوڑا شدہ ڈیوائسز میں کوئی کمپیوٹر نہیں۔ نیچے تمام ڈیوائسز دکھائیں، یا جو آپ استعمال کرتے ہیں اسے ستارہ لگائیں۔</string>
+    <string name="bt_show_all_devices">تمام ڈیوائسز دکھائیں (%1$d مزید)</string>
+    <string name="bt_show_computers_only">صرف کمپیوٹر دکھائیں</string>
+    <string name="bt_last_used">آخری بار استعمال شدہ</string>
+    <string name="bt_star">پسندیدہ میں شامل کریں</string>
+    <string name="bt_unstar">پسندیدہ سے ہٹائیں</string>
     <string name="bt_connecting">%1$s سے رابطہ ہو رہا ہے…</string>
     <string name="bt_connected">✓ %1$s منسلک</string>
     <string name="bt_layout_heading">آپ کے کمپیوٹر کا کی بورڈ لے آؤٹ (فون کا نہیں):</string>

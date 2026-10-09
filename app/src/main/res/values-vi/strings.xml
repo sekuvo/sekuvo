@@ -95,6 +95,12 @@
     <string name="bt_preparing">Đang chuẩn bị bàn phím Bluetooth…</string>
     <string name="bt_pick_computer">Chọn máy tính của bạn (máy tính phải đã ghép nối với điện thoại qua Bluetooth):</string>
     <string name="bt_no_bonded_devices">Không có thiết bị nào đã ghép nối. Hãy ghép nối máy tính của bạn từ cài đặt Bluetooth của điện thoại, rồi thử lại.</string>
+    <string name="bt_no_computers">Không có máy tính nào trong số các thiết bị đã ghép nối. Hãy hiện tất cả thiết bị bên dưới, hoặc gắn sao cho thiết bị bạn dùng.</string>
+    <string name="bt_show_all_devices">Hiện tất cả thiết bị (thêm %1$d)</string>
+    <string name="bt_show_computers_only">Chỉ hiện máy tính</string>
+    <string name="bt_last_used">Dùng gần nhất</string>
+    <string name="bt_star">Thêm vào mục yêu thích</string>
+    <string name="bt_unstar">Xóa khỏi mục yêu thích</string>
     <string name="bt_connecting">Đang kết nối đến %1$s…</string>
     <string name="bt_connected">✓ Đã kết nối với %1$s</string>
     <string name="bt_layout_heading">Bố cục bàn phím MÁY TÍNH CỦA BẠN (không phải điện thoại):</string>
