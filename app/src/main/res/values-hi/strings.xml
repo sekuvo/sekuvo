@@ -111,7 +111,7 @@
     <string name="bt_speed_result_detail">%1$s\nकंप्यूटर पर स्पेस से अलग 10 समूह दिखने चाहिए, हर एक ठीक %2$s का — एक भी अलग हो तो अगली धीमी गति चुनें और परीक्षण दोहराएँ।</string>
     <string name="bt_typing_progress">टाइप हो रहा है… %1$d / %2$d अक्षर</string>
     <string name="bt_remaining">~%1$s बाक़ी — जब तक ख़त्म न हो, कंप्यूटर पर कर्सर न हिलाएँ।</string>
-    <string name="bt_before_start">कर्सर को कंप्यूटर पर लक्ष्य फ़ील्ड में रखें, फिर बटन दबाएँ। टाइपिंग 3 सेकंड बाद शुरू होती है।</string>
+    <string name="bt_before_start">कर्सर को कंप्यूटर पर लक्ष्य फ़ील्ड में रखें, फिर बटन दबाएँ। टाइपिंग 1 सेकंड बाद शुरू होती है।</string>
     <string name="bt_countdown_short">%1$d…</string>
     <string name="bt_type">टाइप करें</string>
     <string name="bt_stop">रोकें</string>
@@ -156,6 +156,14 @@
     <string name="edit_remove_field">फ़ील्ड हटाएँ</string>
     <string name="edit_field_value">मान</string>
     <string name="edit_add_field">+ फ़ील्ड जोड़ें</string>
+    <string name="edit_field_type">फ़ील्ड का प्रकार</string>
+    <string name="field_type_text">टेक्स्ट</string>
+    <string name="field_type_password">पासवर्ड</string>
+    <string name="field_type_email">ईमेल</string>
+    <string name="field_type_phone">फ़ोन</string>
+    <string name="field_type_url">वेब पता</string>
+    <string name="field_type_number">संख्या</string>
+    <string name="field_type_multiline">बहु-पंक्ति नोट</string>
     <string name="edit_field_notes">नोट्स</string>
     <string name="edit_quick_title">बिना पासवर्ड कीबोर्ड पर इस्तेमाल करें</string>
     <string name="edit_quick_desc">चालू होने पर, यह एंट्री तिजोरी लॉक रहते भी Sekuvo कीबोर्ड में दिखती है। तब इसकी सुरक्षा केवल आपके फ़ोन के स्क्रीन लॉक जितनी रहती है; पासवर्ड जैसे संवेदनशील डेटा के लिए इसे बंद रखें।</string>

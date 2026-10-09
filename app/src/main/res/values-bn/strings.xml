@@ -111,7 +111,7 @@
     <string name="bt_speed_result_detail">%1$s\nকম্পিউটারে স্পেস দিয়ে আলাদা করা ১০টি গ্রুপ দেখাতে হবে, প্রতিটি ঠিক %2$s — একটিও ভিন্ন হলে পরের ধীরগতি বেছে টেস্টটি আবার করুন।</string>
     <string name="bt_typing_progress">টাইপ হচ্ছে… %1$d / %2$d অক্ষর</string>
     <string name="bt_remaining">~%1$s বাকি — শেষ না হওয়া পর্যন্ত কম্পিউটারে কার্সার সরাবেন না।</string>
-    <string name="bt_before_start">কম্পিউটারে লক্ষ্য ফিল্ডে কার্সার রেখে বোতাম চাপুন। ৩ সেকেন্ড পর টাইপিং শুরু হবে।</string>
+    <string name="bt_before_start">কম্পিউটারে লক্ষ্য ফিল্ডে কার্সার রেখে বোতাম চাপুন। ১ সেকেন্ড পর টাইপিং শুরু হবে।</string>
     <string name="bt_countdown_short">%1$d…</string>
     <string name="bt_type">টাইপ করুন</string>
     <string name="bt_stop">থামান</string>
@@ -156,6 +156,14 @@
     <string name="edit_remove_field">ফিল্ড সরান</string>
     <string name="edit_field_value">মান</string>
     <string name="edit_add_field">+ ফিল্ড যোগ করুন</string>
+    <string name="edit_field_type">ফিল্ডের ধরন</string>
+    <string name="field_type_text">টেক্সট</string>
+    <string name="field_type_password">পাসওয়ার্ড</string>
+    <string name="field_type_email">ইমেইল</string>
+    <string name="field_type_phone">ফোন</string>
+    <string name="field_type_url">ওয়েব ঠিকানা</string>
+    <string name="field_type_number">সংখ্যা</string>
+    <string name="field_type_multiline">একাধিক লাইনের নোট</string>
     <string name="edit_field_notes">নোট</string>
     <string name="edit_quick_title">পাসওয়ার্ড ছাড়াই কীবোর্ডে ব্যবহার করুন</string>
     <string name="edit_quick_desc">চালু থাকলে, ভল্ট লক থাকলেও এই এন্ট্রিটি Sekuvo কীবোর্ডে দেখা যাবে। তখন এটি শুধু ফোনের স্ক্রিন লক দিয়ে সুরক্ষিত থাকে; পাসওয়ার্ডের মতো স্পর্শকাতর তথ্যের জন্য এটি বন্ধ রাখুন।</string>

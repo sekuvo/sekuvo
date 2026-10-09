@@ -111,7 +111,7 @@
     <string name="bt_speed_result_detail">%1$s\nEl ordenador debe mostrar 10 grupos separados por espacios, cada uno exactamente %2$s — si aunque sea uno difiere, elige la siguiente velocidad más lenta y repite la prueba.</string>
     <string name="bt_typing_progress">Escribiendo… %1$d / %2$d caracteres</string>
     <string name="bt_remaining">~%1$s restante — no muevas el cursor en el ordenador hasta que termine.</string>
-    <string name="bt_before_start">Pon el cursor en el campo de destino del ordenador y luego pulsa el botón. La escritura empieza 3 segundos después.</string>
+    <string name="bt_before_start">Pon el cursor en el campo de destino del ordenador y luego pulsa el botón. La escritura empieza 1 segundo después.</string>
     <string name="bt_countdown_short">%1$d…</string>
     <string name="bt_type">Escribir</string>
     <string name="bt_stop">Detener</string>
@@ -156,6 +156,14 @@
     <string name="edit_remove_field">Quitar campo</string>
     <string name="edit_field_value">Valor</string>
     <string name="edit_add_field">+ Añadir campo</string>
+    <string name="edit_field_type">Tipo de campo</string>
+    <string name="field_type_text">Texto</string>
+    <string name="field_type_password">Contraseña</string>
+    <string name="field_type_email">Correo</string>
+    <string name="field_type_phone">Teléfono</string>
+    <string name="field_type_url">Dirección web</string>
+    <string name="field_type_number">Número</string>
+    <string name="field_type_multiline">Nota de varias líneas</string>
     <string name="edit_field_notes">Notas</string>
     <string name="edit_quick_title">Usar en el teclado sin contraseña</string>
     <string name="edit_quick_desc">Si está activado, esta entrada aparece en el Teclado Sekuvo incluso con la bóveda bloqueada. Entonces queda protegida solo por el bloqueo de pantalla de tu teléfono; déjalo apagado para datos sensibles como contraseñas.</string>

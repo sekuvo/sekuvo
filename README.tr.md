@@ -135,7 +135,7 @@ Ana parola ──PBKDF2(310k)──▶ KEK ──AES-GCM sarma──▶ dataKey 
 3. Listeden bilgisayarını seç → bağlanınca bilgisayarın klavye düzenini seç
    (Türkçe Q / US)
 4. Bilgisayarda imleci şifre kutusuna getir → telefonda **Yaz**'a bas →
-   3 saniyelik geri sayımdan sonra değer tuş tuş yazılır
+   1 saniyelik geri sayımdan sonra değer tuş tuş yazılır
 5. **Uzun sırlarda hız**: değer tuş tuş gittiği için 5.000 karakterlik bir sır
    *Güvenli* temposunda dakikalar sürer. Diyalogdaki **Yazma hızı**
    (Güvenli / Hızlı / Çok hızlı) tempoyu belirler, altında tahmini süre yazar.

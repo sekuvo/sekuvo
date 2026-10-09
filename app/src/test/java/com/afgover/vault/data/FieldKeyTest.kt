@@ -49,4 +49,36 @@ class FieldKeyTest {
     fun `bos alanlar listede yok`() {
         assertTrue(EntryData().fields().isEmpty())
     }
+
+    @Test
+    fun `sifre turundeki eklenen alan maskelenir, metin turundeki maskelenmez`() {
+        val veri = EntryData(custom = listOf(
+            CustomField("PIN", "1234", CustomFieldType.PASSWORD),
+            CustomField("Şube", "Kadıköy")
+        ))
+        val alanlar = veri.fields()
+        assertTrue(alanlar.first { it.customLabel == "PIN" }.hidden)
+        assertFalse(alanlar.first { it.customLabel == "Şube" }.hidden)
+    }
+
+    @Test
+    fun `alan turu JSON gidis donusunde korunur, tursuz eski kayit metin okunur`() {
+        val veri = EntryData(custom = listOf(
+            CustomField("PIN", "1234", CustomFieldType.PASSWORD),
+            CustomField("Not", "a\nb", CustomFieldType.MULTILINE),
+            CustomField("Şube", "Kadıköy")
+        ))
+        val json = veri.toJson()
+        // Metin türü yazılmaz: eski biçimle birebir aynı kalır.
+        assertFalse(json.getJSONArray("custom").getJSONObject(2).has("type"))
+        assertEquals(veri.custom, EntryData.fromJson(json).custom)
+
+        val eski = org.json.JSONObject(
+            """{"custom":[{"label":"x","value":"y"},{"label":"z","value":"w","type":"gelecekte"}]}"""
+        )
+        assertEquals(
+            listOf(CustomFieldType.TEXT, CustomFieldType.TEXT),
+            EntryData.fromJson(eski).custom.map { it.type }
+        )
+    }
 }

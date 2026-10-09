@@ -111,7 +111,7 @@
     <string name="bt_speed_result_detail">%1$s\n电脑上必须显示 10 组以空格分隔的内容，每组都恰好是 %2$s — 只要有一组不同，就选择更慢一档的速度并重复测试。</string>
     <string name="bt_typing_progress">正在输入…%1$d / %2$d 个字符</string>
     <string name="bt_remaining">~剩余 %1$s — 完成前请勿移动电脑上的光标。</string>
-    <string name="bt_before_start">将光标放在电脑上的目标字段中，然后按下按钮。3 秒后开始输入。</string>
+    <string name="bt_before_start">将光标放在电脑上的目标字段中，然后按下按钮。1 秒后开始输入。</string>
     <string name="bt_countdown_short">%1$d…</string>
     <string name="bt_type">输入</string>
     <string name="bt_stop">停止</string>
@@ -156,6 +156,14 @@
     <string name="edit_remove_field">移除字段</string>
     <string name="edit_field_value">值</string>
     <string name="edit_add_field">+ 添加字段</string>
+    <string name="edit_field_type">字段类型</string>
+    <string name="field_type_text">文本</string>
+    <string name="field_type_password">密码</string>
+    <string name="field_type_email">邮箱</string>
+    <string name="field_type_phone">电话</string>
+    <string name="field_type_url">网址</string>
+    <string name="field_type_number">数字</string>
+    <string name="field_type_multiline">多行备注</string>
     <string name="edit_field_notes">备注</string>
     <string name="edit_quick_title">在键盘中免密码使用</string>
     <string name="edit_quick_desc">开启后，即使密码库锁定，此条目也会显示在 Sekuvo 键盘中。此时它仅受手机锁屏保护；对于密码等敏感数据请保持关闭。</string>

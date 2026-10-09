@@ -5,8 +5,35 @@ import com.afgover.vault.R
 import org.json.JSONArray
 import org.json.JSONObject
 
-/** Kullanıcının kendi tanımladığı ek alan (ad + değer). */
-data class CustomField(val label: String, val value: String)
+/**
+ * Kullanıcının eklediği alanın türü. Tür değerin NE OLDUĞUNU söyler:
+ * düzenlerken hangi klavyenin açılacağını, şifrenin maskelenip
+ * maskelenmeyeceğini ve üretici düğmesinin görünüp görünmeyeceğini.
+ *
+ * [stable] JSON'a yazılan, dile bağlı olmayan addır ([FieldKey] ile aynı
+ * gerekçe). Bilinmeyen ya da eksik tür [TEXT] okunur: türsüz eski kayıtlar
+ * ve daha yeni bir sürümün yazdığı tanımadığımız türler metin olarak kalır.
+ */
+enum class CustomFieldType(@StringRes val labelRes: Int, val stable: String) {
+    TEXT(R.string.field_type_text, "text"),
+    PASSWORD(R.string.field_type_password, "password"),
+    EMAIL(R.string.field_type_email, "email"),
+    PHONE(R.string.field_type_phone, "phone"),
+    URL(R.string.field_type_url, "url"),
+    NUMBER(R.string.field_type_number, "number"),
+    MULTILINE(R.string.field_type_multiline, "multiline");
+
+    companion object {
+        fun ofStable(name: String?): CustomFieldType = entries.firstOrNull { it.stable == name } ?: TEXT
+    }
+}
+
+/** Kullanıcının kendi tanımladığı ek alan (ad + değer + tür). */
+data class CustomField(
+    val label: String,
+    val value: String,
+    val type: CustomFieldType = CustomFieldType.TEXT
+)
 
 /**
  * Geride bırakılmış bir parola ve **ne zaman** bırakıldığı (epoch ms).
@@ -58,13 +85,16 @@ enum class FieldKey(@StringRes val labelRes: Int, val stable: String) {
 data class EntryField(
     val key: FieldKey?,
     val customLabel: String?,
-    val value: String
+    val value: String,
+    val customType: CustomFieldType? = null
 ) {
     /** Günlüğe/panoya yazılan ad — dile bağlı DEĞİL. */
     val stableName: String get() = key?.stable ?: customLabel.orEmpty()
 
     /** Varsayılan olarak gizlenir mi (şifre, CVV)? Metin değil kimlik sorusu. */
-    val hidden: Boolean get() = key == FieldKey.PASSWORD || key == FieldKey.CVV
+    val hidden: Boolean
+        get() = key == FieldKey.PASSWORD || key == FieldKey.CVV ||
+            customType == CustomFieldType.PASSWORD
 }
 
 /**
@@ -121,7 +151,10 @@ data class EntryData(
         if (custom.isNotEmpty()) {
             put("custom", JSONArray().apply {
                 custom.forEach { field ->
-                    put(JSONObject().put("label", field.label).put("value", field.value))
+                    put(JSONObject().put("label", field.label).put("value", field.value).apply {
+                        // Metin varsayılan: yazılmaz, türsüz eski biçimle aynı kalır.
+                        if (field.type != CustomFieldType.TEXT) put("type", field.type.stable)
+                    })
                 }
             })
         }
@@ -153,7 +186,7 @@ data class EntryData(
         yerlesik(FieldKey.CVV, cvv)
         yerlesik(FieldKey.IBAN, iban)
         custom.forEach { field ->
-            if (field.value.isNotEmpty()) add(EntryField(null, field.label, field.value))
+            if (field.value.isNotEmpty()) add(EntryField(null, field.label, field.value, field.type))
         }
         yerlesik(FieldKey.NOTES, notes)
     }
@@ -195,7 +228,9 @@ data class EntryData(
                 for (i in 0 until length()) {
                     val o = optJSONObject(i) ?: continue
                     val label = o.optString("label")
-                    if (label.isNotEmpty()) add(CustomField(label, o.optString("value")))
+                    if (label.isNotEmpty()) {
+                        add(CustomField(label, o.optString("value"), CustomFieldType.ofStable(o.optString("type"))))
+                    }
                 }
             }
         }

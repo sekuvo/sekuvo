@@ -188,10 +188,10 @@ fun BtTypeDialog(
         progress = 0
         total = metin.length
         iptal.set(false)
-        for (i in 3 downTo 1) {
-            countdown = i
-            delay(1000)
-        }
+        // Bir saniye: kullanıcı imleci "Yaz"a basmadan önce yerleştiriyor;
+        // üç saniye beklemek her alanda gereksiz bir duraklamaydı.
+        countdown = 1
+        delay(1000)
         countdown = 0
         typing = true
         val sonuc = withContext(Dispatchers.IO) {

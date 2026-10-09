@@ -111,7 +111,7 @@
     <string name="bt_speed_result_detail">%1$s\nکمپیوٹر پر خالی جگہ سے الگ کیے گئے 10 گروپ ظاہر ہونے چاہئیں، ہر ایک بالکل %2$s کا — اگر ایک بھی مختلف ہو، اگلی کم رفتار منتخب کریں اور دوبارہ ٹیسٹ کریں۔</string>
     <string name="bt_typing_progress">ٹائپ ہو رہا ہے… %1$d / %2$d حروف</string>
     <string name="bt_remaining">~%1$s باقی — مکمل ہونے تک کمپیوٹر پر کرسر نہ ہلائیں۔</string>
-    <string name="bt_before_start">کمپیوٹر پر ہدف فیلڈ میں کرسر رکھیں، پھر بٹن دبائیں۔ ٹائپنگ 3 سیکنڈ بعد شروع ہوگی۔</string>
+    <string name="bt_before_start">کمپیوٹر پر ہدف فیلڈ میں کرسر رکھیں، پھر بٹن دبائیں۔ ٹائپنگ 1 سیکنڈ بعد شروع ہوگی۔</string>
     <string name="bt_countdown_short">%1$d…</string>
     <string name="bt_type">ٹائپ کریں</string>
     <string name="bt_stop">روکیں</string>
@@ -156,6 +156,14 @@
     <string name="edit_remove_field">فیلڈ ہٹائیں</string>
     <string name="edit_field_value">قدر</string>
     <string name="edit_add_field">+ فیلڈ شامل کریں</string>
+    <string name="edit_field_type">فیلڈ کی قسم</string>
+    <string name="field_type_text">متن</string>
+    <string name="field_type_password">پاس ورڈ</string>
+    <string name="field_type_email">ای میل</string>
+    <string name="field_type_phone">فون</string>
+    <string name="field_type_url">ویب ایڈریس</string>
+    <string name="field_type_number">نمبر</string>
+    <string name="field_type_multiline">کثیر سطری نوٹ</string>
     <string name="edit_field_notes">نوٹس</string>
     <string name="edit_quick_title">پاس ورڈ کے بغیر کی بورڈ میں استعمال کریں</string>
     <string name="edit_quick_desc">فعال ہونے پر، یہ اندراج والٹ مقفل ہونے پر بھی Sekuvo کی بورڈ میں ظاہر ہوتا ہے۔ اس صورت میں اس کی حفاظت صرف آپ کے فون کے اسکرین لاک جتنی ہے؛ پاس ورڈز جیسی حساس معلومات کے لیے اسے غیر فعال رکھیں۔</string>
