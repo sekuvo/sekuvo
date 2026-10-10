@@ -170,6 +170,10 @@
     <string name="field_type_url">ওয়েব ঠিকানা</string>
     <string name="field_type_number">সংখ্যা</string>
     <string name="field_type_multiline">একাধিক লাইনের নোট</string>
+    <string name="edit_field_dialog_new">নতুন ফিল্ড</string>
+    <string name="edit_field_dialog_edit">ফিল্ড সম্পাদনা করুন</string>
+    <string name="edit_field_add_confirm">যোগ করুন</string>
+    <string name="edit_field_done">সম্পন্ন</string>
     <string name="edit_field_notes">নোট</string>
     <string name="edit_quick_title">পাসওয়ার্ড ছাড়াই কীবোর্ডে ব্যবহার করুন</string>
     <string name="edit_quick_desc">চালু থাকলে, ভল্ট লক থাকলেও এই এন্ট্রিটি Sekuvo কীবোর্ডে দেখা যাবে। তখন এটি শুধু ফোনের স্ক্রিন লক দিয়ে সুরক্ষিত থাকে; পাসওয়ার্ডের মতো স্পর্শকাতর তথ্যের জন্য এটি বন্ধ রাখুন।</string>

@@ -177,6 +177,10 @@
     <string name="field_type_url">Web address</string>
     <string name="field_type_number">Number</string>
     <string name="field_type_multiline">Multi-line note</string>
+    <string name="edit_field_dialog_new">New field</string>
+    <string name="edit_field_dialog_edit">Edit field</string>
+    <string name="edit_field_add_confirm">Add</string>
+    <string name="edit_field_done">Done</string>
     <string name="edit_field_notes">Notes</string>
     <string name="edit_quick_title">Use on the keyboard without a password</string>
     <string name="edit_quick_desc">When on, this entry appears in the Sekuvo Keyboard even while the vault is locked. It is then protected only by your phone\'s screen lock; leave it off for sensitive data such as passwords.</string>

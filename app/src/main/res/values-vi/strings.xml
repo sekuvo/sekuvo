@@ -170,6 +170,10 @@
     <string name="field_type_url">Địa chỉ web</string>
     <string name="field_type_number">Số</string>
     <string name="field_type_multiline">Ghi chú nhiều dòng</string>
+    <string name="edit_field_dialog_new">Trường mới</string>
+    <string name="edit_field_dialog_edit">Sửa trường</string>
+    <string name="edit_field_add_confirm">Thêm</string>
+    <string name="edit_field_done">Xong</string>
     <string name="edit_field_notes">Ghi chú</string>
     <string name="edit_quick_title">Dùng trên bàn phím không cần mật khẩu</string>
     <string name="edit_quick_desc">Nếu bật, mục này sẽ xuất hiện trong Bàn phím Sekuvo ngay cả khi kho lưu trữ đang khóa. Khi đó, nó chỉ được bảo vệ bởi khóa màn hình điện thoại của bạn; hãy để tắt đối với dữ liệu nhạy cảm như mật khẩu.</string>

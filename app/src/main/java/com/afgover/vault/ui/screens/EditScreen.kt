@@ -2,7 +2,6 @@ package com.afgover.vault.ui.screens
 
 import androidx.activity.compose.BackHandler
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
@@ -21,15 +20,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Casino
-import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -51,6 +47,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.text.KeyboardOptions
@@ -63,7 +60,6 @@ import com.afgover.vault.core.FieldFormats
 import com.afgover.vault.R
 import com.afgover.vault.ui.theme.vaultButtonColors
 import com.afgover.vault.data.CustomField
-import com.afgover.vault.data.CustomFieldType
 import com.afgover.vault.data.OldPassword
 import com.afgover.vault.data.EntryData
 import com.afgover.vault.data.EntryType
@@ -113,9 +109,10 @@ fun EditScreen(
     val originalHistory = remember { mutableStateListOf<OldPassword>() }
     var loaded by remember { mutableStateOf(id == 0L) }
     var confirmDelete by remember { mutableStateOf(false) }
-    // Üreticinin sonucu nereye yazılacak: null = kapalı, [ANA_SIFRE] = kaydın
-    // şifresi, 0.. = o sıradaki eklenen alan (türü Şifre olan).
-    var generatorTarget by remember { mutableStateOf<Int?>(null) }
+    var showGenerator by remember { mutableStateOf(false) }
+    // Açık alan penceresi: null = kapalı, [YENI_ALAN] = yeni alan, 0.. = o
+    // sıradaki eklenen alanın düzenlenmesi.
+    var alanPenceresi by remember { mutableStateOf<Int?>(null) }
     // Parolayı QR ile tazeleme: bilgisayarda üretilen yeni parola şifreli bir
     // zarfla gelir, düz metin olarak hiçbir yerde dolaşmaz.
     var sifreQrTarama by remember { mutableStateOf(false) }
@@ -246,6 +243,9 @@ fun EditScreen(
     }
 
     Scaffold(
+        // Alan penceresi açıkken arkadaki form bulanıklaşır (Android 12+;
+        // daha eskide yalnız pencerenin karartması kalır).
+        modifier = Modifier.blur(if (alanPenceresi != null) 8.dp else 0.dp),
         topBar = {
             TopAppBar(
                 title = {
@@ -320,7 +320,7 @@ fun EditScreen(
                                         contentDescription = stringResource(R.string.edit_password_from_qr)
                                     )
                                 }
-                                IconButton(onClick = { generatorTarget = ANA_SIFRE }) {
+                                IconButton(onClick = { showGenerator = true }) {
                                     Icon(Icons.Filled.Casino, contentDescription = stringResource(R.string.edit_generate_password))
                                 }
                             }
@@ -495,66 +495,16 @@ fun EditScreen(
                 Spacer(Modifier.height(16.dp))
                 Text(stringResource(R.string.edit_custom_fields), style = MaterialTheme.typography.titleSmall)
                 customFields.forEachIndexed { index, field ->
-                    Spacer(Modifier.height(12.dp))
-                    // Alan adı ve değer alt alta: yan yana iken ikisi de dar
-                    // kalıyor ve uzun değerler okunmuyordu.
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(
-                                MaterialTheme.colorScheme.surfaceContainerLow,
-                                MaterialTheme.shapes.medium
-                            )
-                            .padding(12.dp)
-                    ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            OutlinedTextField(
-                                value = field.label,
-                                onValueChange = { customFields[index] = field.copy(label = it) },
-                                label = { Text(stringResource(R.string.edit_field_name)) }, singleLine = true,
-                                modifier = Modifier.weight(1f)
-                            )
-                            IconButton(onClick = { customFields.removeAt(index) }) {
-                                Icon(Icons.Filled.Close, contentDescription = stringResource(R.string.edit_remove_field))
-                            }
-                        }
-                        OzelAlanTuruSecici(
-                            secili = field.type,
-                            onSec = { customFields[index] = field.copy(type = it) }
-                        )
-                        // Tür, değer alanının nasıl davrandığını belirler:
-                        // açılan klavye, tek/çok satır ve Şifre'de üretici.
-                        val epostaHatali = field.type == CustomFieldType.EMAIL &&
-                            !FieldFormats.epostaGecerliMi(field.value)
-                        OutlinedTextField(
-                            value = field.value,
-                            onValueChange = { customFields[index] = field.copy(value = it) },
-                            label = { Text(stringResource(R.string.edit_field_value)) },
-                            singleLine = field.type != CustomFieldType.TEXT &&
-                                field.type != CustomFieldType.MULTILINE,
-                            minLines = if (field.type == CustomFieldType.MULTILINE) 3 else 1,
-                            isError = epostaHatali,
-                            supportingText = if (epostaHatali) {
-                                { Text(stringResource(R.string.edit_email_invalid)) }
-                            } else null,
-                            keyboardOptions = KeyboardOptions(keyboardType = field.type.klavye()),
-                            trailingIcon = if (field.type == CustomFieldType.PASSWORD) {
-                                {
-                                    IconButton(onClick = { generatorTarget = index }) {
-                                        Icon(
-                                            Icons.Filled.Casino,
-                                            contentDescription = stringResource(R.string.edit_generate_password)
-                                        )
-                                    }
-                                }
-                            } else null,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                    }
+                    Spacer(Modifier.height(8.dp))
+                    OzelAlanSatiri(
+                        alan = field,
+                        onDuzenle = { alanPenceresi = index },
+                        onSil = { customFields.removeAt(index) }
+                    )
                 }
                 Spacer(Modifier.height(8.dp))
                 OutlinedButton(
-                    onClick = { customFields.add(CustomField("", "")) },
+                    onClick = { alanPenceresi = YENI_ALAN },
                     modifier = Modifier.fillMaxWidth()
                 ) { Text(stringResource(R.string.edit_add_field)) }
             }
@@ -713,19 +663,28 @@ fun EditScreen(
         )
     }
 
-    generatorTarget?.let { hedef ->
+    if (showGenerator) {
         // Pano etiketi @Composable olmayan geri çağrımda kullanılıyor: dizeyi
-        // burada, Compose bağlamında çöz. Eklenen alanda etiket, kullanıcının
-        // verdiği addır (adsızsa "Şifre").
-        val sifreEtiketi = customFields.getOrNull(hedef)?.label?.trim()?.ifEmpty { null }
-            ?: stringResource(R.string.field_password)
+        // burada, Compose bağlamında çöz.
+        val sifreEtiketi = stringResource(R.string.field_password)
         GeneratorDialog(
-            onDismiss = { generatorTarget = null },
+            onDismiss = { showGenerator = false },
             onCopy = { viewModel.copyToClipboard(sifreEtiketi, it) },
-            onUse = { uretilen ->
-                if (hedef == ANA_SIFRE) password = uretilen
-                else customFields.getOrNull(hedef)?.let { customFields[hedef] = it.copy(value = uretilen) }
-            }
+            onUse = { password = it }
+        )
+    }
+
+    alanPenceresi?.let { hedef ->
+        val mevcut = customFields.getOrNull(hedef)
+        OzelAlanDialog(
+            baslangic = mevcut ?: CustomField("", ""),
+            yeni = mevcut == null,
+            onKaydet = { alan ->
+                if (mevcut == null) customFields.add(alan) else customFields[hedef] = alan
+                alanPenceresi = null
+            },
+            onKapat = { alanPenceresi = null },
+            onCopy = { etiket, deger -> viewModel.copyToClipboard(etiket, deger) }
         )
     }
 
@@ -863,44 +822,5 @@ private object TarihGorunumu : VisualTransformation {
     }
 }
 
-/** [generatorTarget] için kaydın kendi şifre alanı (eklenen alanlar 0'dan başlar). */
-private const val ANA_SIFRE = -1
-
-private fun CustomFieldType.klavye(): KeyboardType = when (this) {
-    CustomFieldType.TEXT, CustomFieldType.MULTILINE -> KeyboardType.Text
-    CustomFieldType.PASSWORD -> KeyboardType.Password
-    CustomFieldType.EMAIL -> KeyboardType.Email
-    CustomFieldType.PHONE -> KeyboardType.Phone
-    CustomFieldType.URL -> KeyboardType.Uri
-    CustomFieldType.NUMBER -> KeyboardType.Number
-}
-
-/** Eklenen alanın türünü seçen satır: "Alan türü: Metin ▾". */
-@Composable
-private fun OzelAlanTuruSecici(secili: CustomFieldType, onSec: (CustomFieldType) -> Unit) {
-    var acik by remember { mutableStateOf(false) }
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        Text(
-            stringResource(R.string.edit_field_type),
-            style = MaterialTheme.typography.bodyMedium
-        )
-        Spacer(Modifier.width(4.dp))
-        Box {
-            TextButton(onClick = { acik = true }) {
-                Text(stringResource(secili.labelRes))
-                Icon(Icons.Filled.ExpandMore, contentDescription = null)
-            }
-            DropdownMenu(expanded = acik, onDismissRequest = { acik = false }) {
-                CustomFieldType.entries.forEach { tur ->
-                    DropdownMenuItem(
-                        text = { Text(stringResource(tur.labelRes)) },
-                        onClick = {
-                            onSec(tur)
-                            acik = false
-                        }
-                    )
-                }
-            }
-        }
-    }
-}
+/** [alanPenceresi] için: yeni alan ekleniyor (mevcut alanlar 0'dan başlar). */
+private const val YENI_ALAN = -1

@@ -170,6 +170,10 @@
     <string name="field_type_url">Web address</string>
     <string name="field_type_number">Number</string>
     <string name="field_type_multiline">Note wey get many lines</string>
+    <string name="edit_field_dialog_new">New field</string>
+    <string name="edit_field_dialog_edit">Change field</string>
+    <string name="edit_field_add_confirm">Add</string>
+    <string name="edit_field_done">Don finish</string>
     <string name="edit_field_notes">Notes</string>
     <string name="edit_quick_title">Use am for keyboard without password</string>
     <string name="edit_quick_desc">If you turn am on, dis entry go show for Sekuvo Keyboard even if the vault dey lock. For dat case, na only your phone lock screen dey protect am; leave am off for sensitive data like password.</string>

@@ -170,6 +170,10 @@
     <string name="field_type_url">网址</string>
     <string name="field_type_number">数字</string>
     <string name="field_type_multiline">多行备注</string>
+    <string name="edit_field_dialog_new">新字段</string>
+    <string name="edit_field_dialog_edit">编辑字段</string>
+    <string name="edit_field_add_confirm">添加</string>
+    <string name="edit_field_done">完成</string>
     <string name="edit_field_notes">备注</string>
     <string name="edit_quick_title">在键盘中免密码使用</string>
     <string name="edit_quick_desc">开启后，即使密码库锁定，此条目也会显示在 Sekuvo 键盘中。此时它仅受手机锁屏保护；对于密码等敏感数据请保持关闭。</string>

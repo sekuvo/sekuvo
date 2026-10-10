@@ -170,6 +170,10 @@
     <string name="field_type_url">Adresse web</string>
     <string name="field_type_number">Nombre</string>
     <string name="field_type_multiline">Note multiligne</string>
+    <string name="edit_field_dialog_new">Nouveau champ</string>
+    <string name="edit_field_dialog_edit">Modifier le champ</string>
+    <string name="edit_field_add_confirm">Ajouter</string>
+    <string name="edit_field_done">Terminé</string>
     <string name="edit_field_notes">Notes</string>
     <string name="edit_quick_title">Utiliser au clavier sans mot de passe</string>
     <string name="edit_quick_desc">Si activé, cette entrée apparaît dans le Clavier Sekuvo même quand le coffre est verrouillé. Elle n\'est alors protégée que par le verrouillage d\'écran de ton téléphone ; laisse cette option désactivée pour les données sensibles comme les mots de passe.</string>

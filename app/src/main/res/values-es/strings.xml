@@ -170,6 +170,10 @@
     <string name="field_type_url">Dirección web</string>
     <string name="field_type_number">Número</string>
     <string name="field_type_multiline">Nota de varias líneas</string>
+    <string name="edit_field_dialog_new">Nuevo campo</string>
+    <string name="edit_field_dialog_edit">Editar campo</string>
+    <string name="edit_field_add_confirm">Añadir</string>
+    <string name="edit_field_done">Listo</string>
     <string name="edit_field_notes">Notas</string>
     <string name="edit_quick_title">Usar en el teclado sin contraseña</string>
     <string name="edit_quick_desc">Si está activado, esta entrada aparece en el Teclado Sekuvo incluso con la bóveda bloqueada. Entonces queda protegida solo por el bloqueo de pantalla de tu teléfono; déjalo apagado para datos sensibles como contraseñas.</string>

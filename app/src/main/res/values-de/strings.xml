@@ -170,6 +170,10 @@
     <string name="field_type_url">Webadresse</string>
     <string name="field_type_number">Zahl</string>
     <string name="field_type_multiline">Mehrzeilige Notiz</string>
+    <string name="edit_field_dialog_new">Neues Feld</string>
+    <string name="edit_field_dialog_edit">Feld bearbeiten</string>
+    <string name="edit_field_add_confirm">Hinzufügen</string>
+    <string name="edit_field_done">Fertig</string>
     <string name="edit_field_notes">Notizen</string>
     <string name="edit_quick_title">Ohne Passwort in der Tastatur verwenden</string>
     <string name="edit_quick_desc">Wenn aktiviert, erscheint dieser Eintrag in der Sekuvo-Tastatur, auch wenn der Tresor gesperrt ist. Er ist dann nur durch die Bildschirmsperre deines Telefons geschützt; lass dies für sensible Daten wie Passwörter deaktiviert.</string>

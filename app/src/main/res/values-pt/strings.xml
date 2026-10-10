@@ -170,6 +170,10 @@
     <string name="field_type_url">Endereço web</string>
     <string name="field_type_number">Número</string>
     <string name="field_type_multiline">Nota de várias linhas</string>
+    <string name="edit_field_dialog_new">Novo campo</string>
+    <string name="edit_field_dialog_edit">Editar campo</string>
+    <string name="edit_field_add_confirm">Adicionar</string>
+    <string name="edit_field_done">Concluído</string>
     <string name="edit_field_notes">Notas</string>
     <string name="edit_quick_title">Usar no teclado sem senha</string>
     <string name="edit_quick_desc">Se ativado, este item aparece no Teclado Sekuvo mesmo com o cofre bloqueado. Ele fica então protegido apenas pelo bloqueio de tela do telefone; deixe desativado para dados sensíveis como senhas.</string>

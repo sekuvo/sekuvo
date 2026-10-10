@@ -170,6 +170,10 @@
     <string name="field_type_url">ウェブアドレス</string>
     <string name="field_type_number">数値</string>
     <string name="field_type_multiline">複数行メモ</string>
+    <string name="edit_field_dialog_new">新しいフィールド</string>
+    <string name="edit_field_dialog_edit">フィールドを編集</string>
+    <string name="edit_field_add_confirm">追加</string>
+    <string name="edit_field_done">完了</string>
     <string name="edit_field_notes">メモ</string>
     <string name="edit_quick_title">パスワードなしでキーボードから使う</string>
     <string name="edit_quick_desc">有効にすると、保管庫がロックされていてもこのアイテムはSekuvoキーボードに表示されます。この場合、保護レベルは端末の画面ロックのみになります。パスワードなど機密性の高いデータでは無効のままにしてください。</string>

@@ -170,6 +170,10 @@
     <string name="field_type_url">Веб-адрес</string>
     <string name="field_type_number">Число</string>
     <string name="field_type_multiline">Многострочная заметка</string>
+    <string name="edit_field_dialog_new">Новое поле</string>
+    <string name="edit_field_dialog_edit">Изменить поле</string>
+    <string name="edit_field_add_confirm">Добавить</string>
+    <string name="edit_field_done">Готово</string>
     <string name="edit_field_notes">Заметки</string>
     <string name="edit_quick_title">Использовать в клавиатуре без пароля</string>
     <string name="edit_quick_desc">Если включено, эта запись отображается в Клавиатуре Sekuvo даже при заблокированном хранилище. При этом она защищена только блокировкой экрана телефона; оставляйте выключенным для чувствительных данных вроде паролей.</string>

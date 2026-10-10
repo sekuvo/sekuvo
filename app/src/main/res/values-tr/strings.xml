@@ -171,6 +171,10 @@
     <string name="field_type_url">Web adresi</string>
     <string name="field_type_number">Sayı</string>
     <string name="field_type_multiline">Çok satırlı not</string>
+    <string name="edit_field_dialog_new">Yeni alan</string>
+    <string name="edit_field_dialog_edit">Alanı düzenle</string>
+    <string name="edit_field_add_confirm">Ekle</string>
+    <string name="edit_field_done">Tamam</string>
     <string name="edit_field_notes">Notlar</string>
     <string name="edit_quick_title">Klavyede parolasız kullan</string>
     <string name="edit_quick_desc">Açıkken bu kayıt, kasa kilitliyken de Sekuvo Klavyesi\'nde çıkar. Koruması telefonun ekran kilidi kadardır; şifre gibi hassas bilgiler için kapalı bırak.</string>

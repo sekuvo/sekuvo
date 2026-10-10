@@ -170,6 +170,10 @@
     <string name="field_type_url">वेब पता</string>
     <string name="field_type_number">संख्या</string>
     <string name="field_type_multiline">बहु-पंक्ति नोट</string>
+    <string name="edit_field_dialog_new">नया फ़ील्ड</string>
+    <string name="edit_field_dialog_edit">फ़ील्ड संपादित करें</string>
+    <string name="edit_field_add_confirm">जोड़ें</string>
+    <string name="edit_field_done">हो गया</string>
     <string name="edit_field_notes">नोट्स</string>
     <string name="edit_quick_title">बिना पासवर्ड कीबोर्ड पर इस्तेमाल करें</string>
     <string name="edit_quick_desc">चालू होने पर, यह एंट्री तिजोरी लॉक रहते भी Sekuvo कीबोर्ड में दिखती है। तब इसकी सुरक्षा केवल आपके फ़ोन के स्क्रीन लॉक जितनी रहती है; पासवर्ड जैसे संवेदनशील डेटा के लिए इसे बंद रखें।</string>

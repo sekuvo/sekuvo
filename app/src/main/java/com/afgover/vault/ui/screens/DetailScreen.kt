@@ -1,5 +1,7 @@
 package com.afgover.vault.ui.screens
 
+import androidx.compose.foundation.layout.width
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.horizontalScroll
@@ -159,6 +161,7 @@ fun DetailScreen(
                     labelSuffix = if (alan.key == FieldKey.CARD_NUMBER) {
                         FieldFormats.cardNetwork(alan.value).gorunenAd
                     } else "",
+                    labelIcon = alan.customType?.ikon(),
                     hiddenByDefault = alan.hidden,
                     onCopy = {
                         // Panoya ve günlüğe KARARLI ad gider, ekrandaki çeviri değil.
@@ -353,6 +356,8 @@ private fun FieldCard(
     value: String,
     displayValue: String = value,
     labelSuffix: String = "",
+    /** Eklenen alanın tür ikonu; yerleşik alanlarda yok. */
+    labelIcon: ImageVector? = null,
     hiddenByDefault: Boolean,
     onCopy: () -> Unit,
     onTypeToPc: () -> Unit,
@@ -380,6 +385,15 @@ private fun FieldCard(
             // Başlık ve eylemler üstte: değer artık tam genişlikte akıyor,
             // düğmeler metnin ortasında yer kaplamıyor.
             Row(verticalAlignment = Alignment.CenterVertically) {
+                if (labelIcon != null) {
+                    Icon(
+                        labelIcon,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(16.dp)
+                    )
+                    Spacer(Modifier.width(6.dp))
+                }
                 Text(
                     if (labelSuffix.isEmpty()) label else "$label · $labelSuffix",
                     style = MaterialTheme.typography.labelMedium,

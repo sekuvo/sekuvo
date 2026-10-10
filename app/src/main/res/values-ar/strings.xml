@@ -170,6 +170,10 @@
     <string name="field_type_url">عنوان الويب</string>
     <string name="field_type_number">رقم</string>
     <string name="field_type_multiline">ملاحظة متعددة الأسطر</string>
+    <string name="edit_field_dialog_new">حقل جديد</string>
+    <string name="edit_field_dialog_edit">تعديل الحقل</string>
+    <string name="edit_field_add_confirm">إضافة</string>
+    <string name="edit_field_done">تم</string>
     <string name="edit_field_notes">ملاحظات</string>
     <string name="edit_quick_title">استخدام في لوحة المفاتيح دون كلمة مرور</string>
     <string name="edit_quick_desc">عند التفعيل، تظهر هذه المدخلة في لوحة مفاتيح Sekuvo حتى مع قفل الخزنة. عندئذٍ تكون حمايتها بقوة قفل شاشة هاتفك فقط؛ اتركها معطَّلة للبيانات الحسّاسة مثل كلمات المرور.</string>

@@ -170,6 +170,10 @@
     <string name="field_type_url">Alamat web</string>
     <string name="field_type_number">Angka</string>
     <string name="field_type_multiline">Catatan multibaris</string>
+    <string name="edit_field_dialog_new">Kolom baru</string>
+    <string name="edit_field_dialog_edit">Edit kolom</string>
+    <string name="edit_field_add_confirm">Tambah</string>
+    <string name="edit_field_done">Selesai</string>
     <string name="edit_field_notes">Catatan</string>
     <string name="edit_quick_title">Gunakan di keyboard tanpa kata sandi</string>
     <string name="edit_quick_desc">Jika diaktifkan, entri ini muncul di Keyboard Sekuvo bahkan saat brankas terkunci. Saat itu perlindungannya hanya sekuat kunci layar ponselmu; biarkan nonaktif untuk data sensitif seperti kata sandi.</string>
