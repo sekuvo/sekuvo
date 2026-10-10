@@ -137,6 +137,14 @@ object BtHidManager {
         adapter = btAdapter
         _state.value = State.Registering
 
+        // Profil bağlantısı duruyor ama kayıt düşmüşse (sistem, uygulama ön
+        // plandan çıkınca HID kaydını kendiliğinden siler — ölçüldü) yalnız
+        // yeniden kaydol; yeni bir profil bağlantısı açmaya gerek yok.
+        hid?.let { mevcut ->
+            registerApp(context.applicationContext, mevcut)
+            return
+        }
+
         val ok = safe {
             btAdapter.getProfileProxy(
                 context.applicationContext,
@@ -229,6 +237,31 @@ object BtHidManager {
 
     /** Cihazın kalıcı kimliği (yıldız ve son kullanılan kaydı için). */
     fun deviceAddress(device: BluetoothDevice): String = safe { device.address }.orEmpty()
+
+    /**
+     * Kurulum sihirbazı: kullanıcının az önce eşleştirdiği bilgisayarı
+     * beklenen cihaz yapar. Bilgisayar klavye bağlantısını kendisi başlatırsa
+     * (Windows çoğu zaman böyle yapar) reddedilmez; başka bir cihazın
+     * kendiliğinden gelen bağlantısı ise yine reddedilir.
+     */
+    fun expect(device: BluetoothDevice) {
+        intendedDevice = device
+    }
+
+    /** Bağlı bilgisayarın adresi (son kullanılan kaydı için); bağlı değilse null. */
+    fun connectedAddress(): String? = connectedDevice?.let { safe { it.address } }
+
+    /** Ekranda gösterilecek cihaz adı (kurulum sihirbazındaki eşleşme bildirimi için). */
+    fun displayName(device: BluetoothDevice): String = deviceName(device)
+
+    /** Telefonun Bluetooth adı: bilgisayarın listesinde aranacak ad budur. */
+    fun phoneName(context: Context): String? = safe {
+        (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager).adapter?.name
+    }
+
+    fun isBluetoothOn(context: Context): Boolean = safe {
+        (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager).adapter?.isEnabled
+    } == true
 
     @RequiresApi(28)
     fun connect(device: BluetoothDevice) {

@@ -19,7 +19,10 @@ incapable of leaving the device.
 - **Clipboard-free channels:** an Android autofill service, the Sekuvo
   Keyboard (types secrets straight into any app), and a Bluetooth HID mode
   that types a secret directly into a nearby computer — no software installed
-  on the computer, works on Windows/macOS/Linux.
+  on the computer, works on Windows/macOS/Linux. A live setup wizard
+  (shown after the first vault setup, and in Settings) walks through pairing
+  with OS-specific steps, detects pairing and connection as they happen, and
+  ends with a test line that also confirms the computer's keyboard layout.
 - **Screen-off locking:** the vault locks the moment the screen it lives on
   goes dark — including folding a foldable. The app, keyboard and autofill
   share one session.

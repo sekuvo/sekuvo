@@ -189,6 +189,10 @@ sealed interface Nav {
     /** Araç çıpası; ana ekrandaki parmak izi düğmesinden açılır. */
     data object Anchor : Nav
     data class Info(val kind: com.afgover.vault.ui.screens.InfoKind) : Nav
+    /** Uygulama tanıtımı; bitince [donus]'e dönülür. */
+    data class Tanitim(val donus: Nav) : Nav
+    /** Bluetooth kurulum sihirbazı; açıldığı yere ([donus]) döner. */
+    data class BtKurulum(val donus: Nav) : Nav
 }
 
 @Composable
@@ -213,6 +217,8 @@ fun VaultRoot(
         nav = when (val screen = nav) {
             is Nav.Edit -> if (screen.id == 0L) Nav.Home else Nav.Detail(screen.id)
             is Nav.Info -> Nav.Settings
+            is Nav.Tanitim -> screen.donus
+            is Nav.BtKurulum -> screen.donus
             else -> Nav.Home
         }
     }
@@ -278,6 +284,11 @@ fun VaultRoot(
             // Ayarlar'a: dosya seçiciyi orası açar (bayrağı da orası tüketir).
             LaunchedEffect(Unit) {
                 if (viewModel.restoreAfterSetup) nav = Nav.Settings
+                // Kasa yeni kurulduysa tanıtım bir kez kendiliğinden açılır.
+                if (viewModel.tanitimGoster) {
+                    viewModel.tanitimGoster = false
+                    nav = Nav.Tanitim(donus = Nav.Home)
+                }
             }
             when (val screen = nav) {
             is Nav.Home -> HomeScreen(
@@ -292,7 +303,8 @@ fun VaultRoot(
                 viewModel = viewModel,
                 id = screen.id,
                 onEdit = { id, type -> nav = Nav.Edit(id, type) },
-                onBack = { nav = Nav.Home }
+                onBack = { nav = Nav.Home },
+                onBtKurulum = { nav = Nav.BtKurulum(donus = screen) }
             )
 
             is Nav.Edit -> EditScreen(
@@ -308,7 +320,9 @@ fun VaultRoot(
                 canUseBiometric = canUseBiometric(),
                 onBiometricEnable = onBiometricEnable,
                 onBack = { nav = Nav.Home },
-                onInfo = { kind -> nav = Nav.Info(kind) }
+                onInfo = { kind -> nav = Nav.Info(kind) },
+                onTanitim = { nav = Nav.Tanitim(donus = Nav.Settings) },
+                onBtKurulum = { nav = Nav.BtKurulum(donus = Nav.Settings) }
             )
 
             is Nav.Anchor -> com.afgover.vault.ui.screens.AnchorScreen(
@@ -319,6 +333,15 @@ fun VaultRoot(
             is Nav.Info -> com.afgover.vault.ui.screens.InfoScreen(
                 kind = screen.kind,
                 onBack = { nav = Nav.Settings }
+            )
+
+            is Nav.Tanitim -> com.afgover.vault.ui.screens.TanitimEkrani(
+                onBitir = { nav = screen.donus },
+                onBtKurulum = { nav = Nav.BtKurulum(donus = screen.donus) }
+            )
+
+            is Nav.BtKurulum -> com.afgover.vault.ui.screens.BtKurulumEkrani(
+                onBack = { nav = screen.donus }
             )
             }
         }

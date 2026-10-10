@@ -129,8 +129,19 @@ Ana parola ──PBKDF2(310k)──▶ KEK ──AES-GCM sarma──▶ dataKey 
 
 ### Bilgisayara yazma (Bluetooth klavye)
 
-1. Telefonu bilgisayarla Bluetooth'tan **bir kez eşleştir** (normal klavye
-   eşleştirir gibi; telefon Bluetooth ayarlarından)
+> **İlk kez mi?** Ayarlar → **Bluetooth kurulum sihirbazı** (kasa ilk
+> kurulduğunda tanıtımın sonunda da çıkar) aşağıdaki adımları canlı yürütür:
+> bilgisayarın sistemine göre (Windows / macOS / Linux / ChromeOS) menü
+> yolunu gösterir, eşleşmeyi ve bağlantıyı algılayınca kendiliğinden ilerler
+> ve bilgisayara bir deneme yazısı yazarak klavye düzenini doğrular.
+
+1. Telefonu bilgisayarla Bluetooth'tan **bir kez eşleştir** — en kolayı
+   sihirbaz. Eşleştirme anında Sekuvo **ön planda** olmalı: Android, Sekuvo
+   arka plandayken telefonun klavye kaydını siler ve o sırada yapılan
+   eşleştirmede bilgisayar telefonu klavye değil telefon olarak tanır
+   (ölçüldü). Telefonu görünür yapmak için Bluetooth ayarlarına gidip
+   telefonun adı bilgisayarın listesinde çıkınca Sekuvo'ya dön, bilgisayarda
+   ancak ondan sonra tıkla
 2. Sekuvo'ta kaydı aç → ilgili alanın yanındaki 💻 simgesine dokun
 3. Listeden bilgisayarını seç → bağlanınca bilgisayarın klavye düzenini seç
    (Türkçe Q / US)

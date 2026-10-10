@@ -69,7 +69,9 @@ fun DetailScreen(
     viewModel: VaultViewModel,
     id: Long,
     onEdit: (Long, EntryType) -> Unit,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    /** 💻 ekranındaki "kurulum sihirbazı" bağlantısı. */
+    onBtKurulum: () -> Unit = {}
 ) {
     val ctx = androidx.compose.ui.platform.LocalContext.current
     var entry by remember { mutableStateOf<DecryptedEntry?>(null) }
@@ -340,6 +342,10 @@ fun DetailScreen(
             label = hedef.gosterilen,
             value = hedef.deger,
             onDismiss = { btField = null },
+            onKurulum = {
+                btField = null
+                onBtKurulum()
+            },
             onTyped = { target ->
                 entry?.let {
                     viewModel.logUsage(it.id, UsageKind.BT_YAZILDI, hedef.kararli, target)

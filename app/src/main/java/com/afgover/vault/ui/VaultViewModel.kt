@@ -94,6 +94,12 @@ class VaultViewModel(application: Application) : AndroidViewModel(application) {
      */
     var restoreAfterSetup by mutableStateOf(false)
 
+    /**
+     * Kasa yeni kurulduysa tanıtım bir kez açılır. Yedekten dönen kullanıcı
+     * uygulamayı zaten tanıyor: onda açılmaz (Ayarlar'dan açabilir).
+     */
+    var tanitimGoster by mutableStateOf(false)
+
     /** PIN aşaması için bekleyen iç sargı; PIN doğrulanınca temizlenir. */
     private var pendingInner: ByteArray? = null
 
@@ -251,6 +257,7 @@ class VaultViewModel(application: Application) : AndroidViewModel(application) {
             // kullanıcı ana parolayı her açılışta yeniden yazmak zorunda kalır
             // ve özelliğin var olduğunu çoğu zaman hiç fark etmez.
             offerBiometric = true
+            if (!restoreAfterSetup) tanitimGoster = true
         }
     }
 

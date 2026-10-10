@@ -70,7 +70,9 @@ fun SettingsScreen(
     canUseBiometric: Boolean,
     onBiometricEnable: (String?) -> Unit,
     onBack: () -> Unit,
-    onInfo: (InfoKind) -> Unit = {}
+    onInfo: (InfoKind) -> Unit = {},
+    onTanitim: () -> Unit = {},
+    onBtKurulum: () -> Unit = {}
 ) {
     val context = LocalContext.current
 
@@ -160,6 +162,16 @@ fun SettingsScreen(
                 stringResource(R.string.settings_info_section),
                 style = MaterialTheme.typography.titleMedium
             )
+            Spacer(Modifier.height(8.dp))
+            OutlinedButton(
+                onClick = onTanitim,
+                modifier = Modifier.fillMaxWidth()
+            ) { Text(stringResource(R.string.settings_tour)) }
+            Spacer(Modifier.height(8.dp))
+            OutlinedButton(
+                onClick = onBtKurulum,
+                modifier = Modifier.fillMaxWidth()
+            ) { Text(stringResource(R.string.settings_bt_setup)) }
             Spacer(Modifier.height(8.dp))
             OutlinedButton(
                 onClick = { onInfo(InfoKind.GUIDE) },

@@ -1,5 +1,7 @@
 package com.afgover.vault.ui.screens
 
+import android.content.SharedPreferences
+import android.bluetooth.BluetoothDevice
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
@@ -90,7 +92,9 @@ fun BtTypeDialog(
     value: String,
     onDismiss: () -> Unit,
     /** Asıl değer yazıldığında hedef bilgisayarın adıyla çağrılır (günlük). */
-    onTyped: (target: String) -> Unit = {}
+    onTyped: (target: String) -> Unit = {},
+    /** Verilirse cihaz listesinin altında kurulum sihirbazı bağlantısı görünür. */
+    onKurulum: (() -> Unit)? = null
 ) {
     val context = LocalContext.current
 
@@ -128,6 +132,7 @@ fun BtTypeDialog(
             BtHidManager.start(context)
         }
     }
+    HidKaydiniCanliTut(permissionGranted)
 
     /** Yazma arka planda blokluyor; durdurma bu bayrakla bildirilir. */
     val iptal = remember { AtomicBoolean(false) }
@@ -168,9 +173,6 @@ fun BtTypeDialog(
         )
     }
     var countdown by remember { mutableIntStateOf(0) }
-    // Cihaz listesi: yıldız değişince yeniden okunsun diye sürüm sayacı.
-    var listeSurumu by remember { mutableIntStateOf(0) }
-    var tumCihazlar by remember { mutableStateOf(false) }
     // Bağlantı kurulunca "son kullanılan" olarak kaydedilecek cihaz.
     var secilenAdres by remember { mutableStateOf<String?>(null) }
     LaunchedEffect(state) {
@@ -301,55 +303,17 @@ fun BtTypeDialog(
                             style = MaterialTheme.typography.bodySmall
                         )
                         Spacer(Modifier.height(8.dp))
-                        val eslesmis = remember(state) {
-                            BtHidManager.bondedDevices().associate { (_, d) -> BtHidManager.deviceAddress(d) to d }
+                        BtCihazSecimi(prefs = prefs, yenile = state) { adres, d ->
+                            secilenAdres = adres
+                            BtHidManager.connect(d)
                         }
-                        val cihazlar = remember(state, listeSurumu) {
-                            val yildizli = BtCihazListesi.yildizlilar(prefs)
-                            val son = BtCihazListesi.sonKullanilanlar(prefs)
-                            BtCihazListesi.sirala(
-                                BtHidManager.bondedDevices().map { (ad, d) ->
-                                    val adres = BtHidManager.deviceAddress(d)
-                                    BtCihaz(ad, adres, BtHidManager.deviceType(d), adres in yildizli, son.indexOf(adres))
-                                }
-                            )
-                        }
-                        if (cihazlar.isEmpty()) {
-                            Text(stringResource(R.string.bt_no_bonded_devices))
-                        }
-                        // Kulaklık, saat, araba listeyi kalabalıklaştırıyordu:
-                        // varsayılan liste bilgisayarlar + kullanıcının seçtikleri.
-                        val gorunen = if (tumCihazlar) cihazlar else cihazlar.filter { it.varsayilandaGorunur }
-                        val gizli = cihazlar.size - cihazlar.count { it.varsayilandaGorunur }
-                        if (gorunen.isEmpty() && cihazlar.isNotEmpty()) {
-                            Text(
-                                stringResource(R.string.bt_no_computers),
-                                style = MaterialTheme.typography.bodySmall
-                            )
-                        }
-                        val enSon = cihazlar.firstOrNull { it.sonKullanimSirasi == 0 }?.adres
-                        gorunen.forEach { cihaz ->
-                            CihazSatiri(
-                                cihaz = cihaz,
-                                sonKullanilan = cihaz.adres == enSon,
-                                onSec = {
-                                    eslesmis[cihaz.adres]?.let { d ->
-                                        secilenAdres = cihaz.adres
-                                        BtHidManager.connect(d)
-                                    }
-                                },
-                                onYildiz = {
-                                    BtCihazListesi.yildizDegistir(prefs, cihaz.adres)
-                                    listeSurumu++
-                                }
-                            )
-                        }
-                        if (gizli > 0) {
-                            TextButton(onClick = { tumCihazlar = !tumCihazlar }) {
-                                Text(
-                                    if (tumCihazlar) stringResource(R.string.bt_show_computers_only)
-                                    else stringResource(R.string.bt_show_all_devices, gizli)
-                                )
+                        // Bilgisayar listede yoksa ya da bağlanmıyorsa
+                        // çözüm çoğu zaman eşleştirmeyi baştan yapmak:
+                        // sihirbaz bunu adım adım, canlı durumla yürütür.
+                        if (onKurulum != null) {
+                            Spacer(Modifier.height(4.dp))
+                            TextButton(onClick = onKurulum) {
+                                Text(stringResource(R.string.bt_open_setup_wizard))
                             }
                         }
                     }
@@ -570,7 +534,7 @@ fun BtTypeDialog(
 
 /** Cihaz listesinde tek satır: tür ikonu · ad (+ "son kullanılan") · yıldız. */
 @Composable
-private fun CihazSatiri(
+internal fun CihazSatiri(
     cihaz: BtCihaz,
     sonKullanilan: Boolean,
     onSec: () -> Unit,
@@ -618,5 +582,87 @@ private fun CihazSatiri(
                 )
             }
         }
+    }
+}
+
+/**
+ * Eşleşmiş cihazlardan seçim listesi: yıldızlılar ve son kullanılanlar
+ * üstte; kulaklık, saat gibi bilgisayar olmayanlar "tümünü göster"
+ * arkasında. 💻 ekranı ve kurulum sihirbazı aynı listeyi kullanır.
+ *
+ * @param yenile değiştiğinde eşleşmiş cihazlar yeniden okunur
+ */
+@Composable
+internal fun BtCihazSecimi(
+    prefs: SharedPreferences,
+    yenile: Any?,
+    onSec: (adres: String, cihaz: BluetoothDevice) -> Unit
+) {
+    // Yıldız değişince liste yeniden okunsun diye sürüm sayacı.
+    var listeSurumu by remember { mutableIntStateOf(0) }
+    var tumCihazlar by remember { mutableStateOf(false) }
+    val eslesmis = remember(yenile) {
+        BtHidManager.bondedDevices().associate { (_, d) -> BtHidManager.deviceAddress(d) to d }
+    }
+    val cihazlar = remember(yenile, listeSurumu) {
+        val yildizli = BtCihazListesi.yildizlilar(prefs)
+        val son = BtCihazListesi.sonKullanilanlar(prefs)
+        BtCihazListesi.sirala(
+            BtHidManager.bondedDevices().map { (ad, d) ->
+                val adres = BtHidManager.deviceAddress(d)
+                BtCihaz(ad, adres, BtHidManager.deviceType(d), adres in yildizli, son.indexOf(adres))
+            }
+        )
+    }
+    if (cihazlar.isEmpty()) {
+        Text(stringResource(R.string.bt_no_bonded_devices))
+    }
+    // Kulaklık, saat, araba listeyi kalabalıklaştırıyordu: varsayılan liste
+    // bilgisayarlar + kullanıcının seçtikleri.
+    val gorunen = if (tumCihazlar) cihazlar else cihazlar.filter { it.varsayilandaGorunur }
+    val gizli = cihazlar.size - cihazlar.count { it.varsayilandaGorunur }
+    if (gorunen.isEmpty() && cihazlar.isNotEmpty()) {
+        Text(stringResource(R.string.bt_no_computers), style = MaterialTheme.typography.bodySmall)
+    }
+    val enSon = cihazlar.firstOrNull { it.sonKullanimSirasi == 0 }?.adres
+    gorunen.forEach { cihaz ->
+        CihazSatiri(
+            cihaz = cihaz,
+            sonKullanilan = cihaz.adres == enSon,
+            onSec = { eslesmis[cihaz.adres]?.let { onSec(cihaz.adres, it) } },
+            onYildiz = {
+                BtCihazListesi.yildizDegistir(prefs, cihaz.adres)
+                listeSurumu++
+            }
+        )
+    }
+    if (gizli > 0) {
+        TextButton(onClick = { tumCihazlar = !tumCihazlar }) {
+            Text(
+                if (tumCihazlar) stringResource(R.string.bt_show_computers_only)
+                else stringResource(R.string.bt_show_all_devices, gizli)
+            )
+        }
+    }
+}
+
+/**
+ * Sistem, uygulama ön plandan çıktığı anda telefonun klavye (HID) kaydını
+ * kendiliğinden siler (ölçüldü: başka bir uygulamaya geçince "disabling hid
+ * device service"). Geri dönüldüğünde kayıt yeniden yapılmazsa ekran
+ * "hazırlanıyor" durumunda takılı kalırdı. Her dönüşte yeniden kaydol.
+ */
+@Composable
+internal fun HidKaydiniCanliTut(izin: Boolean) {
+    val context = LocalContext.current
+    val yasam = androidx.lifecycle.compose.LocalLifecycleOwner.current.lifecycle
+    DisposableEffect(yasam, izin) {
+        val gozcu = androidx.lifecycle.LifecycleEventObserver { _, olay ->
+            if (olay == androidx.lifecycle.Lifecycle.Event.ON_RESUME && izin && Build.VERSION.SDK_INT >= 28) {
+                BtHidManager.start(context)
+            }
+        }
+        yasam.addObserver(gozcu)
+        onDispose { yasam.removeObserver(gozcu) }
     }
 }
