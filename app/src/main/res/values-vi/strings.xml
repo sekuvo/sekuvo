@@ -69,7 +69,7 @@
     <string name="bt_err_queue">Hàng đợi gửi Bluetooth ngừng phản hồi; việc nhập liệu dừng lại ở ký tự %1$d. Hãy chọn tốc độ chậm hơn.</string>
 
     <!-- Entry too large -->
-    <string name="entry_too_large">"%1$s" quá lớn: %2$d KB (giới hạn %3$d KB). Hãy chia nhỏ nội dung dài, hoặc lưu nó dưới dạng tệp trên máy tính của bạn.</string>
+    <string name="entry_too_large">“%1$s” quá lớn: %2$d KB (giới hạn %3$d KB). Hãy chia nhỏ nội dung dài, hoặc lưu nó dưới dạng tệp trên máy tính của bạn.</string>
     <string name="ime_write_field">Nhập %1$s</string>
 
     <!-- backup -->
@@ -187,7 +187,7 @@
     <string name="edit_discard_confirm">Thoát mà không lưu</string>
     <string name="edit_discard_cancel">Quay lại chỉnh sửa</string>
     <string name="edit_delete_title">Xóa mục</string>
-    <string name="edit_delete_text">"%1$s" sẽ bị xóa vĩnh viễn. Bạn có chắc không?</string>
+    <string name="edit_delete_text">“%1$s” sẽ bị xóa vĩnh viễn. Bạn có chắc không?</string>
     <string name="edit_cancel">Hủy</string>
     <!-- home -->
     <string name="home_sort_cd">Sắp xếp: %1$s</string>
@@ -217,7 +217,7 @@
     <string name="home_tag_add_new">+ Thẻ mới</string>
     <string name="home_close">Đóng</string>
     <string name="home_tag_delete_title">Xóa thẻ</string>
-    <string name="home_tag_delete_msg">"%1$s" sẽ bị xóa và gỡ khỏi tất cả các mục có gắn thẻ này. Bản thân các mục sẽ không bị xóa.</string>
+    <string name="home_tag_delete_msg">“%1$s” sẽ bị xóa và gỡ khỏi tất cả các mục có gắn thẻ này. Bản thân các mục sẽ không bị xóa.</string>
     <!-- ime -->
     <string name="ime_switch_keyboard">ABC</string>
     <string name="ime_locked_quick_only">Kho lưu trữ đang khóa — chỉ hiện các mục truy cập nhanh.</string>
@@ -225,7 +225,7 @@
     <string name="ime_no_quick_entries">Không có mục nào được đánh dấu để truy cập nhanh.</string>
     <string name="ime_no_entries">Không có mục nào.</string>
     <string name="ime_no_everyday">Không có mục hằng ngày.</string>
-    <string name="ime_no_match">Không có mục nào khớp với "%1$s".</string>
+    <string name="ime_no_match">Không có mục nào khớp với “%1$s”.</string>
     <string name="ime_back_to_list">← %1$s</string>
     <string name="ime_search_hint">Tìm kiếm…</string>
     <!-- log -->
@@ -236,7 +236,7 @@
     <string name="log_empty">Nhật ký trống.</string>
     <string name="log_empty_for_target">Không có mục nào đã gửi đến đích này.</string>
     <string name="log_deleted_entry">(mục đã xóa)</string>
-    <string name="log_entries_to_target">Các mục đã gửi đến "%1$s": %2$s</string>
+    <string name="log_entries_to_target">Các mục đã gửi đến “%1$s”: %2$s</string>
     <string name="log_clear_confirm">Xóa toàn bộ nhật ký? Việc này không thể hoàn tác; bản thân các mục không bị ảnh hưởng.</string>
     <string name="log_clear_yes">Có, xóa</string>
     <string name="log_cancel">Hủy</string>
@@ -261,7 +261,7 @@
     <string name="paste_title_qr">Nhập qua QR</string>
     <string name="paste_title_text">Nhập từ văn bản</string>
     <string name="paste_qr_ready">✓ Đã quét QR · đã nhận phong bì mã hóa gồm %1$d ký tự.\nBây giờ chỉ cần nhập **mật khẩu sao lưu**.</string>
-    <string name="paste_intro">Dán văn bản từ trang, hoặc chạm vào "Lấy từ bộ nhớ tạm". Văn bản này đã được mã hóa; bạn sẽ nhập mật khẩu của nó vào trường tiếp theo.</string>
+    <string name="paste_intro">Dán văn bản từ trang, hoặc chạm vào “Lấy từ bộ nhớ tạm”. Văn bản này đã được mã hóa; bạn sẽ nhập mật khẩu của nó vào trường tiếp theo.</string>
     <string name="paste_label_envelope">Phong bì mã hóa</string>
     <string name="paste_char_count">%1$d ký tự</string>
     <string name="paste_btn_clipboard">Lấy từ bộ nhớ tạm</string>
@@ -269,7 +269,7 @@
     <string name="paste_mode_merge">Thêm vào các mục hiện có</string>
     <string name="paste_mode_replace">Thay thế tất cả</string>
     <string name="paste_replace_warning">Cảnh báo: mọi mục hiện có sẽ bị xóa và thay thế bằng các mục trong phong bì.</string>
-    <string name="paste_err_envelope_empty">Trường phong bì mã hóa đang trống — hãy dán nó qua "Lấy từ bộ nhớ tạm".</string>
+    <string name="paste_err_envelope_empty">Trường phong bì mã hóa đang trống — hãy dán nó qua “Lấy từ bộ nhớ tạm”.</string>
     <string name="paste_err_password_required_qr">Cần có mật khẩu sao lưu: mật khẩu bạn đã nhập khi mã hóa phong bì trên máy tính của bạn.</string>
     <string name="paste_err_password_missing">Chưa nhập mật khẩu sao lưu.</string>
     <string name="paste_btn_importing">Đang nhập…</string>
@@ -301,7 +301,7 @@
     <string name="settings_usage_log_open">Mở nhật ký sử dụng</string>
     <string name="settings_security">Bảo mật</string>
     <string name="settings_locking">Khóa</string>
-    <string name="settings_locking_desc">Kho lưu trữ khóa lại ngay khoảnh khắc màn hình tắt; khóa được xóa khỏi bộ nhớ. Miễn là màn hình còn bật, bạn sẽ không bị hỏi lại mật khẩu hoặc vân tay.\n\nCác mục được đánh dấu "Dùng trên bàn phím không cần mật khẩu" cũng có thể dùng được khi kho lưu trữ đang khóa; bạn có thể bật hoặc tắt dấu này từ màn hình của từng mục.</string>
+    <string name="settings_locking_desc">Kho lưu trữ khóa lại ngay khoảnh khắc màn hình tắt; khóa được xóa khỏi bộ nhớ. Miễn là màn hình còn bật, bạn sẽ không bị hỏi lại mật khẩu hoặc vân tay.\n\nCác mục được đánh dấu “Dùng trên bàn phím không cần mật khẩu” cũng có thể dùng được khi kho lưu trữ đang khóa; bạn có thể bật hoặc tắt dấu này từ màn hình của từng mục.</string>
     <string name="settings_biometric_disable">Tắt mở khóa sinh trắc học</string>
     <string name="settings_biometric_enable">Bật mở khóa sinh trắc học</string>
     <string name="settings_pin_heading">PIN (cánh cửa thứ hai cho vân tay)</string>
@@ -318,7 +318,7 @@
     <string name="settings_change_password">Đổi mật khẩu chính</string>
     <string name="settings_autofill">Tự động điền</string>
     <string name="settings_autofill_on_desc">Đang bật. Khi chạm vào biểu mẫu đăng nhập hoặc thẻ trong ứng dụng và trình duyệt, các mục Sekuvo của bạn sẽ xuất hiện như một tùy chọn điền. Nếu kho lưu trữ đang khóa, màn hình mở khóa sẽ hiện trước; không có giá trị nào được chuyển cho hệ thống khi nó đang khóa.</string>
-    <string name="settings_autofill_off_desc">Nếu bật, chạm vào biểu mẫu đăng nhập hoặc thẻ trong ứng dụng và trình duyệt sẽ trực tiếp gợi ý các mục Sekuvo của bạn như một tùy chọn điền. Nó cũng đề nghị lưu các chi tiết vừa nhập vào Sekuvo.\n\nNút bên dưới mở cài đặt hệ thống. Tên của danh sách mở ra tùy theo thiết bị ("Dịch vụ ưu tiên", "Dịch vụ tự động điền", hoặc "Mật khẩu, khóa truy cập &amp; tự động điền"); chỉ cần chọn Sekuvo trong danh sách đó.</string>
+    <string name="settings_autofill_off_desc">Nếu bật, chạm vào biểu mẫu đăng nhập hoặc thẻ trong ứng dụng và trình duyệt sẽ trực tiếp gợi ý các mục Sekuvo của bạn như một tùy chọn điền. Nó cũng đề nghị lưu các chi tiết vừa nhập vào Sekuvo.\n\nNút bên dưới mở cài đặt hệ thống. Tên của danh sách mở ra tùy theo thiết bị (“Dịch vụ ưu tiên”, “Dịch vụ tự động điền”, hoặc “Mật khẩu, khóa truy cập &amp; tự động điền”); chỉ cần chọn Sekuvo trong danh sách đó.</string>
     <string name="settings_autofill_open">Mở cài đặt tự động điền</string>
     <string name="settings_autofill_enable">Bật tự động điền</string>
     <string name="settings_keyboard">Bàn phím Sekuvo</string>
@@ -354,11 +354,11 @@
     <string name="settings_set">Thiết lập</string>
     <!-- transfer -->
     <string name="transfer_title">Lấy từ máy tính · bước %1$d/2</string>
-    <string name="transfer_step1_steps">1. Trên máy tính, mở aktar.html, chuyển sang tiếng Việt nếu chưa, và đặt con trỏ vào trường "Backup password".\n2. Dùng nút bên dưới để nhập mật khẩu vào cả hai trường cùng lúc (giữa chúng là phím Tab).</string>
+    <string name="transfer_step1_steps">1. Trên máy tính, mở aktar.html, chuyển sang tiếng Việt nếu chưa, và đặt con trỏ vào trường “Backup password”.\n2. Dùng nút bên dưới để nhập mật khẩu vào cả hai trường cùng lúc (giữa chúng là phím Tab).</string>
     <string name="transfer_regenerate">Tạo mật khẩu mới</string>
     <string name="transfer_password_note">Mật khẩu được tạo cho một lần dùng — bạn không cần nhớ nó, bước 2 sẽ tự động dùng nó. Chữ cái và số: không bị ảnh hưởng bởi sự khác biệt về bố cục bàn phím.</string>
     <string name="transfer_bt_write_both">💻 Nhập vào cả hai trường qua Bluetooth</string>
-    <string name="transfer_step2_steps">Trên máy tính: dán nội dung → "Encrypt &amp; publish" → quét mã QR bằng điện thoại của bạn → "Copy" trên trang. Sau đó quay lại đây và nhận phong bì. Mật khẩu đã sẵn sàng trong trình hướng dẫn — bạn sẽ không cần nhập nó.</string>
+    <string name="transfer_step2_steps">Trên máy tính: dán nội dung → “Encrypt &amp; publish” → quét mã QR bằng điện thoại của bạn → “Copy” trên trang. Sau đó quay lại đây và nhận phong bì. Mật khẩu đã sẵn sàng trong trình hướng dẫn — bạn sẽ không cần nhập nó.</string>
     <string name="transfer_envelope_label">Phong bì mã hóa</string>
     <string name="transfer_char_count">%1$d ký tự</string>
     <string name="transfer_scan_qr">Quét QR</string>
@@ -367,7 +367,7 @@
     <string name="transfer_replace_all">Thay thế tất cả</string>
     <string name="transfer_replace_warning">Cảnh báo: mọi mục hiện có sẽ bị xóa và thay thế bằng các mục trong phong bì.</string>
     <string name="transfer_password_typed_next">Đã nhập mật khẩu, tiếp tục →</string>
-    <string name="transfer_envelope_empty">Trường phong bì mã hóa đang trống — hãy công bố trên máy tính, quét mã QR, và chạm vào "Lấy từ bộ nhớ tạm".</string>
+    <string name="transfer_envelope_empty">Trường phong bì mã hóa đang trống — hãy công bố trên máy tính, quét mã QR, và chạm vào “Lấy từ bộ nhớ tạm”.</string>
     <string name="transfer_importing">Đang nhập…</string>
     <string name="transfer_import">Nhập</string>
     <string name="transfer_back">← Quay lại</string>
@@ -549,21 +549,21 @@
     <string name="privacy_s6_body">Câu hỏi: contact@sekuvo.com\nPhiên bản chính thức của chính sách này được công bố tại sekuvo.com/privacy/ và có giá trị ưu tiên khi có sự khác biệt.</string>
 
     <string name="guide_s1_title">Lần chạy đầu tiên</string>
-    <string name="guide_s1_body">Bạn thiết lập một mật khẩu chính. Mỗi bí mật mà bạn lưu được mã hóa bằng khóa dẫn xuất từ nó, vì vậy đây là thứ duy nhất mà Sekuvo không thể giúp bạn khôi phục — hãy ghi lại nó ở nơi an toàn trước khi tiếp tục.\nBạn đang chuyển từ điện thoại khác? Hãy chạm vào "Tôi có bản sao lưu — khôi phục nó" trên màn hình chào mừng: bạn vẫn sẽ thiết lập mật khẩu chính cho thiết bị này trước, sau đó bộ chọn tệp sẽ tự động mở ra.</string>
+    <string name="guide_s1_body">Bạn thiết lập một mật khẩu chính. Mỗi bí mật mà bạn lưu được mã hóa bằng khóa dẫn xuất từ nó, vì vậy đây là thứ duy nhất mà Sekuvo không thể giúp bạn khôi phục — hãy ghi lại nó ở nơi an toàn trước khi tiếp tục.\nBạn đang chuyển từ điện thoại khác? Hãy chạm vào “Tôi có bản sao lưu — khôi phục nó” trên màn hình chào mừng: bạn vẫn sẽ thiết lập mật khẩu chính cho thiết bị này trước, sau đó bộ chọn tệp sẽ tự động mở ra.</string>
     <string name="guide_s2_title">Những gì bạn có thể lưu</string>
     <string name="guide_s2_body">Tài khoản/Mật khẩu, Hằng ngày (tên, điện thoại, email, địa chỉ), Thẻ, và Ghi chú bảo mật — với các loại phụ dành cho tập lệnh, khóa, mã khôi phục, và tệp cấu hình. Các mục Tài khoản và Hằng ngày cũng chấp nhận số lượng không giới hạn các trường tùy chỉnh, được mã hóa hoàn toàn giống như các trường tích hợp sẵn.</string>
     <string name="guide_s3_title">Tự động điền</string>
-    <string name="guide_s3_body">Cài đặt → Bật tự động điền → chọn Sekuvo từ danh sách hệ thống. Danh sách này có tên khác nhau tùy theo thiết bị — trên Samsung và Android 14+ là "Mật khẩu, khóa truy cập &amp; tự động điền → Dịch vụ ưu tiên", trên Android thuần túy là "Dịch vụ tự động điền".\nSau đó, chạm vào một trường đăng nhập hoặc thẻ trong bất kỳ ứng dụng nào sẽ gợi ý các mục của bạn. Trong khi kho lưu trữ đang khóa, hệ thống hoàn toàn không nhận được bất cứ điều gì.</string>
+    <string name="guide_s3_body">Cài đặt → Bật tự động điền → chọn Sekuvo từ danh sách hệ thống. Danh sách này có tên khác nhau tùy theo thiết bị — trên Samsung và Android 14+ là “Mật khẩu, khóa truy cập &amp; tự động điền → Dịch vụ ưu tiên”, trên Android thuần túy là “Dịch vụ tự động điền”.\nSau đó, chạm vào một trường đăng nhập hoặc thẻ trong bất kỳ ứng dụng nào sẽ gợi ý các mục của bạn. Trong khi kho lưu trữ đang khóa, hệ thống hoàn toàn không nhận được bất cứ điều gì.</string>
     <string name="guide_s4_title">Bàn phím Sekuvo</string>
-    <string name="guide_s4_body">Cài đặt → Bật bàn phím, sau đó chọn "Bàn phím Sekuvo" từ bộ chuyển đổi bàn phím khi bạn cần. Nó nhập các giá trị đã lưu trực tiếp vào bất kỳ trường nào, với chức năng tìm kiếm và các mục gần đây ở trên cùng. Khi đang khóa, nó chỉ hiện các mục được đánh dấu để truy cập nhanh.</string>
+    <string name="guide_s4_body">Cài đặt → Bật bàn phím, sau đó chọn “Bàn phím Sekuvo” từ bộ chuyển đổi bàn phím khi bạn cần. Nó nhập các giá trị đã lưu trực tiếp vào bất kỳ trường nào, với chức năng tìm kiếm và các mục gần đây ở trên cùng. Khi đang khóa, nó chỉ hiện các mục được đánh dấu để truy cập nhanh.</string>
     <string name="guide_s5_title">Nhập trên máy tính qua Bluetooth</string>
-    <string name="guide_s5_body">Lần đầu sử dụng? Cài đặt → Trình hướng dẫn thiết lập Bluetooth sẽ dẫn bạn qua từng bước theo thời gian thực.\nMở mục, chạm vào biểu tượng 💻 cạnh trường bạn muốn nhập, và GIỮ MÀN HÌNH NÀY MỞ — điện thoại chỉ tự công bố mình là bàn phím khi màn hình này còn mở. Trên máy tính, hãy thêm điện thoại như một thiết bị Bluetooth mới và xác nhận mã. Quay lại điện thoại, chọn máy tính của bạn, chọn bố cục bàn phím của MÁY TÍNH, nhấp vào trường đích và chạm Nhập.\nĐã kết nối nhưng không có gì được nhập? Nguyên nhân thường là máy tính đã từng ghép nối điện thoại của bạn như một điện thoại thông thường trước đây, nên chưa bao giờ bật dịch vụ bàn phím cho nó. Hãy gỡ ghép nối từ CẢ HAI phía, mở màn hình 💻, và ghép nối lại bắt đầu từ máy tính. Trên Windows, sau đó Trình quản lý Thiết bị → Thiết bị Giao diện Người dùng phải hiển thị thiết bị "Bluetooth HID". Trên macOS, hãy đóng Trình hỗ trợ Thiết lập Bàn phím nếu nó mở ra.\nHãy dùng thử nghiệm tốc độ để chẩn đoán: không có gì được nhập nghĩa là vấn đề ghép nối, ký tự bị lộn xộn nghĩa là vấn đề bố cục, việc nhập bị gián đoạn nghĩa là vấn đề tốc độ.</string>
+    <string name="guide_s5_body">Lần đầu sử dụng? Cài đặt → Trình hướng dẫn thiết lập Bluetooth sẽ dẫn bạn qua từng bước theo thời gian thực.\nMở mục, chạm vào biểu tượng 💻 cạnh trường bạn muốn nhập, và GIỮ MÀN HÌNH NÀY MỞ — điện thoại chỉ tự công bố mình là bàn phím khi màn hình này còn mở. Trên máy tính, hãy thêm điện thoại như một thiết bị Bluetooth mới và xác nhận mã. Quay lại điện thoại, chọn máy tính của bạn, chọn bố cục bàn phím của MÁY TÍNH, nhấp vào trường đích và chạm Nhập.\nĐã kết nối nhưng không có gì được nhập? Nguyên nhân thường là máy tính đã từng ghép nối điện thoại của bạn như một điện thoại thông thường trước đây, nên chưa bao giờ bật dịch vụ bàn phím cho nó. Hãy gỡ ghép nối từ CẢ HAI phía, mở màn hình 💻, và ghép nối lại bắt đầu từ máy tính. Trên Windows, sau đó Trình quản lý Thiết bị → Thiết bị Giao diện Người dùng phải hiển thị thiết bị “Bluetooth HID”. Trên macOS, hãy đóng Trình hỗ trợ Thiết lập Bàn phím nếu nó mở ra.\nHãy dùng thử nghiệm tốc độ để chẩn đoán: không có gì được nhập nghĩa là vấn đề ghép nối, ký tự bị lộn xộn nghĩa là vấn đề bố cục, việc nhập bị gián đoạn nghĩa là vấn đề tốc độ.</string>
     <string name="guide_s6_title">Cách khóa hoạt động</string>
     <string name="guide_s6_body">Kho lưu trữ khóa lại ngay khoảnh khắc màn hình mà nó đang mở tắt đi — gập điện thoại có thể gập lại cũng được tính. Rời khỏi ứng dụng trong khi màn hình vẫn bật KHÔNG khóa nó lại: ứng dụng, bàn phím, và tự động điền chia sẻ chung một phiên làm việc.</string>
     <string name="guide_s7_title">Sao lưu</string>
     <string name="guide_s7_body">Sao lưu hệ thống bị tắt một cách có chủ đích, vì vậy chỉ có đúng một cách để kho lưu trữ của bạn rời khỏi điện thoại: Cài đặt → Tạo bản sao lưu mã hóa. Hãy dùng mật khẩu sao lưu khác với mật khẩu chính của bạn. Tệp .vaultbak được tạo ra, cùng với mật khẩu đó, sẽ khôi phục mọi thứ trên bất kỳ điện thoại nào, ngay cả sau khi đặt lại về cài đặt gốc.</string>
     <string name="guide_s8_title">Mang bí mật từ máy tính về</string>
-    <string name="guide_s8_body">Nút ➕ cung cấp "Nhập qua QR" và "Nhập từ văn bản". Trình hướng dẫn ⇄ thực hiện cả hai trong một luồng: nó tạo một mật khẩu chuyển giao dùng một lần, nhập nó trên máy tính qua Bluetooth, rồi lấy lại phong bì bằng cách quét mã QR hoặc từ bộ nhớ tạm — giải mã nó bằng cùng mật khẩu đó.\nCông cụ phía máy tính là một tệp để tải xuống, không phải một trang web: hãy lấy aktar.html từ trang Releases của dự án, kiểm tra SHA-256 của nó, và mở nó từ chính ổ đĩa của bạn. Trang này sẽ không bao giờ hỏi bạn về một bí mật.</string>
+    <string name="guide_s8_body">Nút ➕ cung cấp “Nhập qua QR” và “Nhập từ văn bản”. Trình hướng dẫn ⇄ thực hiện cả hai trong một luồng: nó tạo một mật khẩu chuyển giao dùng một lần, nhập nó trên máy tính qua Bluetooth, rồi lấy lại phong bì bằng cách quét mã QR hoặc từ bộ nhớ tạm — giải mã nó bằng cùng mật khẩu đó.\nCông cụ phía máy tính là một tệp để tải xuống, không phải một trang web: hãy lấy aktar.html từ trang Releases của dự án, kiểm tra SHA-256 của nó, và mở nó từ chính ổ đĩa của bạn. Trang này sẽ không bao giờ hỏi bạn về một bí mật.</string>
     <string name="settings_info_section">Trợ giúp và thông tin</string>
     <string name="edit_email_invalid">Hãy kiểm tra địa chỉ — cần có @ và tên miền như example.com</string>
     <string name="edit_expiry_invalid">Nhập tháng và năm theo định dạng MMYY (tháng 01–12)</string>

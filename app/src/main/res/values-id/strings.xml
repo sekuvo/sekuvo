@@ -69,7 +69,7 @@
     <string name="bt_err_queue">Antrean pengiriman Bluetooth berhenti merespons; pengetikan berhenti di karakter %1$d. Pilih kecepatan yang lebih rendah.</string>
 
     <!-- Entry too large -->
-    <string name="entry_too_large">"%1$s" terlalu besar: %2$d KB (batas %3$d KB). Pisahkan teks panjang, atau simpan sebagai file di komputer.</string>
+    <string name="entry_too_large">“%1$s” terlalu besar: %2$d KB (batas %3$d KB). Pisahkan teks panjang, atau simpan sebagai file di komputer.</string>
     <string name="ime_write_field">Ketik %1$s</string>
 
     <!-- backup -->
@@ -187,7 +187,7 @@
     <string name="edit_discard_confirm">Keluar tanpa menyimpan</string>
     <string name="edit_discard_cancel">Kembali mengedit</string>
     <string name="edit_delete_title">Hapus entri</string>
-    <string name="edit_delete_text">"%1$s" akan dihapus secara permanen. Yakin?</string>
+    <string name="edit_delete_text">“%1$s” akan dihapus secara permanen. Yakin?</string>
     <string name="edit_cancel">Batal</string>
     <!-- home -->
     <string name="home_sort_cd">Urutan: %1$s</string>
@@ -217,7 +217,7 @@
     <string name="home_tag_add_new">+ Label baru</string>
     <string name="home_close">Tutup</string>
     <string name="home_tag_delete_title">Hapus label</string>
-    <string name="home_tag_delete_msg">"%1$s" akan dihapus dan dilepas dari semua entri yang memilikinya. Entri itu sendiri tidak dihapus.</string>
+    <string name="home_tag_delete_msg">“%1$s” akan dihapus dan dilepas dari semua entri yang memilikinya. Entri itu sendiri tidak dihapus.</string>
     <!-- ime -->
     <string name="ime_switch_keyboard">ABC</string>
     <string name="ime_locked_quick_only">Brankas terkunci — hanya entri akses cepat.</string>
@@ -225,7 +225,7 @@
     <string name="ime_no_quick_entries">Tidak ada entri yang ditandai untuk akses cepat.</string>
     <string name="ime_no_entries">Tidak ada entri.</string>
     <string name="ime_no_everyday">Tidak ada entri sehari-hari.</string>
-    <string name="ime_no_match">Tidak ada entri yang cocok dengan "%1$s".</string>
+    <string name="ime_no_match">Tidak ada entri yang cocok dengan “%1$s”.</string>
     <string name="ime_back_to_list">← %1$s</string>
     <string name="ime_search_hint">Cari…</string>
     <!-- log -->
@@ -236,7 +236,7 @@
     <string name="log_empty">Log kosong.</string>
     <string name="log_empty_for_target">Tidak ada entri yang dikirim ke tujuan ini.</string>
     <string name="log_deleted_entry">(entri dihapus)</string>
-    <string name="log_entries_to_target">Entri yang dikirim ke "%1$s": %2$s</string>
+    <string name="log_entries_to_target">Entri yang dikirim ke “%1$s”: %2$s</string>
     <string name="log_clear_confirm">Hapus seluruh log? Ini tidak bisa dibatalkan; entri itu sendiri tidak terpengaruh.</string>
     <string name="log_clear_yes">Ya, hapus</string>
     <string name="log_cancel">Batal</string>
@@ -261,7 +261,7 @@
     <string name="paste_title_qr">Impor lewat QR</string>
     <string name="paste_title_text">Impor dari teks</string>
     <string name="paste_qr_ready">✓ QR dipindai · amplop terenkripsi %1$d karakter diterima.\nSekarang masukkan hanya **kata sandi cadangan**.</string>
-    <string name="paste_intro">Tempel teks dari halaman atau ketuk "Ambil dari papan klip". Teks ini terenkripsi; kamu akan memasukkan kata sandinya di kolom berikutnya.</string>
+    <string name="paste_intro">Tempel teks dari halaman atau ketuk “Ambil dari papan klip”. Teks ini terenkripsi; kamu akan memasukkan kata sandinya di kolom berikutnya.</string>
     <string name="paste_label_envelope">Amplop terenkripsi</string>
     <string name="paste_char_count">%1$d karakter</string>
     <string name="paste_btn_clipboard">Ambil dari papan klip</string>
@@ -269,7 +269,7 @@
     <string name="paste_mode_merge">Tambahkan ke yang sudah ada</string>
     <string name="paste_mode_replace">Ganti semua</string>
     <string name="paste_replace_warning">Peringatan: semua entri yang ada akan dihapus dan digantikan oleh entri dari amplop.</string>
-    <string name="paste_err_envelope_empty">Kolom amplop terenkripsi kosong — tempel dengan "Ambil dari papan klip".</string>
+    <string name="paste_err_envelope_empty">Kolom amplop terenkripsi kosong — tempel dengan “Ambil dari papan klip”.</string>
     <string name="paste_err_password_required_qr">Kata sandi cadangan diperlukan: kata sandi yang kamu masukkan saat mengenkripsi amplop di komputer.</string>
     <string name="paste_err_password_missing">Kata sandi cadangan belum dimasukkan.</string>
     <string name="paste_btn_importing">Mengimpor…</string>
@@ -301,7 +301,7 @@
     <string name="settings_usage_log_open">Buka log penggunaan</string>
     <string name="settings_security">Keamanan</string>
     <string name="settings_locking">Penguncian</string>
-    <string name="settings_locking_desc">Brankas terkunci saat layar mati; kunci dihapus dari memori. Selama layar tetap menyala, kamu tidak akan diminta kata sandi atau sidik jari lagi.\n\nEntri yang ditandai "Gunakan di keyboard tanpa kata sandi" juga bisa digunakan saat brankas terkunci; kamu bisa mengaktifkan atau menonaktifkan tanda ini dari layar setiap entri.</string>
+    <string name="settings_locking_desc">Brankas terkunci saat layar mati; kunci dihapus dari memori. Selama layar tetap menyala, kamu tidak akan diminta kata sandi atau sidik jari lagi.\n\nEntri yang ditandai “Gunakan di keyboard tanpa kata sandi” juga bisa digunakan saat brankas terkunci; kamu bisa mengaktifkan atau menonaktifkan tanda ini dari layar setiap entri.</string>
     <string name="settings_biometric_disable">Nonaktifkan buka kunci biometrik</string>
     <string name="settings_biometric_enable">Aktifkan buka kunci biometrik</string>
     <string name="settings_pin_heading">PIN (pintu kedua untuk sidik jari)</string>
@@ -318,7 +318,7 @@
     <string name="settings_change_password">Ubah kata sandi utama</string>
     <string name="settings_autofill">Isi otomatis</string>
     <string name="settings_autofill_on_desc">Aktif. Saat menyentuh formulir masuk atau kartu di aplikasi dan browser, entri Sekuvo-mu muncul sebagai pilihan pengisian. Jika brankas terkunci, layar buka kunci muncul dulu; tidak ada nilai yang diberikan ke sistem selama terkunci.</string>
-    <string name="settings_autofill_off_desc">Jika diaktifkan, menyentuh formulir masuk atau kartu di aplikasi dan browser akan langsung menawarkan entri Sekuvo-mu sebagai pilihan pengisian. Ini juga menawarkan untuk menyimpan detail yang baru dimasukkan ke Sekuvo.\n\nTombol di bawah membuka pengaturan sistem. Nama daftar yang terbuka berbeda-beda tergantung perangkat ("Layanan pilihan", "Layanan isi otomatis", atau "Kata sandi, kunci sandi &amp; isi otomatis"); pilih saja Sekuvo dari daftar itu.</string>
+    <string name="settings_autofill_off_desc">Jika diaktifkan, menyentuh formulir masuk atau kartu di aplikasi dan browser akan langsung menawarkan entri Sekuvo-mu sebagai pilihan pengisian. Ini juga menawarkan untuk menyimpan detail yang baru dimasukkan ke Sekuvo.\n\nTombol di bawah membuka pengaturan sistem. Nama daftar yang terbuka berbeda-beda tergantung perangkat (“Layanan pilihan”, “Layanan isi otomatis”, atau “Kata sandi, kunci sandi &amp; isi otomatis”); pilih saja Sekuvo dari daftar itu.</string>
     <string name="settings_autofill_open">Buka pengaturan isi otomatis</string>
     <string name="settings_autofill_enable">Aktifkan isi otomatis</string>
     <string name="settings_keyboard">Keyboard Sekuvo</string>
@@ -354,11 +354,11 @@
     <string name="settings_set">Atur</string>
     <!-- transfer -->
     <string name="transfer_title">Ambil dari komputer · langkah %1$d/2</string>
-    <string name="transfer_step1_steps">1. Di komputer, buka aktar.html, ganti ke bahasa Indonesia jika belum, dan letakkan kursor di kolom "Backup password".\n2. Gunakan tombol di bawah untuk mengetik kata sandi ke kedua kolom sekaligus (dipisahkan oleh Tab).</string>
+    <string name="transfer_step1_steps">1. Di komputer, buka aktar.html, ganti ke bahasa Indonesia jika belum, dan letakkan kursor di kolom “Backup password”.\n2. Gunakan tombol di bawah untuk mengetik kata sandi ke kedua kolom sekaligus (dipisahkan oleh Tab).</string>
     <string name="transfer_regenerate">Buat kata sandi baru</string>
     <string name="transfer_password_note">Kata sandi sekali pakai yang dibuat otomatis — kamu tidak perlu mengingatnya, langkah 2 akan menggunakannya secara otomatis. Huruf dan angka: tidak terpengaruh oleh perbedaan tata letak keyboard.</string>
     <string name="transfer_bt_write_both">💻 Ketik ke kedua kolom lewat Bluetooth</string>
-    <string name="transfer_step2_steps">Di komputer: tempel isinya → "Enkripsi &amp; publikasikan" → pindai QR dengan ponselmu → "Salin" di halaman. Lalu kembali ke sini dan ambil amplopnya. Kata sandi sudah siap di wizard — kamu tidak perlu memasukkannya.</string>
+    <string name="transfer_step2_steps">Di komputer: tempel isinya → “Enkripsi &amp; publikasikan” → pindai QR dengan ponselmu → “Salin” di halaman. Lalu kembali ke sini dan ambil amplopnya. Kata sandi sudah siap di wizard — kamu tidak perlu memasukkannya.</string>
     <string name="transfer_envelope_label">Amplop terenkripsi</string>
     <string name="transfer_char_count">%1$d karakter</string>
     <string name="transfer_scan_qr">Pindai QR</string>
@@ -367,7 +367,7 @@
     <string name="transfer_replace_all">Ganti semua</string>
     <string name="transfer_replace_warning">Peringatan: semua entri yang ada akan dihapus dan digantikan oleh entri dari amplop.</string>
     <string name="transfer_password_typed_next">Kata sandi diketik, lanjutkan →</string>
-    <string name="transfer_envelope_empty">Kolom amplop terenkripsi kosong — publikasikan di komputer, pindai QR, dan ketuk "Ambil dari papan klip".</string>
+    <string name="transfer_envelope_empty">Kolom amplop terenkripsi kosong — publikasikan di komputer, pindai QR, dan ketuk “Ambil dari papan klip”.</string>
     <string name="transfer_importing">Mengimpor…</string>
     <string name="transfer_import">Impor</string>
     <string name="transfer_back">← Kembali</string>
@@ -550,21 +550,21 @@
     <string name="privacy_s6_body">Pertanyaan: contact@sekuvo.com\nVersi resmi kebijakan ini dipublikasikan di sekuvo.com/privacy/ dan berlaku jika ada perbedaan.</string>
 
     <string name="guide_s1_title">Menjalankan pertama kali</string>
-    <string name="guide_s1_body">Kamu mengatur kata sandi utama. Setiap rahasia yang kamu simpan dienkripsi dengan kunci yang diturunkan darinya, sehingga itu satu-satunya hal yang tidak bisa dipulihkan Sekuvo untukmu — tulis di tempat yang aman sebelum melanjutkan.\nBerpindah dari ponsel lain? Ketuk "Saya punya cadangan — pulihkan" di layar sambutan: kamu tetap mengatur kata sandi utama untuk perangkat ini dulu, lalu pemilih file terbuka sendiri dan entrimu kembali.</string>
+    <string name="guide_s1_body">Kamu mengatur kata sandi utama. Setiap rahasia yang kamu simpan dienkripsi dengan kunci yang diturunkan darinya, sehingga itu satu-satunya hal yang tidak bisa dipulihkan Sekuvo untukmu — tulis di tempat yang aman sebelum melanjutkan.\nBerpindah dari ponsel lain? Ketuk “Saya punya cadangan — pulihkan” di layar sambutan: kamu tetap mengatur kata sandi utama untuk perangkat ini dulu, lalu pemilih file terbuka sendiri dan entrimu kembali.</string>
     <string name="guide_s2_title">Apa yang bisa kamu simpan</string>
     <string name="guide_s2_body">Akun/Kata sandi, Sehari-hari (nama, telepon, email, alamat), Kartu, dan Catatan aman — dengan subjenis untuk skrip, kunci, kode pemulihan, dan file konfigurasi. Entri Akun dan Sehari-hari juga menerima kolom kustom tanpa batas, dienkripsi persis seperti kolom bawaan.</string>
     <string name="guide_s3_title">Isi otomatis</string>
-    <string name="guide_s3_body">Pengaturan → Aktifkan isi otomatis → pilih Sekuvo dari daftar sistem. Daftar ini disebut "Kata sandi, kunci sandi &amp; isi otomatis → Layanan pilihan" di Samsung dan Android 14+, dan "Layanan isi otomatis" di Android murni.\nSetelah itu, menyentuh kolom nama pengguna, kata sandi, atau kartu di aplikasi mana pun menampilkan entri yang cocok. Saat brankas terkunci, sistem sama sekali tidak menerima apa pun.</string>
+    <string name="guide_s3_body">Pengaturan → Aktifkan isi otomatis → pilih Sekuvo dari daftar sistem. Daftar ini disebut “Kata sandi, kunci sandi &amp; isi otomatis → Layanan pilihan” di Samsung dan Android 14+, dan “Layanan isi otomatis” di Android murni.\nSetelah itu, menyentuh kolom nama pengguna, kata sandi, atau kartu di aplikasi mana pun menampilkan entri yang cocok. Saat brankas terkunci, sistem sama sekali tidak menerima apa pun.</string>
     <string name="guide_s4_title">Keyboard Sekuvo</string>
-    <string name="guide_s4_body">Pengaturan → Aktifkan keyboard, lalu pilih "Keyboard Sekuvo" dari pemilih keyboard saat dibutuhkan. Ini mengetik nilai tersimpan langsung ke kolom mana pun, dengan pencarian dan entri terbaru di atas. Saat terkunci, hanya menampilkan entri yang ditandai untuk akses cepat.</string>
+    <string name="guide_s4_body">Pengaturan → Aktifkan keyboard, lalu pilih “Keyboard Sekuvo” dari pemilih keyboard saat dibutuhkan. Ini mengetik nilai tersimpan langsung ke kolom mana pun, dengan pencarian dan entri terbaru di atas. Saat terkunci, hanya menampilkan entri yang ditandai untuk akses cepat.</string>
     <string name="guide_s5_title">Mengetik di komputer lewat Bluetooth</string>
-    <string name="guide_s5_body">Pertama kali? Pengaturan → Wizard penyiapan Bluetooth memandumu di setiap langkah secara langsung.\nBuka entri, ketuk ikon 💻 di samping kolom yang ingin diketik, dan JAGA LAYAR INI TETAP TERBUKA — ponsel hanya mengumumkan dirinya sebagai keyboard selagi layar ini terbuka. Di komputer, tambahkan ponsel sebagai perangkat Bluetooth baru dan konfirmasi kodenya. Kembali ke ponsel, pilih komputermu, pilih tata letak keyboard KOMPUTER, klik di kolom tujuan, dan ketuk Ketik.\nTerhubung tapi tidak ada yang diketik? Biasanya penyebabnya adalah komputer pernah memasangkan ponselmu sebagai ponsel biasa sebelumnya, sehingga tidak pernah mengaktifkan layanan keyboard untuknya. Hapus pemasangan dari KEDUA sisi, buka layar 💻, dan pasangkan lagi mulai dari komputer. Di Windows, perangkat "Bluetooth HID" seharusnya muncul di Device Manager → Human Interface Devices. Di macOS, tutup Keyboard Setup Assistant jika terbuka.\nGunakan tes kecepatan sebagai diagnosis: tidak ada yang diketik berarti masalah pemasangan, karakter kacau berarti tata letak, pengetikan terputus berarti kecepatan.</string>
+    <string name="guide_s5_body">Pertama kali? Pengaturan → Wizard penyiapan Bluetooth memandumu di setiap langkah secara langsung.\nBuka entri, ketuk ikon 💻 di samping kolom yang ingin diketik, dan JAGA LAYAR INI TETAP TERBUKA — ponsel hanya mengumumkan dirinya sebagai keyboard selagi layar ini terbuka. Di komputer, tambahkan ponsel sebagai perangkat Bluetooth baru dan konfirmasi kodenya. Kembali ke ponsel, pilih komputermu, pilih tata letak keyboard KOMPUTER, klik di kolom tujuan, dan ketuk Ketik.\nTerhubung tapi tidak ada yang diketik? Biasanya penyebabnya adalah komputer pernah memasangkan ponselmu sebagai ponsel biasa sebelumnya, sehingga tidak pernah mengaktifkan layanan keyboard untuknya. Hapus pemasangan dari KEDUA sisi, buka layar 💻, dan pasangkan lagi mulai dari komputer. Di Windows, perangkat “Bluetooth HID” seharusnya muncul di Device Manager → Human Interface Devices. Di macOS, tutup Keyboard Setup Assistant jika terbuka.\nGunakan tes kecepatan sebagai diagnosis: tidak ada yang diketik berarti masalah pemasangan, karakter kacau berarti tata letak, pengetikan terputus berarti kecepatan.</string>
     <string name="guide_s6_title">Cara kerja kunci</string>
     <string name="guide_s6_body">Brankas terkunci begitu layar tempatnya terbuka mati — menutup ponsel lipat juga termasuk. Keluar dari aplikasi dengan layar tetap menyala tidak menguncinya: aplikasi, keyboard, dan isi otomatis berbagi satu sesi.</string>
     <string name="guide_s7_title">Cadangan</string>
     <string name="guide_s7_body">Pencadangan sistem sengaja dinonaktifkan, sehingga brankasmu hanya bisa keluar dari ponsel lewat satu cara: Pengaturan → Buat cadangan terenkripsi. Gunakan kata sandi cadangan yang berbeda dari kata sandi utamamu. File .vaultbak yang dihasilkan, bersama kata sandi itu, memulihkan semuanya di ponsel mana pun, bahkan setelah reset pabrik.</string>
     <string name="guide_s8_title">Membawa rahasia dari komputer</string>
-    <string name="guide_s8_body">Tombol ➕ menawarkan "Impor lewat QR" dan "Impor dari teks". Wizard ⇄ melakukan keduanya dalam satu alur: membuat kata sandi transfer sekali pakai, mengetiknya di komputer lewat Bluetooth, lalu mengambil kembali amplopnya baik dengan memindai QR maupun dari papan klip — mendekripsinya dengan kata sandi yang sama.\nAlat di sisi komputer adalah file unduhan, bukan situs web: ambil aktar.html dari halaman Releases proyek, periksa SHA-256-nya, dan buka dari diskmu sendiri. Situs ini tidak pernah meminta rahasia darimu.</string>
+    <string name="guide_s8_body">Tombol ➕ menawarkan “Impor lewat QR” dan “Impor dari teks”. Wizard ⇄ melakukan keduanya dalam satu alur: membuat kata sandi transfer sekali pakai, mengetiknya di komputer lewat Bluetooth, lalu mengambil kembali amplopnya baik dengan memindai QR maupun dari papan klip — mendekripsinya dengan kata sandi yang sama.\nAlat di sisi komputer adalah file unduhan, bukan situs web: ambil aktar.html dari halaman Releases proyek, periksa SHA-256-nya, dan buka dari diskmu sendiri. Situs ini tidak pernah meminta rahasia darimu.</string>
     <string name="settings_info_section">Bantuan dan informasi</string>
     <string name="edit_email_invalid">Periksa alamatnya — harus ada @ dan domain seperti example.com</string>
     <string name="edit_expiry_invalid">Masukkan bulan dan tahun dalam format BBTT (bulan 01–12)</string>

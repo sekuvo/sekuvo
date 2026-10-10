@@ -30,11 +30,11 @@
 
     <!-- Note subtypes -->
     <string name="note_kind_general">ملاحظة عامة</string>
-    <string name="note_kind_script">نص برمجي / أمر (.sh)</string>
-    <string name="note_kind_key">مفتاح / شهادة (.pem)</string>
+    <string name="note_kind_script">نص برمجي / أمر (\u2068.sh\u2069)</string>
+    <string name="note_kind_key">مفتاح / شهادة (\u2068.pem\u2069)</string>
     <string name="note_kind_fingerprint">بصمة / مرساة ثقة</string>
     <string name="note_kind_recovery">رموز الاستعادة</string>
-    <string name="note_kind_config">إعداد (.env, json)</string>
+    <string name="note_kind_config">إعداد (\u2068.env, json\u2069)</string>
 
     <!-- Sort options -->
     <string name="sort_title_asc">العنوان (A→Z)</string>
@@ -605,7 +605,7 @@
     <string name="guide_s6_title">القفل</string>
     <string name="guide_s6_body">تُقفل الخزنة لحظة انطفاء الشاشة التي هي عليها — ويشمل ذلك طيّ الهاتف القابل للطي. أما مغادرة التطبيق والشاشة مضاءة فلا تُقفلها: التطبيق ولوحة المفاتيح والملء التلقائي يتشاركون جلسة واحدة.</string>
     <string name="guide_s7_title">النسخ الاحتياطية</string>
-    <string name="guide_s7_body">نسخ النظام معطَّل عمدًا، فيبقى لخروج خزنتك من الهاتف طريق واحد فقط: الإعدادات ← إنشاء نسخة مشفَّرة. استخدم كلمة مرور نسخة مختلفة عن الرئيسية. الملف الناتج .vaultbak مع تلك الكلمة يستعيدان كل شيء على أي هاتف، حتى بعد إعادة ضبط المصنع.</string>
+    <string name="guide_s7_body">نسخ النظام معطَّل عمدًا، فيبقى لخروج خزنتك من الهاتف طريق واحد فقط: الإعدادات ← إنشاء نسخة مشفَّرة. استخدم كلمة مرور نسخة مختلفة عن الرئيسية. الملف الناتج \u2068.vaultbak\u2069 مع تلك الكلمة يستعيدان كل شيء على أي هاتف، حتى بعد إعادة ضبط المصنع.</string>
     <string name="guide_s8_title">جلب الأسرار من حاسوب</string>
     <string name="guide_s8_body">يقدّم زر ➕ خياري «استيراد عبر QR» و«استيراد من نص». ويؤدي معالج ⇄ الأمرين في تدفّق واحد: يولّد كلمة مرور نقل للاستخدام مرة واحدة، يكتبها في الحاسوب عبر البلوتوث، ثم يستعيد المظروف بمسح QR أو من الحافظة — ويفكّ تشفيره بالكلمة نفسها.\nأداة الحاسوب ملف يُنزَّل، لا موقع ويب: احصل على aktar.html من صفحة Releases الخاصة بالمشروع، تحقّق من بصمة SHA-256 الخاصة به، وافتحه من قرصك الخاص. هذا الموقع لا يطلب منك سرًّا أبدًا.</string>
     <string name="settings_info_section">المساعدة والمعلومات</string>
@@ -715,7 +715,7 @@
     <string name="tour_keyboard_title">الملء دون الحافظة</string>
     <string name="tour_keyboard_body">تكتب لوحة مفاتيح Sekuvo القيمة مباشرة في الحقل، ويقترح الملء التلقائي مدخلاتك في نماذج تسجيل الدخول. فعّل الاثنين من الإعدادات.</string>
     <string name="tour_backup_title">النسخ الاحتياطي على طريقتك</string>
-    <string name="tour_backup_body">احفظ نسخة احتياطية مشفَّرة بصيغة .vaultbak أينما شئت. يعيد الملف مع كلمة مروره كل شيء، حتى على هاتف جديد.</string>
+    <string name="tour_backup_body">احفظ نسخة احتياطية مشفَّرة بصيغة \u2068.vaultbak\u2069 أينما شئت. يعيد الملف مع كلمة مروره كل شيء، حتى على هاتف جديد.</string>
     <string name="tour_bt_title">اكتب في حاسوبك كلوحة مفاتيح</string>
     <string name="tour_bt_body">يتصل الهاتف بالحاسوب كلوحة مفاتيح بلوتوث ويكتب كلمة المرور مفتاحًا مفتاحًا حيث يوجد المؤشر. لا يُثبَّت أي شيء على الحاسوب. هيا نُعِدّه معًا، مباشرةً.</string>
 </resources>

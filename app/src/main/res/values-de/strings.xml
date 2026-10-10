@@ -69,7 +69,7 @@
     <string name="bt_err_queue">Die Bluetooth-Sendewarteschlange reagiert nicht mehr; die Eingabe stoppte bei Zeichen %1$d. Wähle eine niedrigere Geschwindigkeit.</string>
 
     <!-- Entry too large -->
-    <string name="entry_too_large">„%1$s" ist zu groß: %2$d KB (Grenze %3$d KB). Teile den langen Inhalt auf, oder bewahre ihn als Datei auf deinem Computer auf.</string>
+    <string name="entry_too_large">„%1$s“ ist zu groß: %2$d KB (Grenze %3$d KB). Teile den langen Inhalt auf, oder bewahre ihn als Datei auf deinem Computer auf.</string>
     <string name="ime_write_field">%1$s eingeben</string>
 
     <!-- backup -->
@@ -187,7 +187,7 @@
     <string name="edit_discard_confirm">Ohne Speichern beenden</string>
     <string name="edit_discard_cancel">Zurück zum Bearbeiten</string>
     <string name="edit_delete_title">Eintrag löschen</string>
-    <string name="edit_delete_text">„%1$s" wird dauerhaft gelöscht. Bist du sicher?</string>
+    <string name="edit_delete_text">„%1$s“ wird dauerhaft gelöscht. Bist du sicher?</string>
     <string name="edit_cancel">Abbrechen</string>
     <!-- home -->
     <string name="home_sort_cd">Sortierung: %1$s</string>
@@ -217,7 +217,7 @@
     <string name="home_tag_add_new">+ Neues Tag</string>
     <string name="home_close">Schließen</string>
     <string name="home_tag_delete_title">Tag löschen</string>
-    <string name="home_tag_delete_msg">„%1$s" wird gelöscht und von allen Einträgen entfernt, die es tragen. Die Einträge selbst werden nicht gelöscht.</string>
+    <string name="home_tag_delete_msg">„%1$s“ wird gelöscht und von allen Einträgen entfernt, die es tragen. Die Einträge selbst werden nicht gelöscht.</string>
     <!-- ime -->
     <string name="ime_switch_keyboard">ABC</string>
     <string name="ime_locked_quick_only">Der Tresor ist gesperrt — nur Einträge mit Schnellzugriff.</string>
@@ -225,7 +225,7 @@
     <string name="ime_no_quick_entries">Keine Einträge für den Schnellzugriff markiert.</string>
     <string name="ime_no_entries">Keine Einträge.</string>
     <string name="ime_no_everyday">Keine Alltagseinträge.</string>
-    <string name="ime_no_match">Keine Einträge entsprechen „%1$s".</string>
+    <string name="ime_no_match">Keine Einträge entsprechen „%1$s“.</string>
     <string name="ime_back_to_list">← %1$s</string>
     <string name="ime_search_hint">Suchen…</string>
     <!-- log -->
@@ -236,7 +236,7 @@
     <string name="log_empty">Das Protokoll ist leer.</string>
     <string name="log_empty_for_target">Zu diesem Ziel ist kein Eintrag gegangen.</string>
     <string name="log_deleted_entry">(gelöschter Eintrag)</string>
-    <string name="log_entries_to_target">An „%1$s" gesendete Einträge: %2$s</string>
+    <string name="log_entries_to_target">An „%1$s“ gesendete Einträge: %2$s</string>
     <string name="log_clear_confirm">Das gesamte Protokoll löschen? Dies kann nicht rückgängig gemacht werden; die Einträge selbst sind nicht betroffen.</string>
     <string name="log_clear_yes">Ja, löschen</string>
     <string name="log_cancel">Abbrechen</string>
@@ -261,7 +261,7 @@
     <string name="paste_title_qr">Über QR importieren</string>
     <string name="paste_title_text">Aus Text importieren</string>
     <string name="paste_qr_ready">✓ QR gescannt · verschlüsselter Umschlag mit %1$d Zeichen empfangen.\nGib jetzt nur noch das **Backup-Passwort** ein.</string>
-    <string name="paste_intro">Füge den Text von der Seite ein oder tippe auf „Aus Zwischenablage übernehmen". Dieser Text ist verschlüsselt; sein Passwort gibst du im nächsten Feld ein.</string>
+    <string name="paste_intro">Füge den Text von der Seite ein oder tippe auf „Aus Zwischenablage übernehmen“. Dieser Text ist verschlüsselt; sein Passwort gibst du im nächsten Feld ein.</string>
     <string name="paste_label_envelope">Verschlüsselter Umschlag</string>
     <string name="paste_char_count">%1$d Zeichen</string>
     <string name="paste_btn_clipboard">Aus Zwischenablage übernehmen</string>
@@ -269,7 +269,7 @@
     <string name="paste_mode_merge">Zum Bestehenden hinzufügen</string>
     <string name="paste_mode_replace">Alles ersetzen</string>
     <string name="paste_replace_warning">Achtung: Jeder bestehende Eintrag wird gelöscht und durch die des Umschlags ersetzt.</string>
-    <string name="paste_err_envelope_empty">Das Feld für den verschlüsselten Umschlag ist leer — füge ihn über „Aus Zwischenablage übernehmen" ein.</string>
+    <string name="paste_err_envelope_empty">Das Feld für den verschlüsselten Umschlag ist leer — füge ihn über „Aus Zwischenablage übernehmen“ ein.</string>
     <string name="paste_err_password_required_qr">Das Backup-Passwort wird benötigt: dasjenige, das du beim Verschlüsseln des Umschlags an deinem Computer eingegeben hast.</string>
     <string name="paste_err_password_missing">Kein Backup-Passwort eingegeben.</string>
     <string name="paste_btn_importing">Wird importiert…</string>
@@ -301,7 +301,7 @@
     <string name="settings_usage_log_open">Nutzungsprotokoll öffnen</string>
     <string name="settings_security">Sicherheit</string>
     <string name="settings_locking">Sperren</string>
-    <string name="settings_locking_desc">Der Tresor sperrt sich in dem Moment, in dem der Bildschirm ausgeht; der Schlüssel wird aus dem Speicher gelöscht. Solange der Bildschirm eingeschaltet bleibt, wirst du nicht erneut nach Passwort oder Fingerabdruck gefragt.\n\nEinträge, die mit „Ohne Passwort in der Tastatur verwenden" markiert sind, können auch bei gesperrtem Tresor verwendet werden; du kannst diese Markierung auf dem Bildschirm jedes Eintrags ein- und ausschalten.</string>
+    <string name="settings_locking_desc">Der Tresor sperrt sich in dem Moment, in dem der Bildschirm ausgeht; der Schlüssel wird aus dem Speicher gelöscht. Solange der Bildschirm eingeschaltet bleibt, wirst du nicht erneut nach Passwort oder Fingerabdruck gefragt.\n\nEinträge, die mit „Ohne Passwort in der Tastatur verwenden“ markiert sind, können auch bei gesperrtem Tresor verwendet werden; du kannst diese Markierung auf dem Bildschirm jedes Eintrags ein- und ausschalten.</string>
     <string name="settings_biometric_disable">Biometrisches Entsperren deaktivieren</string>
     <string name="settings_biometric_enable">Biometrisches Entsperren aktivieren</string>
     <string name="settings_pin_heading">PIN (zweite Tür für den Fingerabdruck)</string>
@@ -318,7 +318,7 @@
     <string name="settings_change_password">Hauptpasswort ändern</string>
     <string name="settings_autofill">Automatisches Ausfüllen</string>
     <string name="settings_autofill_on_desc">Aktiviert. Beim Berühren eines Login- oder Kartenformulars in Apps und Browsern erscheinen deine Sekuvo-Einträge als Ausfüllmöglichkeit. Ist der Tresor gesperrt, erscheint zuerst der Entsperrbildschirm; solange er gesperrt ist, wird dem System überhaupt nichts übergeben.</string>
-    <string name="settings_autofill_off_desc">Wenn aktiviert, bietet das Berühren eines Login- oder Kartenformulars in Apps und Browsern deine Sekuvo-Einträge direkt als Ausfüllmöglichkeit an. Es wird außerdem angeboten, neu eingegebene Angaben in Sekuvo zu speichern.\n\nDie Schaltfläche unten öffnet die Systemeinstellungen. Der Name der sich öffnenden Liste ist je nach Gerät unterschiedlich („Bevorzugter Dienst", „Dienst für automatisches Ausfüllen" oder „Passwörter, Passkeys &amp; automatisches Ausfüllen"); wähle einfach Sekuvo aus dieser Liste.</string>
+    <string name="settings_autofill_off_desc">Wenn aktiviert, bietet das Berühren eines Login- oder Kartenformulars in Apps und Browsern deine Sekuvo-Einträge direkt als Ausfüllmöglichkeit an. Es wird außerdem angeboten, neu eingegebene Angaben in Sekuvo zu speichern.\n\nDie Schaltfläche unten öffnet die Systemeinstellungen. Der Name der sich öffnenden Liste ist je nach Gerät unterschiedlich („Bevorzugter Dienst“, „Dienst für automatisches Ausfüllen“ oder „Passwörter, Passkeys &amp; automatisches Ausfüllen“); wähle einfach Sekuvo aus dieser Liste.</string>
     <string name="settings_autofill_open">Einstellungen für automatisches Ausfüllen öffnen</string>
     <string name="settings_autofill_enable">Automatisches Ausfüllen aktivieren</string>
     <string name="settings_keyboard">Sekuvo-Tastatur</string>
@@ -354,11 +354,11 @@
     <string name="settings_set">Festlegen</string>
     <!-- transfer -->
     <string name="transfer_title">Vom Computer übertragen · Schritt %1$d/2</string>
-    <string name="transfer_step1_steps">1. Öffne am Computer aktar.html, stelle es auf Deutsch um, falls es das noch nicht ist, und setze den Cursor in das Feld „Backup password".\n2. Nutze die Schaltfläche unten, um das Passwort in beide Felder auf einmal einzugeben (dazwischen liegt ein Tab).</string>
+    <string name="transfer_step1_steps">1. Öffne am Computer aktar.html, stelle es auf Deutsch um, falls es das noch nicht ist, und setze den Cursor in das Feld „Backup password“.\n2. Nutze die Schaltfläche unten, um das Passwort in beide Felder auf einmal einzugeben (dazwischen liegt ein Tab).</string>
     <string name="transfer_regenerate">Neues Passwort generieren</string>
     <string name="transfer_password_note">Ein generiertes Einmalpasswort — du musst es dir nicht merken, Schritt 2 verwendet es automatisch. Buchstaben und Zahlen: unabhängig von unterschiedlichen Tastaturlayouts.</string>
     <string name="transfer_bt_write_both">💻 In beide Felder per Bluetooth eingeben</string>
-    <string name="transfer_step2_steps">Am Computer: Inhalt einfügen → „Verschlüsseln &amp; veröffentlichen" → QR mit deinem Telefon scannen → „Kopieren" auf der Seite. Komm dann hierher zurück und hole den Umschlag ab. Das Passwort steht im Assistenten bereits bereit — du musst es nicht eingeben.</string>
+    <string name="transfer_step2_steps">Am Computer: Inhalt einfügen → „Verschlüsseln &amp; veröffentlichen“ → QR mit deinem Telefon scannen → „Kopieren“ auf der Seite. Komm dann hierher zurück und hole den Umschlag ab. Das Passwort steht im Assistenten bereits bereit — du musst es nicht eingeben.</string>
     <string name="transfer_envelope_label">Verschlüsselter Umschlag</string>
     <string name="transfer_char_count">%1$d Zeichen</string>
     <string name="transfer_scan_qr">QR scannen</string>
@@ -367,7 +367,7 @@
     <string name="transfer_replace_all">Alles ersetzen</string>
     <string name="transfer_replace_warning">Achtung: Jeder bestehende Eintrag wird gelöscht und durch die des Umschlags ersetzt.</string>
     <string name="transfer_password_typed_next">Passwort eingegeben, weiter →</string>
-    <string name="transfer_envelope_empty">Das Feld für den verschlüsselten Umschlag ist leer — veröffentliche am Computer, scanne den QR und tippe auf „Aus Zwischenablage übernehmen".</string>
+    <string name="transfer_envelope_empty">Das Feld für den verschlüsselten Umschlag ist leer — veröffentliche am Computer, scanne den QR und tippe auf „Aus Zwischenablage übernehmen“.</string>
     <string name="transfer_importing">Wird importiert…</string>
     <string name="transfer_import">Importieren</string>
     <string name="transfer_back">← Zurück</string>
@@ -556,21 +556,21 @@
     <string name="privacy_s6_body">Fragen: contact@sekuvo.com\nDie maßgebliche Fassung dieser Erklärung ist unter sekuvo.com/privacy/ veröffentlicht und gilt bei Abweichungen.</string>
 
     <string name="guide_s1_title">Erster Start</string>
-    <string name="guide_s1_body">Du legst ein Hauptpasswort fest. Alles wird mit einem daraus abgeleiteten Schlüssel verschlüsselt, daher ist es das Einzige, das nicht wiederhergestellt werden kann — schreibe es an einem sicheren Ort auf, bevor du fortfährst.\nKommst du von einem anderen Telefon? Tippe auf „Ich habe ein Backup — wiederherstellen" auf dem Willkommensbildschirm: Du legst trotzdem zuerst ein Hauptpasswort für dieses Gerät fest, dann öffnet sich die Dateiauswahl von selbst.</string>
+    <string name="guide_s1_body">Du legst ein Hauptpasswort fest. Alles wird mit einem daraus abgeleiteten Schlüssel verschlüsselt, daher ist es das Einzige, das nicht wiederhergestellt werden kann — schreibe es an einem sicheren Ort auf, bevor du fortfährst.\nKommst du von einem anderen Telefon? Tippe auf „Ich habe ein Backup — wiederherstellen“ auf dem Willkommensbildschirm: Du legst trotzdem zuerst ein Hauptpasswort für dieses Gerät fest, dann öffnet sich die Dateiauswahl von selbst.</string>
     <string name="guide_s2_title">Was du speichern kannst</string>
     <string name="guide_s2_body">Konto/Passwort, Alltag (Name, Telefon, E-Mail, Adresse), Karte und sichere Notiz — mit Unterarten für Skripte, Schlüssel, Wiederherstellungscodes und Konfigurationsdateien. Konto- und Alltag-Einträge akzeptieren außerdem unbegrenzt viele benutzerdefinierte Felder, verschlüsselt genau wie die integrierten Felder.</string>
     <string name="guide_s3_title">Automatisches Ausfüllen</string>
-    <string name="guide_s3_body">Einstellungen → Automatisches Ausfüllen aktivieren → wähle Sekuvo aus der Systemliste. Diese Liste heißt auf Samsung und Android 14+ „Passwörter, Passkeys &amp; automatisches Ausfüllen → Bevorzugter Dienst" und auf reinem Android „Dienst für automatisches Ausfüllen".\nDanach bietet das Berühren eines Login- oder Kartenfelds in jeder App deine passenden Einträge an. Ist der Tresor gesperrt, erhält das System überhaupt nichts.</string>
+    <string name="guide_s3_body">Einstellungen → Automatisches Ausfüllen aktivieren → wähle Sekuvo aus der Systemliste. Diese Liste heißt auf Samsung und Android 14+ „Passwörter, Passkeys &amp; automatisches Ausfüllen → Bevorzugter Dienst“ und auf reinem Android „Dienst für automatisches Ausfüllen“.\nDanach bietet das Berühren eines Login- oder Kartenfelds in jeder App deine passenden Einträge an. Ist der Tresor gesperrt, erhält das System überhaupt nichts.</string>
     <string name="guide_s4_title">Sekuvo-Tastatur</string>
-    <string name="guide_s4_body">Einstellungen → Tastatur aktivieren, dann bei Bedarf „Sekuvo-Tastatur" im Tastaturwechsler wählen. Sie gibt gespeicherte Werte direkt in jedes Feld ein, mit Suche und zuletzt verwendeten Einträgen oben. Bei Sperrung zeigt sie nur die für den Schnellzugriff markierten Einträge.</string>
+    <string name="guide_s4_body">Einstellungen → Tastatur aktivieren, dann bei Bedarf „Sekuvo-Tastatur“ im Tastaturwechsler wählen. Sie gibt gespeicherte Werte direkt in jedes Feld ein, mit Suche und zuletzt verwendeten Einträgen oben. Bei Sperrung zeigt sie nur die für den Schnellzugriff markierten Einträge.</string>
     <string name="guide_s5_title">Am Computer per Bluetooth eingeben</string>
-    <string name="guide_s5_body">Zum ersten Mal? Einstellungen → Bluetooth-Einrichtungsassistent führt dich live durch jeden Schritt.\nÖffne den Eintrag, tippe auf das 💻-Symbol neben dem Feld und HALTE DIESEN BILDSCHIRM OFFEN — das Telefon meldet sich nur als Tastatur, solange er offen ist. Füge das Telefon am Computer als neues Bluetooth-Gerät hinzu und bestätige den Code. Zurück am Telefon wählst du deinen Computer, wählst das Tastaturlayout DES COMPUTERS, klickst in das Zielfeld und tippst auf Eingeben.\nVerbunden, aber nichts wird eingegeben? Der Computer hat dein Telefon zuvor als gewöhnliches Telefon gekoppelt und daher nie den Tastaturdienst dafür aktiviert. Entferne die Kopplung auf BEIDEN Seiten, öffne den 💻-Bildschirm und koppele erneut, beginnend mit dem Computer. Unter Windows sollte danach im Geräte-Manager → Eingabegeräte (HID) ein „Bluetooth-HID"-Gerät erscheinen. Unter macOS schließe den Tastatur-Einrichtungsassistenten, falls er sich öffnet.\nNutze den Geschwindigkeitstest zur Diagnose: nichts eingegeben deutet auf ein Kopplungsproblem hin, verzerrte Zeichen auf das Layout, eine abgebrochene Eingabe auf die Geschwindigkeit.</string>
+    <string name="guide_s5_body">Zum ersten Mal? Einstellungen → Bluetooth-Einrichtungsassistent führt dich live durch jeden Schritt.\nÖffne den Eintrag, tippe auf das 💻-Symbol neben dem Feld und HALTE DIESEN BILDSCHIRM OFFEN — das Telefon meldet sich nur als Tastatur, solange er offen ist. Füge das Telefon am Computer als neues Bluetooth-Gerät hinzu und bestätige den Code. Zurück am Telefon wählst du deinen Computer, wählst das Tastaturlayout DES COMPUTERS, klickst in das Zielfeld und tippst auf Eingeben.\nVerbunden, aber nichts wird eingegeben? Der Computer hat dein Telefon zuvor als gewöhnliches Telefon gekoppelt und daher nie den Tastaturdienst dafür aktiviert. Entferne die Kopplung auf BEIDEN Seiten, öffne den 💻-Bildschirm und koppele erneut, beginnend mit dem Computer. Unter Windows sollte danach im Geräte-Manager → Eingabegeräte (HID) ein „Bluetooth-HID“-Gerät erscheinen. Unter macOS schließe den Tastatur-Einrichtungsassistenten, falls er sich öffnet.\nNutze den Geschwindigkeitstest zur Diagnose: nichts eingegeben deutet auf ein Kopplungsproblem hin, verzerrte Zeichen auf das Layout, eine abgebrochene Eingabe auf die Geschwindigkeit.</string>
     <string name="guide_s6_title">Wie die Sperre funktioniert</string>
     <string name="guide_s6_body">Der Tresor sperrt sich, sobald der Bildschirm, auf dem er geöffnet ist, ausgeht — auch das Zusammenklappen eines faltbaren Telefons zählt. Die App bei eingeschaltetem Bildschirm zu verlassen sperrt ihn nicht: App, Tastatur und automatisches Ausfüllen teilen sich eine einzige Sitzung.</string>
     <string name="guide_s7_title">Backups</string>
     <string name="guide_s7_body">Die Systemsicherung ist bewusst deaktiviert, sodass dein Tresor das Telefon nur auf eine einzige Weise verlässt: Einstellungen → Verschlüsseltes Backup erstellen. Verwende ein Backup-Passwort, das sich von deinem Hauptpasswort unterscheidet. Die entstehende .vaultbak-Datei stellt zusammen mit diesem Passwort alles auf jedem Telefon wieder her, selbst nach einem Zurücksetzen auf Werkseinstellungen.</string>
     <string name="guide_s8_title">Geheimnisse vom Computer holen</string>
-    <string name="guide_s8_body">Die ➕-Schaltfläche bietet „Über QR importieren" und „Aus Text importieren". Der ⇄-Assistent erledigt beides in einem Durchgang: Er erzeugt ein einmaliges Übertragungspasswort, gibt es per Bluetooth am Computer ein und holt dann den Umschlag zurück, entweder durch Scannen des QR-Codes oder aus der Zwischenablage — und entschlüsselt ihn mit demselben Passwort.\nDas Werkzeug auf der Computerseite ist ein Download, keine Website: Lade aktar.html von der Releases-Seite des Projekts herunter, überprüfe seinen SHA-256-Wert und öffne es von deiner eigenen Festplatte aus. Diese Website fragt dich niemals nach einem Geheimnis.</string>
+    <string name="guide_s8_body">Die ➕-Schaltfläche bietet „Über QR importieren“ und „Aus Text importieren“. Der ⇄-Assistent erledigt beides in einem Durchgang: Er erzeugt ein einmaliges Übertragungspasswort, gibt es per Bluetooth am Computer ein und holt dann den Umschlag zurück, entweder durch Scannen des QR-Codes oder aus der Zwischenablage — und entschlüsselt ihn mit demselben Passwort.\nDas Werkzeug auf der Computerseite ist ein Download, keine Website: Lade aktar.html von der Releases-Seite des Projekts herunter, überprüfe seinen SHA-256-Wert und öffne es von deiner eigenen Festplatte aus. Diese Website fragt dich niemals nach einem Geheimnis.</string>
     <string name="settings_info_section">Hilfe und Informationen</string>
     <string name="edit_email_invalid">Überprüfe die Adresse — es braucht ein @ und eine Domain wie example.com</string>
     <string name="edit_expiry_invalid">Gib Monat und Jahr im Format MMJJ ein (Monat 01–12)</string>

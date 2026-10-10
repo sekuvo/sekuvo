@@ -69,7 +69,7 @@
     <string name="bt_err_queue">Bluetooth sending queue don stop to respond; typing stop for character %1$d. Choose slower speed.</string>
 
     <!-- Entry too large -->
-    <string name="entry_too_large">"%1$s" too big: %2$d KB (limit na %3$d KB). Split the long content, or save am as file for your computer.</string>
+    <string name="entry_too_large">“%1$s” too big: %2$d KB (limit na %3$d KB). Split the long content, or save am as file for your computer.</string>
     <string name="ime_write_field">Type %1$s</string>
 
     <!-- backup -->
@@ -187,7 +187,7 @@
     <string name="edit_discard_confirm">Comot without saving</string>
     <string name="edit_discard_cancel">Go back to editing</string>
     <string name="edit_delete_title">Delete entry</string>
-    <string name="edit_delete_text">"%1$s" go delete finish finish. You sure?</string>
+    <string name="edit_delete_text">“%1$s” go delete finish finish. You sure?</string>
     <string name="edit_cancel">Cancel</string>
     <!-- home -->
     <string name="home_sort_cd">Sort: %1$s</string>
@@ -217,7 +217,7 @@
     <string name="home_tag_add_new">+ New tag</string>
     <string name="home_close">Close</string>
     <string name="home_tag_delete_title">Delete tag</string>
-    <string name="home_tag_delete_msg">"%1$s" go delete and e go comot from every entry wey carry am. The entries demself no go delete.</string>
+    <string name="home_tag_delete_msg">“%1$s” go delete and e go comot from every entry wey carry am. The entries demself no go delete.</string>
     <!-- ime -->
     <string name="ime_switch_keyboard">ABC</string>
     <string name="ime_locked_quick_only">The vault dey lock — na only quick-access entries.</string>
@@ -225,7 +225,7 @@
     <string name="ime_no_quick_entries">No entry wey dem mark for quick access.</string>
     <string name="ime_no_entries">No entry dey.</string>
     <string name="ime_no_everyday">No everyday entry dey.</string>
-    <string name="ime_no_match">No entry match "%1$s".</string>
+    <string name="ime_no_match">No entry match “%1$s”.</string>
     <string name="ime_back_to_list">← %1$s</string>
     <string name="ime_search_hint">Search…</string>
     <!-- log -->
@@ -236,7 +236,7 @@
     <string name="log_empty">The log dey empty.</string>
     <string name="log_empty_for_target">No entry don go dis target before.</string>
     <string name="log_deleted_entry">(entry wey dem delete)</string>
-    <string name="log_entries_to_target">Entries wey dem send go "%1$s": %2$s</string>
+    <string name="log_entries_to_target">Entries wey dem send go “%1$s”: %2$s</string>
     <string name="log_clear_confirm">Delete the whole log? You no fit undo dis one; the entries demself no go affect.</string>
     <string name="log_clear_yes">Yes, delete am</string>
     <string name="log_cancel">Cancel</string>
@@ -261,7 +261,7 @@
     <string name="paste_title_qr">Import through QR</string>
     <string name="paste_title_text">Import from text</string>
     <string name="paste_qr_ready">✓ QR don scan · we receive encrypted envelope wey get %1$d character.\nNow enter only the **backup password**.</string>
-    <string name="paste_intro">Paste the text from the page or tap "Get from clipboard". Dis text dey encrypted; you go enter the password for the next field.</string>
+    <string name="paste_intro">Paste the text from the page or tap “Get from clipboard”. Dis text dey encrypted; you go enter the password for the next field.</string>
     <string name="paste_label_envelope">Encrypted envelope</string>
     <string name="paste_char_count">%1$d character</string>
     <string name="paste_btn_clipboard">Get from clipboard</string>
@@ -269,7 +269,7 @@
     <string name="paste_mode_merge">Add to wetin dey there</string>
     <string name="paste_mode_replace">Replace everything</string>
     <string name="paste_replace_warning">Warning: every entry wey dey there before go delete and the envelope own go replace am.</string>
-    <string name="paste_err_envelope_empty">The encrypted envelope field empty — paste am through "Get from clipboard".</string>
+    <string name="paste_err_envelope_empty">The encrypted envelope field empty — paste am through “Get from clipboard”.</string>
     <string name="paste_err_password_required_qr">We need the backup password: the one wey you enter when you encrypt the envelope for your computer.</string>
     <string name="paste_err_password_missing">No backup password wey you enter.</string>
     <string name="paste_btn_importing">E dey import…</string>
@@ -301,7 +301,7 @@
     <string name="settings_usage_log_open">Open the usage log</string>
     <string name="settings_security">Security</string>
     <string name="settings_locking">Locking</string>
-    <string name="settings_locking_desc">The vault go lock the moment the screen off; dem wipe the key from memory. As long as the screen still dey on, dem no go ask you for password or fingerprint again.\n\nEntries wey you mark "Use for keyboard without password" fit still work even when the vault dey lock; you fit turn dis mark on or off from each entry screen.</string>
+    <string name="settings_locking_desc">The vault go lock the moment the screen off; dem wipe the key from memory. As long as the screen still dey on, dem no go ask you for password or fingerprint again.\n\nEntries wey you mark “Use for keyboard without password” fit still work even when the vault dey lock; you fit turn dis mark on or off from each entry screen.</string>
     <string name="settings_biometric_disable">Turn off biometric unlock</string>
     <string name="settings_biometric_enable">Turn on biometric unlock</string>
     <string name="settings_pin_heading">PIN (second door for the fingerprint)</string>
@@ -318,7 +318,7 @@
     <string name="settings_change_password">Change master password</string>
     <string name="settings_autofill">Autofill</string>
     <string name="settings_autofill_on_desc">E dey on. If you touch login form or card form for apps and browsers, your Sekuvo entries go show as option to fill. If the vault dey lock, the unlock screen go show first; nothing no go hand over to the system while e dey lock.</string>
-    <string name="settings_autofill_off_desc">If you turn am on, touching login form or card form for apps and browsers go show your Sekuvo entries directly as fill option. E go also offer to save new details wey you enter go inside Sekuvo.\n\nThe button wey dey down open the system settings. The name of the list wey go open different for each device ("Preferred service", "Autofill service", or "Passwords, passkeys &amp; autofill"); just choose Sekuvo from dat list.</string>
+    <string name="settings_autofill_off_desc">If you turn am on, touching login form or card form for apps and browsers go show your Sekuvo entries directly as fill option. E go also offer to save new details wey you enter go inside Sekuvo.\n\nThe button wey dey down open the system settings. The name of the list wey go open different for each device (“Preferred service”, “Autofill service”, or “Passwords, passkeys &amp; autofill”); just choose Sekuvo from dat list.</string>
     <string name="settings_autofill_open">Open autofill settings</string>
     <string name="settings_autofill_enable">Turn on autofill</string>
     <string name="settings_keyboard">Sekuvo Keyboard</string>
@@ -354,11 +354,11 @@
     <string name="settings_set">Set</string>
     <!-- transfer -->
     <string name="transfer_title">Bring am from computer · step %1$d/2</string>
-    <string name="transfer_step1_steps">1. For the computer, open aktar.html, switch am go English if e no dey English already, and put the cursor for the "Backup password" field.\n2. Use the button wey dey down to type the password inside both field one time (Tab dey between dem).</string>
+    <string name="transfer_step1_steps">1. For the computer, open aktar.html, switch am go English if e no dey English already, and put the cursor for the “Backup password” field.\n2. Use the button wey dey down to type the password inside both field one time (Tab dey between dem).</string>
     <string name="transfer_regenerate">Generate new password</string>
     <string name="transfer_password_note">Password wey we generate for one-time use — you no need remember am, step 2 go use am automatic. Letters and numbers: keyboard layout differences no dey affect dem.</string>
     <string name="transfer_bt_write_both">💻 Type for both field through Bluetooth</string>
-    <string name="transfer_step2_steps">For the computer: paste the content → "Encrypt &amp; publish" → scan the QR with your phone → "Copy" for the page. Then come back here and collect the envelope. The password don ready already for the wizard — you no need enter am.</string>
+    <string name="transfer_step2_steps">For the computer: paste the content → “Encrypt &amp; publish” → scan the QR with your phone → “Copy” for the page. Then come back here and collect the envelope. The password don ready already for the wizard — you no need enter am.</string>
     <string name="transfer_envelope_label">Encrypted envelope</string>
     <string name="transfer_char_count">%1$d character</string>
     <string name="transfer_scan_qr">Scan QR</string>
@@ -367,7 +367,7 @@
     <string name="transfer_replace_all">Replace everything</string>
     <string name="transfer_replace_warning">Warning: every entry wey dey there before go delete and the envelope own go replace am.</string>
     <string name="transfer_password_typed_next">Password don type, continue →</string>
-    <string name="transfer_envelope_empty">The encrypted envelope field empty — publish am for the computer, scan the QR, and tap "Get from clipboard".</string>
+    <string name="transfer_envelope_empty">The encrypted envelope field empty — publish am for the computer, scan the QR, and tap “Get from clipboard”.</string>
     <string name="transfer_importing">E dey import…</string>
     <string name="transfer_import">Import</string>
     <string name="transfer_back">← Back</string>
@@ -556,21 +556,21 @@
     <string name="privacy_s6_body">Questions: contact@sekuvo.com\nThe official version of dis policy dey published for sekuvo.com/privacy/ and e go be the correct one if difference dey.</string>
 
     <string name="guide_s1_title">First time you dey run am</string>
-    <string name="guide_s1_body">You go set master password. Every secret wey you save go encrypt with key wey dem derive from am, so na the only thing wey Sekuvo no fit help you recover — write am for safe place before you continue.\nYou dey come from another phone? Tap "I get backup — restore am" for the welcome screen: you still go set master password for dis device first, then the file picker go open by itself.</string>
+    <string name="guide_s1_body">You go set master password. Every secret wey you save go encrypt with key wey dem derive from am, so na the only thing wey Sekuvo no fit help you recover — write am for safe place before you continue.\nYou dey come from another phone? Tap “I get backup — restore am” for the welcome screen: you still go set master password for dis device first, then the file picker go open by itself.</string>
     <string name="guide_s2_title">Wetin you fit save</string>
     <string name="guide_s2_body">Account/Password, Everyday (name, phone, email, address), Card, and Secure note — with subtypes for scripts, keys, recovery codes, and config files. Account and Everyday entries fit also take unlimited custom fields, wey dem encrypt exactly like the built-in ones.</string>
     <string name="guide_s3_title">Autofill</string>
-    <string name="guide_s3_body">Settings → Turn on autofill → choose Sekuvo from the system list. Dis list name different for each device — for Samsung and Android 14+ na "Passwords, passkeys &amp; autofill → Preferred service", for pure Android na "Autofill service".\nAfter dis, touching login field or card field for any app go offer your entries. While the vault dey lock, the system no go receive anything at all.</string>
+    <string name="guide_s3_body">Settings → Turn on autofill → choose Sekuvo from the system list. Dis list name different for each device — for Samsung and Android 14+ na “Passwords, passkeys &amp; autofill → Preferred service”, for pure Android na “Autofill service”.\nAfter dis, touching login field or card field for any app go offer your entries. While the vault dey lock, the system no go receive anything at all.</string>
     <string name="guide_s4_title">Sekuvo Keyboard</string>
-    <string name="guide_s4_body">Settings → Turn on the keyboard, then choose "Sekuvo Keyboard" from the keyboard switcher when you need am. E dey type saved values direct inside any field, with search and recent entries on top. While e dey lock, e dey show only the entries wey you mark for quick access.</string>
+    <string name="guide_s4_body">Settings → Turn on the keyboard, then choose “Sekuvo Keyboard” from the keyboard switcher when you need am. E dey type saved values direct inside any field, with search and recent entries on top. While e dey lock, e dey show only the entries wey you mark for quick access.</string>
     <string name="guide_s5_title">Typing for computer through Bluetooth</string>
-    <string name="guide_s5_body">First time? Settings → Bluetooth setup wizard go carry you through every step, live.\nOpen the entry, tap the 💻 icon near the field, and KEEP DIS SCREEN OPEN — the phone go only announce itself as keyboard while dis screen dey open. For the computer, add the phone as new Bluetooth device and confirm the code. Go back to the phone, choose your computer, choose the COMPUTER keyboard layout, click the field wey you want, and tap Type.\nE connect but nothing no dey type? Usually the reason na say the computer don pair your phone before as ordinary phone, so e never turn on keyboard service for am. Remove the pairing from BOTH sides, open the 💻 screen, and pair again starting from the computer. For Windows, after dis, Device Manager → Human Interface Devices suppose show "Bluetooth HID" device. For macOS, close the Keyboard Setup Assistant if e open.\nUse the speed test as diagnosis: nothing wey type mean pairing problem, character wey scatter mean layout problem, typing wey cut mean speed problem.</string>
+    <string name="guide_s5_body">First time? Settings → Bluetooth setup wizard go carry you through every step, live.\nOpen the entry, tap the 💻 icon near the field, and KEEP DIS SCREEN OPEN — the phone go only announce itself as keyboard while dis screen dey open. For the computer, add the phone as new Bluetooth device and confirm the code. Go back to the phone, choose your computer, choose the COMPUTER keyboard layout, click the field wey you want, and tap Type.\nE connect but nothing no dey type? Usually the reason na say the computer don pair your phone before as ordinary phone, so e never turn on keyboard service for am. Remove the pairing from BOTH sides, open the 💻 screen, and pair again starting from the computer. For Windows, after dis, Device Manager → Human Interface Devices suppose show “Bluetooth HID” device. For macOS, close the Keyboard Setup Assistant if e open.\nUse the speed test as diagnosis: nothing wey type mean pairing problem, character wey scatter mean layout problem, typing wey cut mean speed problem.</string>
     <string name="guide_s6_title">How the lock dey work</string>
     <string name="guide_s6_body">The vault go lock the moment the screen wey e open on off — closing foldable phone dey count too. Leaving the app while the screen still on no dey lock am: the app, the keyboard, and autofill dey share one session.</string>
     <string name="guide_s7_title">Backups</string>
     <string name="guide_s7_body">System backup dey off on purpose, so na only one way your vault fit comot from the phone: Settings → Create encrypted backup. Use backup password wey different from your master password. The .vaultbak file wey e produce, plus dis password, go restore everything for any phone, even after factory reset.</string>
     <string name="guide_s8_title">Bringing secrets from computer</string>
-    <string name="guide_s8_body">The ➕ button dey offer "Import through QR" and "Import from text". The ⇄ wizard dey do both for one flow: e go generate one-time transfer password, type am for computer through Bluetooth, then collect the envelope back either by scanning QR or from clipboard — e go decrypt am with the same password.\nThe computer-side tool na file wey you download, e no be website: get aktar.html from the project Releases page, check the SHA-256, and open am from your own disk. Dis site no go ever ask you for secret.</string>
+    <string name="guide_s8_body">The ➕ button dey offer “Import through QR” and “Import from text”. The ⇄ wizard dey do both for one flow: e go generate one-time transfer password, type am for computer through Bluetooth, then collect the envelope back either by scanning QR or from clipboard — e go decrypt am with the same password.\nThe computer-side tool na file wey you download, e no be website: get aktar.html from the project Releases page, check the SHA-256, and open am from your own disk. Dis site no go ever ask you for secret.</string>
     <string name="settings_info_section">Help and information</string>
     <string name="edit_email_invalid">Check the address — e need @ and domain like example.com</string>
     <string name="edit_expiry_invalid">Enter the month and year for MMYY format (month 01–12)</string>

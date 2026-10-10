@@ -176,3 +176,11 @@ tasks.register<Exec>("checkReleaseApkAlignment") {
 tasks.matching { it.name == "assembleRelease" }.configureEach {
     finalizedBy("checkReleaseApkAlignment")
 }
+
+// KaynakMetinTest strings.xml dosyalarını doğrudan diskten okur; Gradle bunu
+// bilmezse yalnız bir çeviri değiştiğinde birim testlerini "güncel" sayıp
+// atlar (ölçüldü: bilerek bozulan Almanca metin testten geçti). Klasörü
+// girdi olarak bildir ki metin değişince test yeniden koşsun.
+tasks.withType<Test>().configureEach {
+    inputs.dir("src/main/res").withPathSensitivity(PathSensitivity.RELATIVE)
+}
