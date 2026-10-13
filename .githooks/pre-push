@@ -1,0 +1,31 @@
+#!/bin/sh
+# Gönderilen commit'lerde istenmeyen bir kimlik var mı? Kalıplar depoda DEĞİL,
+# yerel git ayarında durur (depo herkese açık; kalıbın kendisi de bir kimlik
+# bilgisidir):
+#     git config --add kimlik.yasak 'kalip'      # birden fazla olabilir
+# Yazar, işleyen ve mesaj (Signed-off-by dahil) denetlenir; dosya içeriği
+# denetlenmez. Ayar yoksa kanca hiçbir şey yapmaz.
+kaliplar=$(git config --get-all kimlik.yasak) || exit 0
+[ -z "$kaliplar" ] && exit 0
+sifir=0000000000000000000000000000000000000000
+while read -r yerel_ref yerel_sha uzak_ref uzak_sha; do
+    [ "$yerel_sha" = "$sifir" ] && continue               # dal silme
+    if [ "$uzak_sha" = "$sifir" ]; then
+        commitler=$(git rev-list "$yerel_sha" --not --remotes)
+    else
+        commitler=$(git rev-list "$uzak_sha..$yerel_sha")
+    fi
+    for c in $commitler; do
+        meta=$(git log -1 --format='%an%n%ae%n%cn%n%ce%n%B' "$c")
+        echo "$kaliplar" | while IFS= read -r kalip; do
+            [ -n "$kalip" ] || continue
+            if printf '%s\n' "$meta" | grep -F -i -q -- "$kalip"; then
+                echo "pre-push: REDDEDİLDİ — $(git log -1 --format='%h %s' "$c")" >&2
+                echo "  Bu commit istenmeyen bir kimlik taşıyor (yazar, işleyen ya da mesaj)." >&2
+                echo "  git config user.name/user.email'i düzelt, commit'i --reset-author ile yeniden yaz." >&2
+                exit 1
+            fi
+        done || exit 1
+    done
+done
+exit 0
