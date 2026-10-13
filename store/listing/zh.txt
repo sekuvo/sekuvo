@@ -33,4 +33,4 @@ Sekuvo 是你的安全密码库：密码、银行卡和笔记，在你的手机�
 免费、开源、GPLv3。
 Sekuvo 免费且遵循 GPLv3 — 代码本身就是证明。
 
-GPLv3 · github.com/afgover/Vault
+GPLv3 · github.com/sekuvo/sekuvo

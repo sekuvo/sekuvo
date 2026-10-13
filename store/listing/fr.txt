@@ -33,4 +33,4 @@ Le presse-papiers est l'endroit où les secrets se font voler. Sekuvo écrit les
 Gratuit, open source, GPLv3.
 Sekuvo est gratuit et sous GPLv3 — le code en est la preuve.
 
-GPLv3 · github.com/afgover/Vault
+GPLv3 · github.com/sekuvo/sekuvo

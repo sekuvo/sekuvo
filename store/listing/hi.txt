@@ -33,4 +33,4 @@ Sekuvo आपकी सुरक्षित तिजोरी है: पा�
 मुफ़्त, ओपन सोर्स, GPLv3।
 Sekuvo मुफ़्त और GPLv3 है — कोड ही प्रमाण है।
 
-GPLv3 · github.com/afgover/Vault
+GPLv3 · github.com/sekuvo/sekuvo

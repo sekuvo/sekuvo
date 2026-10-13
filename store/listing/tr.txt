@@ -33,4 +33,4 @@ Pano, sırların çalınmaya gittiği yerdir. Sekuvo değerleri onun yerine doğ
 Ücretsiz, açık kaynak, GPLv3.
 Sekuvo ücretsiz ve GPLv3 — kanıt kodun kendisi.
 
-GPLv3 · github.com/afgover/Vault
+GPLv3 · github.com/sekuvo/sekuvo

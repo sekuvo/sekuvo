@@ -33,4 +33,4 @@ The clipboard is where secrets go to be stolen. Sekuvo types values straight to 
 Free, open source, GPLv3.
 Sekuvo is free and GPLv3 — the code is the proof.
 
-GPLv3 · github.com/afgover/Vault
+GPLv3 · github.com/sekuvo/sekuvo

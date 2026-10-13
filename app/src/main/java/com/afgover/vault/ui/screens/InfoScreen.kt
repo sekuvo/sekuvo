@@ -150,7 +150,7 @@ private fun AboutBody(onOpen: (String) -> Unit) {
     ) { Text(stringResource(R.string.info_about_website)) }
     Spacer(Modifier.height(8.dp))
     OutlinedButton(
-        onClick = { onOpen("https://github.com/afgover/Vault") },
+        onClick = { onOpen("https://github.com/sekuvo/sekuvo") },
         modifier = Modifier.fillMaxWidth()
     ) { Text(stringResource(R.string.info_about_source)) }
     Spacer(Modifier.height(8.dp))

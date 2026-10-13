@@ -33,4 +33,4 @@ Sekuvo আপনার নিরাপদ ভল্ট: পাসওয়ার
 বিনামূল্যে, ওপেন সোর্স, GPLv3।
 Sekuvo বিনামূল্যে এবং GPLv3-এর অধীনে — কোডটাই তার প্রমাণ।
 
-GPLv3 · github.com/afgover/Vault
+GPLv3 · github.com/sekuvo/sekuvo

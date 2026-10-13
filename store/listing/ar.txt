@@ -33,4 +33,4 @@ Sekuvo هي خزنتك الآمنة: كلمات المرور والبطاقات 
 مجاني، مفتوح المصدر، GPLv3.
 Sekuvo مجاني وبرخصة GPLv3 — والشيفرة هي الدليل.
 
-GPLv3 · github.com/afgover/Vault
+GPLv3 · github.com/sekuvo/sekuvo

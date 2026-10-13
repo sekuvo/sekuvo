@@ -33,4 +33,4 @@ Sekuvo آپ کا محفوظ والٹ ہے: پاس ورڈز، کارڈز اور �
 مفت، اوپن سورس، GPLv3۔
 Sekuvo مفت اور GPLv3 کے تحت ہے — کوڈ ہی ثبوت ہے۔
 
-GPLv3 · github.com/afgover/Vault
+GPLv3 · github.com/sekuvo/sekuvo

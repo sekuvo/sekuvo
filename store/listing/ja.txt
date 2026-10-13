@@ -33,4 +33,4 @@ Sekuvoはあなたの安全な保管庫です: パスワード、カード、メ
 無料、オープンソース、GPLv3。
 Sekuvoは無料でGPLv3ライセンスです — コードがその証拠です。
 
-GPLv3 · github.com/afgover/Vault
+GPLv3 · github.com/sekuvo/sekuvo

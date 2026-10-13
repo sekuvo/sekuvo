@@ -33,4 +33,4 @@ Papan klip adalah tempat rahasia dicuri. Karena itu Sekuvo mengetik nilai langsu
 Gratis, sumber terbuka, GPLv3.
 Sekuvo gratis dan berlisensi GPLv3 — kodenya adalah buktinya.
 
-GPLv3 · github.com/afgover/Vault
+GPLv3 · github.com/sekuvo/sekuvo

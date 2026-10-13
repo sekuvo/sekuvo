@@ -33,4 +33,4 @@ A área de transferência é onde segredos são roubados. O Sekuvo digita os val
 Gratuito, código aberto, GPLv3.
 O Sekuvo é gratuito e GPLv3 — o código é a prova.
 
-GPLv3 · github.com/afgover/Vault
+GPLv3 · github.com/sekuvo/sekuvo

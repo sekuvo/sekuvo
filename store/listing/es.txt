@@ -33,4 +33,4 @@ El portapapeles es donde los secretos acaban robados. Sekuvo escribe los valores
 Gratis, código abierto, GPLv3.
 Sekuvo es gratis y GPLv3 — el código es la prueba.
 
-GPLv3 · github.com/afgover/Vault
+GPLv3 · github.com/sekuvo/sekuvo

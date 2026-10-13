@@ -33,4 +33,4 @@ Bộ nhớ tạm là nơi bí mật bị đánh cắp. Đó là lý do Sekuvo g�
 Miễn phí, mã nguồn mở, GPLv3.
 Sekuvo miễn phí và theo giấy phép GPLv3 — mã nguồn chính là bằng chứng.
 
-GPLv3 · github.com/afgover/Vault
+GPLv3 · github.com/sekuvo/sekuvo

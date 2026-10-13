@@ -33,4 +33,4 @@ Sekuvo — ваше защищённое хранилище: пароли, ка�
 Бесплатно, открытый код, GPLv3.
 Sekuvo бесплатен и распространяется под GPLv3 — код тому доказательство.
 
-GPLv3 · github.com/afgover/Vault
+GPLv3 · github.com/sekuvo/sekuvo

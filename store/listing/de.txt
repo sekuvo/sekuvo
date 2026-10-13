@@ -33,4 +33,4 @@ Die Zwischenablage ist der Ort, an dem Geheimnisse gestohlen werden. Deshalb tip
 Kostenlos, quelloffen, GPLv3.
 Sekuvo ist kostenlos und unter GPLv3 lizenziert — der Code ist der Beweis.
 
-GPLv3 · github.com/afgover/Vault
+GPLv3 · github.com/sekuvo/sekuvo
