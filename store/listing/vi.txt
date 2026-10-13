@@ -6,7 +6,7 @@ Sekuvo
 ## Kısa açıklama (≤80)  [44]
 Kho lưu trữ mật khẩu ngoại tuyến cho Android
 
-## Tam açıklama (≤4000)  [2055]
+## Tam açıklama (≤4000)  [2003]
 Sekuvo là kho lưu trữ an toàn của bạn: mật khẩu, thẻ, và ghi chú, được mã hóa trên điện thoại của bạn bằng một khóa mà chỉ mật khẩu chính của bạn mới có thể dẫn xuất. Không máy chủ, không tài khoản, không đồng bộ hóa — và không có cách nào để báo cho ai biết.
 
 Mã hóa mà bạn có thể kiểm chứng, chứ không phải tin tưởng suông.

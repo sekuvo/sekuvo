@@ -6,7 +6,7 @@ Sekuvo
 ## Kısa açıklama (≤80)  [37]
 Android için çevrimdışı parola kasası
 
-## Tam açıklama (≤4000)  [1674]
+## Tam açıklama (≤4000)  [1642]
 Sekuvo senin güvenli kasan: parolalar, kartlar ve notlar, yalnız ana parolandan türeyen bir anahtarla telefonunda şifrelenir. Sunucusu yok, hesabı yok, eşitlemesi yok — ve eve haber verme yolu yok.
 
 İnanılacak değil, denetlenecek şifreleme.

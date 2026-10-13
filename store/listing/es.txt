@@ -6,7 +6,7 @@ Sekuvo
 ## Kısa açıklama (≤80)  [47]
 Bóveda de contraseñas sin conexión para Android
 
-## Tam açıklama (≤4000)  [1870]
+## Tam açıklama (≤4000)  [1825]
 Sekuvo es tu bóveda segura: contraseñas, tarjetas y notas, cifradas en tu teléfono con una clave que solo tu contraseña maestra puede derivar. Sin servidor, sin cuenta, sin sincronización — y sin forma de llamar a casa.
 
 Cifrado que puedes auditar, no creer.

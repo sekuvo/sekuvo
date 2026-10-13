@@ -6,7 +6,7 @@ Sekuvo
 ## Kısa açıklama (≤80)  [40]
 Brankas kata sandi offline untuk Android
 
-## Tam açıklama (≤4000)  [1912]
+## Tam açıklama (≤4000)  [1874]
 Sekuvo adalah brankas amanmu: kata sandi, kartu, dan catatan, dienkripsi di ponselmu dengan kunci yang hanya bisa diturunkan oleh kata sandi utamamu. Tanpa server, tanpa akun, tanpa sinkronisasi — dan tidak ada cara untuk memberi tahu siapa pun.
 
 Enkripsi yang bisa kamu periksa, bukan percayai begitu saja.

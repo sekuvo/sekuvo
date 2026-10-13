@@ -1,4 +1,4 @@
-# Play Store listesi — Naija (pcm)
+# Play Store listesi — Naija (pcm)  ·  Play'de yok (pcm desteklenmiyor)
 
 ## Uygulama adı (≤30)
 Sekuvo
@@ -6,7 +6,7 @@ Sekuvo
 ## Kısa açıklama (≤80)  [34]
 Offline password vault for Android
 
-## Tam açıklama (≤4000)  [1827]
+## Tam açıklama (≤4000)  [1791]
 Sekuvo na your safe vault: passwords, cards, and notes, wey dey encrypt for your phone with key wey only your master password fit derive. No server, no account, no sync — and no way to tell anybody.
 
 Encryption wey you fit check, no be one wey you go just believe.

@@ -1,36 +1,61 @@
 # Play Store listesi — English (en)
 
 ## Uygulama adı (≤30)
-Sekuvo
+Sekuvo: Offline Password Vault
 
-## Kısa açıklama (≤80)  [34]
-Offline password vault for Android
+## Kısa açıklama (≤80)  [73]
+Offline password vault. No internet, no cloud — your secrets never leave.
 
-## Tam açıklama (≤4000)  [1685]
-Sekuvo is your secure vault: passwords, cards and notes, encrypted on your phone with a key only your master password can derive. It has no server, no account, no sync — and no way to phone home.
+## Tam açıklama (≤4000)  [2329]
+Sekuvo is a fully offline password vault for Android. It does not request the
+Internet permission, so your data is technically incapable of leaving the
+device. No account, no cloud, no sync, no telemetry.
 
-Encryption you can audit, not believe.
-Every sensitive field is sealed with AES-256-GCM. The key never touches a server because there is no server; it is derived on your phone, from your master password, every time you unlock.
+WHAT IT STORES
+• Accounts and passwords, with the site or app they belong to
+• Everyday details: name, phone, email, address
+• Cards: number, expiry, CVV, IBAN
+• Secure notes, including scripts, keys, recovery codes and config files
+• Unlimited custom fields on any entry — all encrypted
 
-• Locks when the screen sleeps
-  The key is wiped from memory the moment the screen goes dark — folding a foldable counts. One unlock serves the app, the keyboard and autofill together.
+ENCRYPTION
+Every sensitive field is sealed with AES-256-GCM. The key is derived from your
+master password with PBKDF2-HMAC-SHA256 at 310,000 rounds, on your phone, every
+time you unlock. There is no recovery backdoor: if you forget the master
+password, the data is gone. That is the design.
 
-• Backups that outlive the phone
-  One encrypted .vaultbak file, stored wherever you choose. File + backup password restores everything on any device — the recovery path is tested end to end.
+WITHOUT THE CLIPBOARD
+The clipboard is where secrets get stolen, so Sekuvo delivers values straight
+to their destination in three ways:
+• Android autofill — sign-in and card forms offer your entries directly
+• Sekuvo Keyboard — type a stored secret into any field, in any app
+• Bluetooth — your phone becomes a keyboard and types into your computer, with
+  nothing installed on the computer (Windows, macOS, Linux)
+Copying still works, and the clipboard is cleared automatically after 45
+seconds.
 
-• No recovery backdoor
-  Forget the master password and the data is gone. That is the design: a door only you can open has no spare key under the mat.
+LOCKING
+The vault locks the moment the screen it is on goes dark — including folding a
+foldable. Optional fingerprint or face unlock is a convenience layer; the
+master password always works.
 
-Three ways out, all under your finger.
-The clipboard is where secrets go to be stolen. Sekuvo types values straight to their destination instead.
+BACKUPS YOU CONTROL
+System backup is deliberately disabled. Your vault leaves the phone exactly one
+way: an encrypted .vaultbak file you create and place wherever you choose. File
+plus backup password restores everything on any phone, even after a factory
+reset. Secrets can also be brought over from a computer as an encrypted
+envelope, pasted as text or scanned as QR codes.
 
-• Android autofill service — Sign-in and card forms offer your entries directly. While locked, the system gets nothing — unlock first, then choose.
+USAGE LOG
+Sekuvo records which field of which entry went where and when — to the
+clipboard, to a computer, or into an app. Values are never written to the log.
+When a computer is compromised, this answers what you need to change.
 
-• Sekuvo Keyboard — Switch to it in any app and type a stored secret into the field — searchable, recents on top, no copy step.
+HARDENING
+Screenshots and app-switcher previews blocked, clipboard auto-clear, PIN
+brute-force throttling, size limits that keep a vault from becoming
+unreadable.
 
-• Types into your computer — Your phone becomes a Bluetooth keyboard and types the secret at the computer's cursor. Nothing is installed on the computer.
-
-Free, open source, GPLv3.
-Sekuvo is free and GPLv3 — the code is the proof.
-
-GPLv3 · github.com/sekuvo/sekuvo
+OPEN SOURCE
+Sekuvo is free and GPLv3. The code is the proof:
+https://sekuvo.com

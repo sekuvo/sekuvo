@@ -89,7 +89,7 @@ tercih edilir.
 Konsolda yapıldı ve **incelemeye gönderildi** (29 değişiklik; inceleme
 genellikle ≤7 gün):
 
-- Mağaza girişi: en-US + 14 çeviri (pcm Play'de desteklenmiyor, yalnız o eksik).
+- Mağaza girişi: en-US + 15 çeviri (pt-BR ve pt-PT aynı metin — 2026-10-13'te pt-BR eklendi; pcm Play'de desteklenmiyor, yalnız o eksik).
 - Grafikler: ikon 512, öne çıkan görsel 1024×500, telefon/7"/10" 8'er görüntü.
   Görüntüler emülatörde demo kasayla çekildi (FLAG_SECURE debug'da geçici
   kapatıldı, commit'lenmedi); 1080×2400 → 1080×1920 tuvale yerleştirildi.

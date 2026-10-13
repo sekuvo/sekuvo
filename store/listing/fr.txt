@@ -6,7 +6,7 @@ Sekuvo
 ## Kısa açıklama (≤80)  [47]
 Coffre de mots de passe hors ligne pour Android
 
-## Tam açıklama (≤4000)  [2069]
+## Tam açıklama (≤4000)  [2028]
 Sekuvo est ton coffre sécurisé : mots de passe, cartes et notes, chiffrés sur ton téléphone avec une clé que seul ton mot de passe principal peut dériver. Pas de serveur, pas de compte, pas de synchronisation — et aucun moyen d'appeler la maison.
 
 Un chiffrement à auditer, pas à croire sur parole.

@@ -6,7 +6,7 @@ Sekuvo
 ## Kısa açıklama (≤80)  [34]
 Offline-Passworttresor für Android
 
-## Tam açıklama (≤4000)  [2146]
+## Tam açıklama (≤4000)  [2104]
 Sekuvo ist dein sicherer Tresor: Passwörter, Karten und Notizen, auf deinem Telefon verschlüsselt mit einem Schlüssel, den nur dein Hauptpasswort ableiten kann. Kein Server, kein Konto, keine Synchronisierung — und keine Möglichkeit, jemanden zu informieren.
 
 Verschlüsselung, die du prüfen kannst, statt sie glauben zu müssen.

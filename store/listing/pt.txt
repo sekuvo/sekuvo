@@ -1,4 +1,4 @@
-# Play Store listesi — Português (pt)
+# Play Store listesi — Português (pt)  ·  Play: pt-BR ve pt-PT (aynı metin)
 
 ## Uygulama adı (≤30)
 Sekuvo
@@ -6,7 +6,7 @@ Sekuvo
 ## Kısa açıklama (≤80)  [36]
 Cofre de senhas offline para Android
 
-## Tam açıklama (≤4000)  [1917]
+## Tam açıklama (≤4000)  [1874]
 O Sekuvo é o seu cofre seguro: senhas, cartões e notas, criptografados no seu telefone com uma chave que só a sua senha principal consegue derivar. Sem servidor, sem conta, sem sincronização — e nenhuma forma de avisar alguém.
 
 Criptografia para auditar, não para acreditar.
