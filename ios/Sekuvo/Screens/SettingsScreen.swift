@@ -12,10 +12,40 @@ struct SettingsScreen: View {
     @State private var disaAktar = false
     @State private var geriYukle = false
     @State private var metinden = false
+    @State private var pinPenceresi = false
+    @State private var biyometriPin = false
 
     var body: some View {
         NavigationStack {
             Form {
+                Section {
+                    Text(L("ios_locking_desc")).font(.footnote).foregroundStyle(Theme.onSurfaceVariant)
+                    if let tur = kasa.biometry {
+                        if kasa.biometricEnabled {
+                            Button { kasa.disableBiometric() } label: { Label(L("ios_biometric_disable", tur.name), systemImage: "xmark.circle") }
+                        } else {
+                            Button {
+                                if kasa.pinEnabled { biyometriPin = true } else { Task { await kasa.enableBiometric() } }
+                            } label: { Label(L("ios_biometric_enable", tur.name), systemImage: tur == .touchID ? "touchid" : "faceid") }
+                        }
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(L("ios_pin_heading", tur.name)).font(.subheadline.weight(.semibold))
+                            Text(L(kasa.pinEnabled ? "ios_pin_on_desc" : "ios_pin_off_desc", tur.name))
+                                .font(.footnote).foregroundStyle(Theme.onSurfaceVariant)
+                        }
+                        Button { pinPenceresi = true } label: {
+                            Label(L(kasa.pinEnabled ? "settings_pin_turn_off" : "settings_pin_set"), systemImage: "number.square")
+                        }
+                        Picker(L("settings_reminder_heading"), selection: Binding(get: { kasa.reminderDays }, set: { kasa.setReminder(days: $0) })) {
+                            Text(L("settings_reminder_never")).tag(0)
+                            ForEach([30, 60, 90, 180], id: \.self) { g in Text(L("settings_reminder_days", g)).tag(g) }
+                        }
+                        Text(L("ios_reminder_desc", tur.name)).font(.footnote).foregroundStyle(Theme.onSurfaceVariant)
+                    }
+                    if let hata = kasa.error { Text(hata).font(.footnote).foregroundStyle(Theme.error) }
+                } header: {
+                    Text(L("ios_security"))
+                }
                 Section {
                     Text(L("settings_backup_desc")).font(.footnote).foregroundStyle(Theme.onSurfaceVariant)
                     Button { parolaSor = true } label: { Label(L("settings_backup_export"), systemImage: "square.and.arrow.down.on.square") }
@@ -54,6 +84,19 @@ struct SettingsScreen: View {
             .restoreFlow(isPresented: $geriYukle)
             .sheet(isPresented: $metinden) {
                 NavigationStack { ImportSheet(source: .text) }
+            }
+            .sheet(isPresented: $pinPenceresi) {
+                NavigationStack { PinSetupSheet(disabling: kasa.pinEnabled) }
+            }
+            .sheet(isPresented: $biyometriPin) {
+                NavigationStack { BiometricPinSheet() }
+            }
+            // PIN burada açılınca biyometriyi PIN'e bağlama önerisi de burada gelir.
+            .sheet(isPresented: Binding(
+                get: { kasa.offerBiometric || kasa.offerBiometricPin != nil },
+                set: { if !$0 { kasa.offerBiometric = false; kasa.offerBiometricPin = nil } }
+            )) {
+                BiometricOfferSheet(pin: kasa.offerBiometricPin)
             }
         }
     }

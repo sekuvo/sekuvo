@@ -1,10 +1,6 @@
 {
   "_aciklama": "Yalnız iOS'ta anlamlı metinler. Android'de karşılığı olan her metin app/src/main/res'ten gelir; burada yalnız iOS'a özgü olanlar durur. Şimdilik en ve tr; eksik diller İngilizce görünür ve yayından önce tamamlanır.",
   "metinler": {
-    "ios_unlock_faceid": {
-      "en": "Unlock with Face ID",
-      "tr": "Face ID ile aç"
-    },
     "ios_locked_hint": {
       "en": "The vault locks as soon as Sekuvo leaves the screen.",
       "tr": "Sekuvo ekrandan çıktığı anda kasa kilitlenir."
@@ -38,6 +34,106 @@
     "ios_backup_file_name": {
       "en": "sekuvo-backup",
       "tr": "sekuvo-yedek"
+    },
+    "ios_unlock_biometric": {
+      "en": "Unlock with %1$@",
+      "tr": "%1$@ ile aç"
+    },
+    "ios_biometric_reason": {
+      "en": "Unlock your Sekuvo vault",
+      "tr": "Sekuvo kasanı aç"
+    },
+    "ios_biometric_offer_body": {
+      "en": "Instead of typing your master password every time you open the vault, you can use %1$@. The master password does not go away: it always opens the vault on its own, and it is also what opens your backups — don't forget it.",
+      "tr": "Kasayı her açışta ana parolayı yazmak yerine %1$@ kullanabilirsin. Ana parola kaybolmaz: kasayı her zaman tek başına açar ve yedekleri açan da odur — unutma."
+    },
+    "ios_biometric_enable": {
+      "en": "Enable %1$@",
+      "tr": "%1$@'yi etkinleştir"
+    },
+    "ios_biometric_disable": {
+      "en": "Turn off %1$@",
+      "tr": "%1$@'yi kapat"
+    },
+    "ios_biometric_enabled": {
+      "en": "%1$@ enabled",
+      "tr": "%1$@ etkinleştirildi"
+    },
+    "ios_biometric_invalidated": {
+      "en": "%1$@ unlock is no longer valid — the enrolled faces or fingers changed. Unlock with your master password and enable it again.",
+      "tr": "%1$@ ile açma artık geçerli değil — kayıtlı yüz ya da parmak izleri değişti. Ana parolanla aç ve yeniden etkinleştir."
+    },
+    "ios_biometric_failed": {
+      "en": "%1$@ did not unlock the vault. Use your master password.",
+      "tr": "%1$@ kasayı açamadı. Ana parolanı kullan."
+    },
+    "ios_biometric_pin_title": {
+      "en": "Tie %1$@ to your PIN",
+      "tr": "%1$@'yi PIN'e bağla"
+    },
+    "ios_biometric_pin_desc": {
+      "en": "The %1$@ record is sealed with your PIN: at unlock, %1$@ comes first, then this PIN.",
+      "tr": "%1$@ kaydı PIN'inle mühürlenir: açılışta önce %1$@, sonra bu PIN sorulur."
+    },
+    "ios_pin_heading": {
+      "en": "PIN (second gate for %1$@)",
+      "tr": "PIN (%1$@ için ikinci kapı)"
+    },
+    "ios_pin_on_desc": {
+      "en": "On: after %1$@, the PIN is asked. It is not asked when you unlock with the master password — that password is already a strong secret.",
+      "tr": "Açık: %1$@ sonrasında PIN sorulur. Ana parolayla açarken sorulmaz — parola zaten güçlü bir sırdır."
+    },
+    "ios_pin_off_desc": {
+      "en": "Optional. If you turn it on, the %1$@ record is sealed with the PIN, and the PIN is asked after %1$@. Default: off.",
+      "tr": "İsteğe bağlı. Açarsan %1$@ kaydı PIN'le mühürlenir ve açılışta %1$@ sonrasında PIN sorulur. Varsayılan: kapalı."
+    },
+    "ios_pin_set_desc": {
+      "en": "The PIN must be 4–12 digits. The master password always opens the vault on its own: a forgotten PIN only costs you %1$@ — turn the PIN off with the master password and set up %1$@ again.",
+      "tr": "PIN 4–12 rakam olmalı. Ana parola kasayı her zaman tek başına açar: unutulan bir PIN yalnız %1$@'ye mal olur — PIN'i ana parolayla kapatıp %1$@'yi yeniden kurarsın."
+    },
+    "ios_pin_disable_desc": {
+      "en": "Once the PIN is off, %1$@ opens the vault on its own. You don't need the PIN for this — the master password is enough.",
+      "tr": "PIN kapanınca %1$@ kasayı tek başına açar. Bunun için PIN gerekmez — ana parola yeter."
+    },
+    "ios_pin_unlock_desc": {
+      "en": "Enter your PIN to finish unlocking with %1$@. The master password always works instead.",
+      "tr": "%1$@ ile açmayı bitirmek için PIN'ini gir. Bunun yerine ana parola her zaman çalışır."
+    },
+    "ios_pin_enabled": {
+      "en": "PIN on · tie %1$@ to it",
+      "tr": "PIN açıldı · %1$@'yi PIN'e bağla"
+    },
+    "ios_pin_disabled": {
+      "en": "PIN off · enable %1$@ again",
+      "tr": "PIN kapatıldı · %1$@'yi yeniden etkinleştir"
+    },
+    "ios_pin_biometric_off": {
+      "en": "Too many wrong PINs. %1$@ has been turned off; unlock with your master password.",
+      "tr": "Çok fazla yanlış PIN. %1$@ kapatıldı; ana parolanla aç."
+    },
+    "ios_biometric_stale": {
+      "en": "The %1$@ record was older than this PIN; it has been deleted. Unlock with your master password and enable %1$@ again.",
+      "tr": "%1$@ kaydı bu PIN'den eskiydi; kayıt silindi. Ana parolanla aç ve %1$@'yi yeniden etkinleştir."
+    },
+    "ios_master_reminder": {
+      "en": "Reminder: type your master password this time instead of using %1$@. A forgotten master password locks the vault and the backups alike.",
+      "tr": "Hatırlatma: bu sefer %1$@ yerine ana parolanı yaz. Unutulan ana parola kasayı da yedekleri de kilitler."
+    },
+    "ios_reminder_desc": {
+      "en": "While you use %1$@, the master password goes untyped for months and gets forgotten — yet it is also what opens your backups. Once per interval you choose, the password is asked instead. Default: never.",
+      "tr": "%1$@ kullanırken ana parola aylarca yazılmaz ve unutulur — oysa yedekleri açan da odur. Seçtiğin aralıkta bir kez onun yerine parola istenir. Varsayılan: süresiz."
+    },
+    "ios_security": {
+      "en": "Security",
+      "tr": "Güvenlik"
+    },
+    "ios_locking_desc": {
+      "en": "The vault locks the moment Sekuvo leaves the screen, and the key is wiped from memory. The app switcher shows a cover instead of your entries.",
+      "tr": "Kasa, Sekuvo ekrandan çıktığı anda kilitlenir ve anahtar bellekten silinir. Uygulama değiştiricide kayıtların yerine bir perde görünür."
+    },
+    "ios_biometric_enable_failed": {
+      "en": "Could not enable %1$@: %2$@",
+      "tr": "%1$@ etkinleştirilemedi: %2$@"
     }
   },
   "infoplist": {

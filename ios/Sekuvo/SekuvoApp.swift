@@ -26,6 +26,7 @@ struct RootView: View {
             switch kasa.state {
             case .setup: UnlockScreen(setup: true)
             case .locked: UnlockScreen(setup: false)
+            case .needsPin: PinScreen()
             case .unlocked: HomeScreen()
             }
             // Uygulama değiştiricinin anlık görüntüsü kasa içeriğini göstermesin:

@@ -7,6 +7,7 @@ struct UnlockScreen: View {
     @State private var parola = ""
     @State private var tekrar = ""
     @State private var yedegimVar = false
+    @Environment(\.scenePhase) private var sahne
     @FocusState private var odak: Bool
 
     var body: some View {
@@ -29,6 +30,19 @@ struct UnlockScreen: View {
                     .font(.body)
                     .foregroundStyle(Theme.onSurfaceVariant)
                     .fixedSize(horizontal: false, vertical: true)
+
+                if !setup && kasa.biometricUsable {
+                    Button { Task { await kasa.unlockWithBiometric() } } label: {
+                        Label(L("ios_unlock_biometric", kasa.biometryName),
+                              systemImage: kasa.biometry == .touchID ? "touchid" : (kasa.biometry == .opticID ? "opticid" : "faceid"))
+                    }
+                    .buttonStyle(FilledButton())
+                    .disabled(kasa.busy)
+                } else if !setup && kasa.biometricEnabled && kasa.masterPasswordDue {
+                    // Hatırlatıcı: bu sefer biyometri yerine ana parola (unutmayı önlemek için).
+                    Label(L("ios_master_reminder", kasa.biometryName), systemImage: "exclamationmark.circle")
+                        .font(.callout).foregroundStyle(Theme.primary)
+                }
 
                 SecretInput(label: L(setup ? "unlock_master_password_label" : "unlock_password_label"), text: $parola)
                     .focused($odak)
@@ -76,7 +90,16 @@ struct UnlockScreen: View {
         }
         .scrollDismissesKeyboard(.interactively)
         .background(Theme.background.ignoresSafeArea())
-        .onAppear { odak = true }
+        .onAppear { if setup || !kasa.biometricUsable { odak = true } }
+        // Biyometri kendiliğinden bir kez sorulur: soğuk açılışta ve arka plandan
+        // dönüşte (bkz. `autoBiometricArmed`); yalnız uygulama ekrandayken —
+        // arka planda istem açılamaz.
+        .task(id: sahne) {
+            guard !setup, sahne == .active, kasa.autoBiometricArmed, kasa.biometricUsable else { return }
+            kasa.autoBiometricArmed = false
+            await kasa.unlockWithBiometric()
+            if kasa.state == .locked { odak = true }
+        }
     }
 
     private func gonder() {

@@ -4,12 +4,15 @@
 Swift and SwiftUI, next to the Android app in this repository. It is not on
 the App Store yet.
 
-What works today: creating a vault with a master password, unlocking,
-locking when the app leaves the screen, adding, editing and deleting all
-four entry types, the entry list with search and type filter, the detail
-screen with masked fields, and copying a value to the clipboard for this
-iPhone only, cleared after 45 seconds. Every screen is translated into the
-same sixteen languages as the Android app.
+What works today: creating a vault with a master password; unlocking with
+it or with Face ID / Touch ID, optionally followed by a PIN, as on Android;
+locking when the app leaves the screen; adding, editing and deleting all
+four entry types; the entry list with search and type filter; the detail
+screen with masked fields; copying a value to the clipboard for this iPhone
+only, cleared after 45 seconds; importing a QR transfer or pasted text; and
+backing up to and restoring from a `.vaultbak` file. Screens use the
+Android app's translations in all sixteen languages; the few strings that
+exist only on iOS are in English and Turkish for now.
 
 ## Layout
 
@@ -33,9 +36,17 @@ from `aktar.html` opens on both. The rules live in [`../bicim/`](../bicim/README
 cd ios/SekuvoCore && swift test
 ```
 
+The Face ID record lives in the Keychain, which needs a signed build: with
+`CODE_SIGNING_ALLOWED=NO` the app compiles, but turning on Face ID fails.
+An ad-hoc signature is enough for the simulator.
+
 ```bash
-xcodebuild -project ios/Sekuvo.xcodeproj -scheme Sekuvo -destination 'platform=iOS Simulator,name=iPhone 17 Pro' build CODE_SIGNING_ALLOWED=NO
+xcodebuild -project ios/Sekuvo.xcodeproj -scheme Sekuvo -destination 'platform=iOS Simulator,name=iPhone 17 Pro' build CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY=- DEVELOPMENT_TEAM=
 ```
+
+The simulator does not enforce the Keychain's biometric access control, so
+the app asks for Face ID explicitly before every read. Whether the record
+itself refuses to open without Face ID can only be checked on a device.
 
 After changing a string in the Android app:
 

@@ -97,15 +97,24 @@ struct HomeScreen: View {
             .sheet(isPresented: $metinden) { NavigationStack { ImportSheet(source: .text) } }
             .sheet(isPresented: $ayarlar) { SettingsScreen() }
             .restoreFlow(isPresented: $geriYukle)
-            .onAppear {
-                // Kurulum "yedeğim var" ile yapıldıysa: hemen dosya seçici.
-                if kasa.restoreAfterSetup { kasa.restoreAfterSetup = false; geriYukle = true }
+            .sheet(isPresented: Binding(
+                get: { kasa.offerBiometric || kasa.offerBiometricPin != nil },
+                set: { if !$0 { kasa.offerBiometric = false; kasa.offerBiometricPin = nil } }
+            ), onDismiss: geriYukleGerekirse) {
+                BiometricOfferSheet(pin: kasa.offerBiometricPin)
             }
+            .onAppear(perform: geriYukleGerekirse)
             #if DEBUG
             .task {
                 let a = ProcessInfo.processInfo.arguments
                 if a.contains("-ornekQr") { qr = true }
                 if a.contains("-ornekAyarlar") { ayarlar = true }
+                // `-ornekElleKilitle`: kilit düğmesine basılmış gibi, süreç başına bir kez.
+                if a.contains("-ornekElleKilitle"), !Self.elleKilitlendi {
+                    Self.elleKilitlendi = true
+                    try? await Task.sleep(for: .seconds(1.5))
+                    kasa.lock()
+                }
                 // `-ornekGeriYukle <dosya>`: dosya seçiciye dokunmadan geri yükleme penceresi.
                 if let i = a.firstIndex(of: "-ornekGeriYukle"), i + 1 < a.count,
                    let veri = try? Data(contentsOf: URL(fileURLWithPath: a[i + 1])) {
@@ -123,6 +132,20 @@ struct HomeScreen: View {
             }
             #endif
         }
+    }
+}
+
+extension HomeScreen {
+    #if DEBUG
+    static var elleKilitlendi = false
+    #endif
+
+    /// Kurulum "yedeğim var" ile yapıldıysa dosya seçici açılır — biyometri
+    /// önerisi önce gelir, iki pencere aynı anda açılamaz.
+    func geriYukleGerekirse() {
+        guard kasa.restoreAfterSetup, !kasa.offerBiometric, kasa.offerBiometricPin == nil else { return }
+        kasa.restoreAfterSetup = false
+        geriYukle = true
     }
 }
 

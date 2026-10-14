@@ -1,10 +1,16 @@
 import CryptoKit
 import Foundation
+import LocalAuthentication
 import Observation
 import SekuvoCore
 import SwiftUI
 import UIKit
 import UniformTypeIdentifiers
+import os
+
+enum Log {
+    static let kilit = Logger(subsystem: "com.sekuvo.app", category: "kilit")
+}
 
 /// Kasanın durumu — Android'deki `ui/VaultViewModel.kt`'nin karşılığı.
 ///
@@ -16,7 +22,7 @@ import UniformTypeIdentifiers
 @MainActor
 final class VaultModel {
 
-    enum State { case setup, locked, unlocked }
+    enum State { case setup, locked, needsPin, unlocked }
 
     /// İçe aktarmanın kaynağı: hata ve başarı metni buna göre seçilir.
     enum ImportSource { case qr, text, file }
@@ -31,9 +37,34 @@ final class VaultModel {
     /// Kurulum "yedeğim var" ile yapıldı: liste açılınca dosya seçici gelir.
     var restoreAfterSetup = false
 
+    // Biyometri ve PIN (Android: KeyManager'ın biyometrik ve PIN bölümleri)
+    private(set) var biometry: BiometricStore.Kind? = BiometricStore.available()
+    private(set) var biometricEnabled = false
+    private(set) var pinEnabled = false
+    private(set) var reminderDays = 0
+    /// Kurulumdan hemen sonra biyometri önerilir (Android ile aynı an).
+    var offerBiometric = false
+    /// PIN yeni açıldı: biyometriyi bu PIN'le bağlamayı öner.
+    var offerBiometricPin: String?
+    /// Kilit ekranı biyometriyi kendiliğinden sorar mı. Soğuk açılışta ve arka
+    /// plandan dönüşte evet; elle kilitlenince ya da PIN'den vazgeçilince hayır:
+    /// Face ID ekrana bakan yüzü anında tanır, kasa hemen yeniden açılırdı.
+    var autoBiometricArmed = true
+
     private let keys: KeyManager
     private let storeFile: URL
     private var store: VaultStore?
+    private var dataKey: SymmetricKey?
+    /// Face ID'den gelen ve PIN bekleyen iç sargı.
+    private var pendingInner: Data?
+    private let biometric = BiometricStore()
+    private let pins = PinStore()
+    private let lockPrefs = LockPreferences()
+
+    var biometryName: String { biometry?.name ?? "Face ID" }
+    var masterPasswordDue: Bool { lockPrefs.masterPasswordDue() }
+    /// Kilit ekranında biyometri sunulur mu: cihazda var, kayıt var, hatırlatma zamanı değil.
+    var biometricUsable: Bool { biometry != nil && biometricEnabled && !masterPasswordDue }
 
     init() {
         let kok = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
@@ -41,6 +72,19 @@ final class VaultModel {
         keys = KeyManager(file: kok.appendingPathComponent("keys.json"))
         storeFile = kok.appendingPathComponent("vault.sqlite")
         state = keys.isInitialized ? .locked : .setup
+        // Keychain kayıtları uygulama silinince de kalır: kasası olmayan bir
+        // kurulumda eskiden kalan biyometri ve PIN kaydı temizlenir.
+        if !keys.isInitialized {
+            biometric.clear(); pins.clear(); lockPrefs.clear()
+        }
+        refreshLockOptions()
+    }
+
+    func refreshLockOptions() {
+        biometry = BiometricStore.available()
+        biometricEnabled = biometric.isEnabled
+        pinEnabled = pins.load() != nil
+        reminderDays = lockPrefs.reminderDays
     }
 
     private var simdi: Int64 { Int64(Date().timeIntervalSince1970 * 1000) }
@@ -57,6 +101,10 @@ final class VaultModel {
             let ham = try await Task.detached { try k.setup(password: password).withUnsafeBytes { Data($0) } }.value
             restoreAfterSetup = restoreAfter
             try open(with: SymmetricKey(data: ham))
+            lockPrefs.markMasterPasswordUsed()
+            // Teklif kurulumun hemen ardından: sonraya bırakılırsa özellik çoğu
+            // zaman hiç fark edilmez (Android ile aynı gerekçe).
+            offerBiometric = biometry != nil
         } catch {
             self.error = error.localizedDescription
         }
@@ -68,19 +116,30 @@ final class VaultModel {
         // PBKDF2 (310.000 tur) arayüzü dondurmasın.
         let ham = await Task.detached { k.unlock(password: password)?.withUnsafeBytes { Data($0) } }.value
         guard let ham else { error = L("vm_wrong_password"); return }
-        do { try open(with: SymmetricKey(data: ham)) } catch { self.error = error.localizedDescription }
+        do {
+            try open(with: SymmetricKey(data: ham))
+            // Ana parola tek başına açar: PIN yalnız biyometrik yolu korur.
+            lockPrefs.markMasterPasswordUsed()
+        } catch { self.error = error.localizedDescription }
     }
 
     private func open(with key: SymmetricKey) throws {
+        #if DEBUG
+        Log.kilit.debug("kasa açılıyor")
+        #endif
         store = try VaultStore(file: storeFile, key: key)
+        dataKey = key
         error = nil
         try reload()
         state = .unlocked
     }
 
     func lock() {
+        autoBiometricArmed = false   // elle kilit; arka plana geçiş bunu yeniden kurar
+        if state == .needsPin { pendingInner = nil; state = .locked; return }
         guard state == .unlocked else { return }
         store = nil
+        dataKey = nil
         items = []
         state = .locked
     }
@@ -89,13 +148,189 @@ final class VaultModel {
     /// arka planda kasa kilitlenir.
     func sceneChanged(_ faz: ScenePhase) {
         switch faz {
-        case .active: privacyCover = false
+        case .active:
+            privacyCover = false
+            refreshLockOptions()   // Face ID Ayarlar'dan yeni kurulmuş olabilir
         case .inactive: privacyCover = state == .unlocked
         case .background:
             privacyCover = state == .unlocked
             lock()
+            autoBiometricArmed = true
         @unknown default: break
         }
+    }
+
+    // MARK: Face ID / Touch ID ve PIN
+
+    /// Biyometriyle açar; PIN açıksa ikinci aşamaya (PIN ekranı) geçer.
+    func unlockWithBiometric() async {
+        guard biometricUsable, state == .locked, !busy else { return }
+        busy = true; defer { busy = false }
+        let b = biometric, sebep = L("ios_biometric_reason")
+        #if DEBUG
+        let baslangic = Date()
+        Log.kilit.debug("biyometri: okuma başlıyor")
+        defer { Log.kilit.debug("biyometri: okuma bitti, \(Date().timeIntervalSince(baslangic), format: .fixed(precision: 3)) sn") }
+        #endif
+        do {
+            let icerik = try await b.read(reason: sebep)
+            if pinEnabled {
+                pendingInner = icerik
+                error = nil
+                state = .needsPin
+            } else if icerik.count == Crypto.keyBytes {
+                try open(with: SymmetricKey(data: icerik))
+            } else {
+                error = L("vm_key_unexpected_size")
+            }
+        } catch BiometricStore.Failure.canceled {
+            // Vazgeçildi: parola alanı yerinde.
+        } catch BiometricStore.Failure.invalidated {
+            biometric.clear(); refreshLockOptions()
+            error = L("ios_biometric_invalidated", biometryName)
+        } catch {
+            self.error = L("ios_biometric_failed", biometryName)
+        }
+    }
+
+    /// İkinci aşama: Face ID'den gelen iç sargıyı PIN ile çözer (Android: `unlockWithPin`).
+    func unlockWithPin(_ pin: String) async {
+        guard let ic = pendingInner, var kayit = pins.load() else { cancelPin(); return }
+        let kalan = PinBackoff.remainingMs(fails: kayit.fails, lastFailAt: kayit.failAt, now: simdi)
+        if kalan > 0 { error = Lp("vm_pin_locked_wait", Int(max(kalan / 1000, 1))); return }
+        busy = true; defer { busy = false }
+        let tuz = kayit.salt, kontrol = kayit.check
+        let (anahtar, pinDogru) = await Task.detached { () -> (Data?, Bool) in
+            if let k = PinLock.unwrap(ic, pin: pin, salt: tuz) { return (k, true) }
+            return (nil, PinLock.unwrapCheck(kontrol, pin: pin, salt: tuz))
+        }.value
+        if let anahtar, anahtar.count == Crypto.keyBytes {
+            kayit.fails = 0; kayit.failAt = 0
+            try? pins.save(kayit)
+            pendingInner = nil
+            do { try open(with: SymmetricKey(data: anahtar)) } catch { self.error = error.localizedDescription }
+            return
+        }
+        if pinDogru {
+            // PIN doğru ama biyometrik kayıt bayat (PIN'den önce yazılmış):
+            // sayaç bir güvenlik olayı değil; kayıt silinir, onarıma yönlendirilir.
+            kayit.fails = 0; kayit.failAt = 0
+            try? pins.save(kayit)
+            biometric.clear(); refreshLockOptions()
+            pendingInner = nil; state = .locked
+            error = L("ios_biometric_stale", biometryName)
+            return
+        }
+        kayit.fails += 1; kayit.failAt = simdi
+        try? pins.save(kayit)
+        if kayit.fails >= PinBackoff.maxFails {
+            // Çok fazla yanlış: biyometrik yol tamamen kapanır, yalnız ana parola kalır.
+            biometric.clear(); refreshLockOptions()
+            pendingInner = nil; state = .locked
+            error = L("ios_pin_biometric_off", biometryName)
+        } else {
+            let yeni = PinBackoff.remainingMs(fails: kayit.fails, lastFailAt: kayit.failAt, now: simdi)
+            error = yeni > 0 ? Lp("vm_pin_wrong_wait", Int(max(yeni / 1000, 1))) : L("vm_pin_wrong")
+        }
+    }
+
+    func cancelPin() {
+        pendingInner = nil
+        error = nil
+        autoBiometricArmed = false   // vazgeçen kullanıcı ana parolayı seçti
+        if state == .needsPin { state = .locked }
+    }
+
+    /// Biyometrik kaydı yazar. PIN açıksa içerik PIN'le sarılır (PIN gerekir).
+    /// Önce sistem bir kez Face ID ister: kayıt, kullanıcının kendi onayıyla yazılır.
+    @discardableResult
+    func enableBiometric(pin: String? = nil) async -> Bool {
+        guard let dataKey, biometry != nil else { return false }
+        let ham = dataKey.withUnsafeBytes { Data($0) }
+        var icerik = ham
+        if let kayit = pins.load() {
+            guard let pin, PinLock.isValid(pin) else { error = L("vm_pin_wrong"); return false }
+            busy = true
+            let sarili = await Task.detached { () -> Data? in
+                guard PinLock.unwrapCheck(kayit.check, pin: pin, salt: kayit.salt) else { return nil }
+                return try? PinLock.wrap(dataKey: ham, pin: pin, salt: kayit.salt)
+            }.value
+            busy = false
+            guard let sarili else { error = L("vm_pin_wrong"); return false }
+            icerik = sarili
+        }
+        let baglam = LAContext()
+        do {
+            guard try await baglam.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics,
+                                                  localizedReason: L("ios_biometric_reason")) else { return false }
+            try biometric.store(icerik)
+            #if DEBUG
+            Log.kilit.debug("biyometri: kayıt yazıldı, erişim denetimi: \(self.biometric.debugAccessControlPresent)")
+            #endif
+            refreshLockOptions()
+            error = nil
+            show(L("ios_biometric_enabled", biometryName))
+            return true
+        } catch let e as LAError where [.userCancel, .appCancel, .systemCancel].contains(e.code) {
+            return false
+        } catch {
+            self.error = L("ios_biometric_enable_failed", biometryName, error.localizedDescription)
+            return false
+        }
+    }
+
+    func disableBiometric() {
+        biometric.clear()
+        refreshLockOptions()
+        show(L("vm_biometric_disabled"))
+    }
+
+    /// PIN'i açar. Ana parola yalnız DOĞRULAMA için istenir. Ham anahtarı saran
+    /// eski biyometrik kayıt silinir; biyometri hemen PIN'e bağlanmak üzere önerilir.
+    @discardableResult
+    func enablePin(password: String, pin: String, again: String) async -> Bool {
+        guard PinLock.isValid(pin) else { error = L("vm_pin_enable_failed"); return false }
+        guard pin == again else { error = L("vm_passwords_mismatch"); return false }
+        busy = true; defer { busy = false }
+        let k = keys
+        let tuz = Crypto.randomBytes(16)
+        let kontrol = await Task.detached { () -> Data? in
+            guard k.unlock(password: password) != nil else { return nil }
+            return try? PinLock.wrapCheck(pin: pin, salt: tuz)
+        }.value
+        guard let kontrol else { error = L("vm_pin_enable_failed"); return false }
+        do { try pins.save(PinStore.Record(salt: tuz, check: kontrol)) } catch {
+            self.error = L("vm_pin_enable_failed"); return false
+        }
+        biometric.clear()
+        lockPrefs.markMasterPasswordUsed()
+        refreshLockOptions()
+        error = nil
+        show(L("ios_pin_enabled", biometryName))
+        if biometry != nil { offerBiometricPin = pin }
+        return true
+    }
+
+    /// PIN'i kapatır. Yalnız ana parola ister: PIN zaten yalnız biyometrik yolu korur.
+    @discardableResult
+    func disablePin(password: String) async -> Bool {
+        busy = true; defer { busy = false }
+        let k = keys
+        let dogru = await Task.detached { k.unlock(password: password) != nil }.value
+        guard dogru else { error = L("vm_pin_disable_failed"); return false }
+        pins.clear()
+        biometric.clear()
+        lockPrefs.markMasterPasswordUsed()
+        refreshLockOptions()
+        error = nil
+        show(L("ios_pin_disabled", biometryName))
+        offerBiometric = biometry != nil
+        return true
+    }
+
+    func setReminder(days: Int) {
+        lockPrefs.reminderDays = days
+        reminderDays = days
     }
 
     // MARK: Kayıtlar
@@ -248,8 +483,20 @@ final class VaultModel {
     func seedDemoIfRequested() async {
         guard ProcessInfo.processInfo.arguments.contains("-ornekKasa"), state != .unlocked else { return }
         let parola = "ornek-parola-2026"
-        if state == .setup { await setup(password: parola, again: parola) } else { await unlock(password: parola) }
-        guard state == .unlocked, items.isEmpty else { return }
+        let a = ProcessInfo.processInfo.arguments
+        if state == .setup {
+            // `-ornekYedegimVar`: kurulum "yedeğim var" ile yapılmış gibi.
+            await setup(password: parola, again: parola, restoreAfter: a.contains("-ornekYedegimVar"))
+        } else {
+            await unlock(password: parola)
+        }
+        guard state == .unlocked else { return }
+        // Öneri yalnız istenince: diğer denemelerin önüne pencere düşmesin.
+        offerBiometric = a.contains("-ornekFaceIDAc") && biometry != nil
+        if let i = a.firstIndex(of: "-ornekPinAc"), i + 1 < a.count {
+            await enablePin(password: parola, pin: a[i + 1], again: a[i + 1])
+        }
+        guard items.isEmpty else { return }
         func kayit(_ tur: EntryType, _ baslik: String, kind: NoteKind = .genel, quick: Bool = false,
                    sira: Int = 0, _ doldur: (inout EntryData) -> Void) {
             var d = EntryData(); doldur(&d)
