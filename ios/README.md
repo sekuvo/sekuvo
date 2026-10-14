@@ -50,8 +50,9 @@ xcodebuild -project ios/Sekuvo.xcodeproj -scheme Sekuvo -destination 'platform=i
 ```
 
 The simulator does not enforce the Keychain's biometric access control, so
-the app asks for Face ID explicitly before every read. Whether the record
-itself refuses to open without Face ID can only be checked on a device.
+the app asks for Face ID explicitly before every read. A device does: on an
+iPad Air 3 with Touch ID, a read of the record without user interaction is
+refused (-25308, errSecInteractionNotAllowed).
 
 After changing a string in the Android app:
 

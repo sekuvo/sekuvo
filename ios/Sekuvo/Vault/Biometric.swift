@@ -117,10 +117,13 @@ struct BiometricStore: Sendable {
     /// Face ID ister ve içeriği döndürür.
     ///
     /// Önce sistemden açık bir biyometrik onay alınır, Keychain ancak bu
-    /// onaylanmış bağlamla okunur. Cihazda kaydın kendi erişim denetimi
-    /// (Secure Enclave) ayrıca bekçidir; ama simülatörde bu denetimin
-    /// uygulanmadığı ölçüldü (okuma istem olmadan 0,02 sn'de döndü). Onay
-    /// adımı bu yüzden her koşulda kendisi istenir.
+    /// onaylanmış bağlamla okunur. Kaydın kendi erişim denetimi ayrıca
+    /// bekçidir. Ölçüldü:
+    /// - iPad Air 3'te (Touch ID, iPadOS 26.2) denetim uygulanıyor:
+    ///   etkileşimsiz okuma -25308 (`errSecInteractionNotAllowed`) ile
+    ///   reddedildi.
+    /// - Simülatörde uygulanmıyor: okuma istem olmadan 0,02 sn'de döndü.
+    /// Onay adımı bu yüzden her koşulda kendisi istenir.
     func read(reason: String) async throws -> Data {
         let c = LAContext()
         c.localizedFallbackTitle = ""   // "Parola gir" düğmesi yok: yedek yol ana paroladır
@@ -130,7 +133,7 @@ struct BiometricStore: Sendable {
             }
         } catch let e as LAError {
             #if DEBUG
-            Log.kilit.debug("biyometri: onay alınamadı, LAError \(e.code.rawValue)")
+            Log.kilit.notice("biyometri: onay alınamadı, LAError \(e.code.rawValue)")
             #endif
             switch e.code {
             case .userCancel, .appCancel, .systemCancel, .userFallback: throw Failure.canceled
@@ -144,7 +147,7 @@ struct BiometricStore: Sendable {
         var sonuc: CFTypeRef?
         let durum = SecItemCopyMatching(q as CFDictionary, &sonuc)
         #if DEBUG
-        Log.kilit.debug("biyometri: Keychain okuması \(durum)")
+        Log.kilit.notice("biyometri: Keychain okuması \(durum)")
         #endif
         switch durum {
         case errSecSuccess:

@@ -8,6 +8,9 @@ import UIKit
 import UniformTypeIdentifiers
 import os
 
+/// Yalnız Debug derlemesindeki ölçüm satırları için. `notice` düzeyinde:
+/// cihazda `debug` düzeyi hiç üretilmiyor, konsola (`devicectl --console`,
+/// `OS_ACTIVITY_DT_MODE`) yalnız `notice` ve üstü geliyor (iPad'de ölçüldü).
 enum Log {
     static let kilit = Logger(subsystem: "com.sekuvo.app", category: "kilit")
 }
@@ -133,7 +136,7 @@ final class VaultModel {
 
     private func open(with key: SymmetricKey) throws {
         #if DEBUG
-        Log.kilit.debug("kasa açılıyor")
+        Log.kilit.notice("kasa açılıyor")
         #endif
         store = try VaultStore(file: storeFile, key: key)
         dataKey = key
@@ -179,8 +182,8 @@ final class VaultModel {
         #if DEBUG
         let baslangic = Date()
         // Parola düğmesindeki gösterge yalnız `busy`'ye bağlı: okuma sürerken false olmalı.
-        Log.kilit.debug("biyometri: okuma başlıyor (busy: \(self.busy), biometricBusy: \(self.biometricBusy))")
-        defer { Log.kilit.debug("biyometri: okuma bitti, \(Date().timeIntervalSince(baslangic), format: .fixed(precision: 3)) sn") }
+        Log.kilit.notice("biyometri: okuma başlıyor (busy: \(self.busy), biometricBusy: \(self.biometricBusy))")
+        defer { Log.kilit.notice("biyometri: okuma bitti, \(Date().timeIntervalSince(baslangic), format: .fixed(precision: 3)) sn") }
         #endif
         do {
             let icerik = try await b.read(reason: sebep)
@@ -275,7 +278,7 @@ final class VaultModel {
                                                   localizedReason: L("ios_biometric_reason")) else { return false }
             try biometric.store(icerik)
             #if DEBUG
-            Log.kilit.debug("biyometri: kayıt yazıldı, erişim denetimi: \(self.biometric.debugAccessControlPresent), etkileşimsiz okuma: \(self.biometric.debugEnforcementProbe)")
+            Log.kilit.notice("biyometri: kayıt yazıldı, erişim denetimi: \(self.biometric.debugAccessControlPresent), etkileşimsiz okuma: \(self.biometric.debugEnforcementProbe)")
             #endif
             refreshLockOptions()
             error = nil
@@ -575,7 +578,7 @@ final class VaultModel {
     func show(_ mesaj: String) {
         #if DEBUG
         // Bildirim 2,5 sn görünür: ekran görüntüsüyle sınarken zamanı buradan okunur.
-        Log.kilit.debug("bildirim: \(mesaj)")
+        Log.kilit.notice("bildirim: \(mesaj)")
         #endif
         toast = mesaj
         Task { @MainActor in
