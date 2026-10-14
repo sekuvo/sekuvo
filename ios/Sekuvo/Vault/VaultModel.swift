@@ -569,6 +569,10 @@ final class VaultModel {
     }
 
     func show(_ mesaj: String) {
+        #if DEBUG
+        // Bildirim 2,5 sn görünür: ekran görüntüsüyle sınarken zamanı buradan okunur.
+        Log.kilit.debug("bildirim: \(mesaj)")
+        #endif
         toast = mesaj
         Task { @MainActor in
             try? await Task.sleep(for: .seconds(2.5))

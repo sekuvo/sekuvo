@@ -171,6 +171,11 @@ struct HomeScreen: View {
                 let a = ProcessInfo.processInfo.arguments
                 if a.contains("-ornekQr") { qr = true }
                 if a.contains("-ornekAyarlar") { ayarlar = true }
+                // `-ornekBildirim <metin>`: 2 sn sonra bildirim (açık sayfaların üstünde görünmeli).
+                if let i = a.firstIndex(of: "-ornekBildirim"), i + 1 < a.count {
+                    try? await Task.sleep(for: .seconds(2))
+                    kasa.show(a[i + 1])
+                }
                 // `-ornekYeni <TÜR>`: o türde yeni kayıt ekranı (LOGIN, EVERYDAY, CARD, NOTE).
                 if let i = a.firstIndex(of: "-ornekYeni"), i + 1 < a.count, let t = EntryType(rawValue: a[i + 1]) {
                     yeni = NewEntry(type: t)

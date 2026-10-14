@@ -33,19 +33,8 @@ struct RootView: View {
             // sahne etkin değilken üstte perde durur (FLAG_SECURE'un karşılığı yok).
             if kasa.privacyCover { PrivacyCover() }
         }
-        .overlay(alignment: .bottom) {
-            if let mesaj = kasa.toast {
-                Text(mesaj)
-                    .font(.subheadline)
-                    .foregroundStyle(Color(UIColor { $0.userInterfaceStyle == .dark ? UIColor(rgb: 0x332E27) : UIColor(rgb: 0xF6EFE3) }))
-                    .padding(.horizontal, 16).padding(.vertical, 10)
-                    .background(Color(UIColor { $0.userInterfaceStyle == .dark ? UIColor(rgb: 0xEDE3D3) : UIColor(rgb: 0x33302A) }), in: Capsule())
-                    // Alttaki arama alanının üstünde dursun.
-                    .padding(.bottom, 96).padding(.horizontal, 24)
-                    .transition(.move(edge: .bottom).combined(with: .opacity))
-            }
-        }
-        .animation(.spring(duration: 0.3), value: kasa.toast)
+        // Bildirim ayrı bir pencerede: açık sayfaların altında kalmasın (Toast.swift).
+        .background(ToastHost(kasa: kasa))
         // Dosyalar'dan "Sekuvo ile aç" ya da paylaşım: dosya hemen okunur,
         // geri yükleme penceresi kasa açıkken gelir (HomeScreen).
         .onOpenURL { kasa.receive(fileAt: $0) }
