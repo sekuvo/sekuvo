@@ -183,4 +183,7 @@ tasks.matching { it.name == "assembleRelease" }.configureEach {
 // girdi olarak bildir ki metin değişince test yeniden koşsun.
 tasks.withType<Test>().configureEach {
     inputs.dir("src/main/res").withPathSensitivity(PathSensitivity.RELATIVE)
+    // OrtakBicimTest iOS ile paylaşılan biçim değerlerini okur (bicim/):
+    // değerler değişince test yeniden koşmalı.
+    inputs.dir("../bicim/vektorler").withPathSensitivity(PathSensitivity.RELATIVE)
 }
