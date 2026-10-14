@@ -265,7 +265,7 @@ final class VaultModel {
                                                   localizedReason: L("ios_biometric_reason")) else { return false }
             try biometric.store(icerik)
             #if DEBUG
-            Log.kilit.debug("biyometri: kayıt yazıldı, erişim denetimi: \(self.biometric.debugAccessControlPresent)")
+            Log.kilit.debug("biyometri: kayıt yazıldı, erişim denetimi: \(self.biometric.debugAccessControlPresent), etkileşimsiz okuma: \(self.biometric.debugEnforcementProbe)")
             #endif
             refreshLockOptions()
             error = nil

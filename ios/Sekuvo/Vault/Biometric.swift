@@ -99,6 +99,19 @@ struct BiometricStore: Sendable {
         let ozellikler = sonuc as? [String: Any]
         return durum == errSecInteractionNotAllowed || ozellikler?[kSecAttrAccessControl as String] != nil
     }
+
+    /// İçerik, etkileşime izin vermeyen bir bağlamla okunabiliyor mu? Erişim
+    /// denetimi uygulanıyorsa sistem okumayı reddeder (-25308); simülatörde
+    /// içerik döner (0). Denetimin *uygulandığını* cihazda ölçmek için.
+    var debugEnforcementProbe: OSStatus {
+        let c = LAContext()
+        c.interactionNotAllowed = true
+        var q = temel
+        q[kSecReturnData as String] = true
+        q[kSecUseAuthenticationContext as String] = c
+        var sonuc: CFTypeRef?
+        return SecItemCopyMatching(q as CFDictionary, &sonuc)
+    }
     #endif
 
     /// Face ID ister ve içeriği döndürür.
@@ -116,6 +129,9 @@ struct BiometricStore: Sendable {
                 throw Failure.failed(errSecAuthFailed)
             }
         } catch let e as LAError {
+            #if DEBUG
+            Log.kilit.debug("biyometri: onay alınamadı, LAError \(e.code.rawValue)")
+            #endif
             switch e.code {
             case .userCancel, .appCancel, .systemCancel, .userFallback: throw Failure.canceled
             case .biometryNotEnrolled, .biometryNotAvailable: throw Failure.invalidated
@@ -127,6 +143,9 @@ struct BiometricStore: Sendable {
         q[kSecUseAuthenticationContext as String] = c
         var sonuc: CFTypeRef?
         let durum = SecItemCopyMatching(q as CFDictionary, &sonuc)
+        #if DEBUG
+        Log.kilit.debug("biyometri: Keychain okuması \(durum)")
+        #endif
         switch durum {
         case errSecSuccess:
             guard let veri = sonuc as? Data else { throw Failure.failed(durum) }
