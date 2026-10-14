@@ -3,9 +3,9 @@ import SQLite3
 
 /// Kayıtların diskteki yeri: SQLite, üçüncü taraf kütüphane olmadan.
 ///
-/// Şema Android'deki Room tablosunun (`entries`) karşılığı. Liste ve arama
-/// için yalnız başlık ve tür açık durur; bütün hassas alanlar `blob` içinde
-/// `dataKey` ile AES-256-GCM'lidir (Android'de de aynı, SEC-013). Dosya ayrıca
+/// Şema Android'deki Room tablolarının (`entries`, `tags`) karşılığı. Liste ve
+/// arama için yalnız başlık ve tür açık durur; bütün hassas alanlar `blob`
+/// içinde `dataKey` ile AES-256-GCM'lidir (Android'de de aynı). Dosya ayrıca
 /// iOS veri korumasıyla (`complete`) şifrelidir.
 final class EntryStore {
 
@@ -17,10 +17,18 @@ final class EntryStore {
         var createdAt: Int64
         var updatedAt: Int64
         var quick: Bool = false
+        /// Etiket id'leri, JSON dizi ("[1,3]") — Android'deki `TagIds` biçimi.
         var tags: String = "[]"
         var noteKind: String = "GENEL"
         var sortIndex: Int = 0
         var anchor: Bool = false
+    }
+
+    struct TagRow: Equatable {
+        var id: Int64
+        var name: String
+        var color: Int32
+        var icon: String
     }
 
     enum Failure: Error { case open(String), sql(String) }
@@ -49,14 +57,22 @@ final class EntryStore {
               sortIndex INTEGER NOT NULL DEFAULT 0,
               anchor INTEGER NOT NULL DEFAULT 0
             );
+            CREATE TABLE IF NOT EXISTS tags (
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
+              name TEXT NOT NULL,
+              color INTEGER NOT NULL,
+              icon TEXT NOT NULL DEFAULT ''
+            );
             """)
         try? FileManager.default.setAttributes([.protectionKey: FileProtectionType.complete], ofItemAtPath: file.path)
     }
 
     deinit { sqlite3_close(db) }
 
+    // MARK: Kayıtlar
+
     func all() throws -> [Row] {
-        try query("SELECT id, type, title, blob, createdAt, updatedAt, quick, tags, noteKind, sortIndex, anchor FROM entries") { s in
+        try query("SELECT id, type, title, blob, createdAt, updatedAt, quick, tags, noteKind, sortIndex, anchor FROM entries", { _ in }) { s in
             Row(id: sqlite3_column_int64(s, 0), type: metin(s, 1), title: metin(s, 2), blob: veri(s, 3),
                 createdAt: sqlite3_column_int64(s, 4), updatedAt: sqlite3_column_int64(s, 5),
                 quick: sqlite3_column_int(s, 6) != 0, tags: metin(s, 7), noteKind: metin(s, 8),
@@ -65,7 +81,13 @@ final class EntryStore {
     }
 
     func get(id: Int64) throws -> Row? {
-        try all().first { $0.id == id }
+        try query("SELECT id, type, title, blob, createdAt, updatedAt, quick, tags, noteKind, sortIndex, anchor FROM entries WHERE id = ?",
+                  { sqlite3_bind_int64($0, 1, id) }) { s in
+            Row(id: sqlite3_column_int64(s, 0), type: metin(s, 1), title: metin(s, 2), blob: veri(s, 3),
+                createdAt: sqlite3_column_int64(s, 4), updatedAt: sqlite3_column_int64(s, 5),
+                quick: sqlite3_column_int(s, 6) != 0, tags: metin(s, 7), noteKind: metin(s, 8),
+                sortIndex: Int(sqlite3_column_int(s, 9)), anchor: sqlite3_column_int(s, 10) != 0)
+        }.first
     }
 
     @discardableResult
@@ -89,6 +111,42 @@ final class EntryStore {
 
     func delete(id: Int64) throws {
         try run("DELETE FROM entries WHERE id = ?") { s in sqlite3_bind_int64(s, 1, id) }
+    }
+
+    func deleteAllEntries() throws { try exec("DELETE FROM entries") }
+
+    // MARK: Etiketler
+
+    func allTags() throws -> [TagRow] {
+        try query("SELECT id, name, color, icon FROM tags ORDER BY id", { _ in }) { s in
+            TagRow(id: sqlite3_column_int64(s, 0), name: metin(s, 1),
+                   color: Int32(truncatingIfNeeded: sqlite3_column_int64(s, 2)), icon: metin(s, 3))
+        }
+    }
+
+    @discardableResult
+    func insertTag(name: String, color: Int32, icon: String) throws -> Int64 {
+        try run("INSERT INTO tags (name, color, icon) VALUES (?, ?, ?)") { s in
+            sqlite3_bind_text(s, 1, name, -1, Self.transient)
+            sqlite3_bind_int64(s, 2, Int64(color))
+            sqlite3_bind_text(s, 3, icon, -1, Self.transient)
+        }
+        return sqlite3_last_insert_rowid(db)
+    }
+
+    // MARK: İşlem
+
+    /// Gövde hata atarsa her şey geri alınır: yarıda kesilen bir "tümünü
+    /// değiştir" kasayı boş bırakamaz.
+    func transaction(_ govde: () throws -> Void) throws {
+        try exec("BEGIN IMMEDIATE")
+        do {
+            try govde()
+            try exec("COMMIT")
+        } catch {
+            try? exec("ROLLBACK")
+            throw error
+        }
     }
 
     // MARK: SQLite yardımcıları
@@ -122,10 +180,11 @@ final class EntryStore {
         guard sqlite3_step(s) == SQLITE_DONE else { throw Failure.sql(String(cString: sqlite3_errmsg(db))) }
     }
 
-    private func query<T>(_ sql: String, _ satir: (OpaquePointer?) -> T) throws -> [T] {
+    private func query<T>(_ sql: String, _ bind: (OpaquePointer?) -> Void, _ satir: (OpaquePointer?) -> T) throws -> [T] {
         var s: OpaquePointer?
         guard sqlite3_prepare_v2(db, sql, -1, &s, nil) == SQLITE_OK else { throw Failure.sql(String(cString: sqlite3_errmsg(db))) }
         defer { sqlite3_finalize(s) }
+        bind(s)
         var sonuc: [T] = []
         while sqlite3_step(s) == SQLITE_ROW { sonuc.append(satir(s)) }
         return sonuc
@@ -139,4 +198,17 @@ private func metin(_ s: OpaquePointer?, _ i: Int32) -> String {
 private func veri(_ s: OpaquePointer?, _ i: Int32) -> Data {
     guard let p = sqlite3_column_blob(s, i) else { return Data() }
     return Data(bytes: p, count: Int(sqlite3_column_bytes(s, i)))
+}
+
+/// Android'deki `TagIds`: `[1,3]` biçimli etiket listesi.
+enum TagIds {
+    static func parse(_ json: String) -> [Int64] {
+        guard let dizi = (try? JSONSerialization.jsonObject(with: Data(json.utf8))) as? [Any] else { return [] }
+        return dizi.compactMap { ($0 as? NSNumber)?.int64Value }
+    }
+
+    static func serialize(_ ids: [Int64]) -> String {
+        var gorulen = Set<Int64>()
+        return "[" + ids.filter { gorulen.insert($0).inserted }.map(String.init).joined(separator: ",") + "]"
+    }
 }

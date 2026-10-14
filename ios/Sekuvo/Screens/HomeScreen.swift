@@ -9,13 +9,20 @@ struct HomeScreen: View {
     @State private var tur: EntryType?
     @State private var yeni: NewEntry?
     @State private var yol: [Int64] = []
+    @State private var qr = false
+    @State private var metinden = false
+    @State private var ayarlar = false
+    @State private var geriYukle = false
+    #if DEBUG
+    @State private var ornekDosya: RestoreFlow.SelectedFile?
+    #endif
 
     struct NewEntry: Identifiable {
         let id = UUID()
         let type: EntryType
     }
 
-    private var gorunen: [VaultModel.Item] {
+    private var gorunen: [VaultStore.Item] {
         kasa.items.filter { i in
             (arama.isEmpty || i.title.localizedStandardContains(arama)) && (tur == nil || i.type == tur)
         }
@@ -66,14 +73,17 @@ struct HomeScreen: View {
                         .accessibilityLabel(L("home_lock_cd"))
                 }
                 ToolbarItem(placement: .topBarTrailing) {
+                    Button { ayarlar = true } label: { Image(systemName: "gearshape.fill") }
+                        .accessibilityLabel(L("home_settings_cd"))
+                }
+                ToolbarItem(placement: .topBarTrailing) {
                     Menu {
                         ForEach(EntryType.allCases, id: \.self) { t in
                             Button { yeni = NewEntry(type: t) } label: { Label(t.label, systemImage: t.symbol) }
                         }
                         Divider()
-                        // QR ve metinden içe aktarma sıradaki adım; şimdilik kapalı.
-                        Label(L("home_import_qr"), systemImage: "qrcode.viewfinder").foregroundStyle(.secondary)
-                        Label(L("home_import_text"), systemImage: "doc.on.clipboard").foregroundStyle(.secondary)
+                        Button { qr = true } label: { Label(L("home_import_qr"), systemImage: "qrcode.viewfinder") }
+                        Button { metinden = true } label: { Label(L("home_import_text"), systemImage: "doc.on.clipboard") }
                     } label: {
                         Image(systemName: "plus.circle.fill").font(.title2)
                     }
@@ -83,7 +93,26 @@ struct HomeScreen: View {
             .sheet(item: $yeni) { y in
                 NavigationStack { EditScreen(existing: nil, newType: y.type) }
             }
+            .fullScreenCover(isPresented: $qr) { QrScanScreen() }
+            .sheet(isPresented: $metinden) { NavigationStack { ImportSheet(source: .text) } }
+            .sheet(isPresented: $ayarlar) { SettingsScreen() }
+            .restoreFlow(isPresented: $geriYukle)
+            .onAppear {
+                // Kurulum "yedeğim var" ile yapıldıysa: hemen dosya seçici.
+                if kasa.restoreAfterSetup { kasa.restoreAfterSetup = false; geriYukle = true }
+            }
             #if DEBUG
+            .task {
+                let a = ProcessInfo.processInfo.arguments
+                if a.contains("-ornekQr") { qr = true }
+                if a.contains("-ornekAyarlar") { ayarlar = true }
+                // `-ornekGeriYukle <dosya>`: dosya seçiciye dokunmadan geri yükleme penceresi.
+                if let i = a.firstIndex(of: "-ornekGeriYukle"), i + 1 < a.count,
+                   let veri = try? Data(contentsOf: URL(fileURLWithPath: a[i + 1])) {
+                    ornekDosya = RestoreFlow.SelectedFile(data: veri)
+                }
+            }
+            .sheet(item: $ornekDosya) { s in NavigationStack { ImportSheet(source: .file, envelope: s.data) } }
             // `-ornekDetay <başlık>`: ekran görüntüsü için o kaydın detayıyla açılır.
             .task(id: kasa.items.count) {
                 let a = ProcessInfo.processInfo.arguments
@@ -99,7 +128,7 @@ struct HomeScreen: View {
 
 /// Liste satırı (Android: kart satırı): tür rozeti, başlık, tür adı, ⚡, öncelik.
 struct EntryRow: View {
-    let item: VaultModel.Item
+    let item: VaultStore.Item
 
     var body: some View {
         HStack(spacing: 14) {

@@ -20,6 +20,24 @@
     "ios_copied": {
       "en": "%1$@ copied · this iPhone only, cleared in 45 s",
       "tr": "%1$@ kopyalandı · yalnız bu iPhone'da, 45 sn sonra silinir"
+    },
+    "ios_camera_unavailable": {
+      "en": "No camera is available on this device. Use Import from text instead.",
+      "tr": "Bu cihazda kullanılabilir kamera yok. Bunun yerine Metinden içe aktar'ı kullan."
+    },
+    "ios_qr_import_added": {
+      "en": {
+        "one": "%lld entry added",
+        "other": "%lld entries added"
+      },
+      "tr": {
+        "one": "%lld kayıt eklendi",
+        "other": "%lld kayıt eklendi"
+      }
+    },
+    "ios_backup_file_name": {
+      "en": "sekuvo-backup",
+      "tr": "sekuvo-yedek"
     }
   },
   "infoplist": {

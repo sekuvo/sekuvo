@@ -1,6 +1,5 @@
 import CryptoKit
 import Foundation
-import SekuvoCore
 
 /// Anahtar hiyerarşisi — Android'deki `core/KeyManager.kt` ile aynı:
 ///
@@ -14,7 +13,7 @@ import SekuvoCore
 /// silinince de kalır, yani yeniden kurulumda verisi olmayan bir kasanın
 /// anahtarı ortada kalırdı. Face ID ve PIN katmanı bu sargının
 /// üstüne ayrıca gelecek; ana parola her zaman tek başına açar.
-struct KeyManager {
+public struct KeyManager: Sendable {
 
     struct Wrapped: Codable {
         var salt: String
@@ -22,20 +21,22 @@ struct KeyManager {
         var wrappedKey: String
     }
 
-    let file: URL
+    public let file: URL
 
-    var isInitialized: Bool { FileManager.default.fileExists(atPath: file.path) }
+    public init(file: URL) { self.file = file }
+
+    public var isInitialized: Bool { FileManager.default.fileExists(atPath: file.path) }
 
     /// İlk kurulum: yeni `dataKey` üretir, ana parolayla sarıp saklar.
     /// PBKDF2 ağır olduğu için ana iş parçacığında çağrılmaz.
-    func setup(password: String) throws -> SymmetricKey {
+    public func setup(password: String) throws -> SymmetricKey {
         let dataKey = Crypto.randomKey()
         try store(password: password, payload: dataKey.withUnsafeBytes { Data($0) })
         return dataKey
     }
 
     /// Ana parola doğruysa `dataKey`.
-    func unlock(password: String) -> SymmetricKey? {
+    public func unlock(password: String) -> SymmetricKey? {
         guard let veri = try? Data(contentsOf: file),
               let w = try? JSONDecoder().decode(Wrapped.self, from: veri),
               let tuz = Data(base64Encoded: w.salt),
@@ -47,7 +48,7 @@ struct KeyManager {
     }
 
     /// Ana parolayı değiştirir: `dataKey` aynı kalır, yalnız sargı yenilenir.
-    func changePassword(old: String, new: String) throws -> Bool {
+    public func changePassword(old: String, new: String) throws -> Bool {
         guard let dataKey = unlock(password: old) else { return false }
         try store(password: new, payload: dataKey.withUnsafeBytes { Data($0) })
         return true

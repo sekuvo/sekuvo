@@ -25152,6 +25152,40 @@
         }
       }
     },
+    "ios_backup_file_name": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "sekuvo-backup"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "sekuvo-yedek"
+          }
+        }
+      }
+    },
+    "ios_camera_unavailable": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No camera is available on this device. Use Import from text instead."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bu cihazda kullanılabilir kamera yok. Bunun yerine Metinden içe aktar'ı kullan."
+          }
+        }
+      }
+    },
     "ios_copied": {
       "extractionState": "manual",
       "localizations": {
@@ -25216,6 +25250,47 @@
           "stringUnit": {
             "state": "translated",
             "value": "iOS önizleme"
+          }
+        }
+      }
+    },
+    "ios_qr_import_added": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld entry added"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld entries added"
+                }
+              }
+            }
+          }
+        },
+        "tr": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld kayıt eklendi"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld kayıt eklendi"
+                }
+              }
+            }
           }
         }
       }

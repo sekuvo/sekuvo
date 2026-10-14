@@ -103,8 +103,9 @@ def main():
     for ad, ceviriler in yalniz.get("metinler", {}).items():
         if ad in katalog:
             sys.exit(f"çakışma: '{ad}' hem Android'de hem yalniz-ios.json'da")
-        katalog[ad] = {"extractionState": "manual",
-                       "localizations": {d: birim(v) for d, v in ceviriler.items()}}
+        katalog[ad] = {"extractionState": "manual", "localizations": {
+            d: ({"variations": {"plural": {q: birim(x) for q, x in v.items()}}} if isinstance(v, dict) else birim(v))
+            for d, v in ceviriler.items()}}
 
     HEDEF.parent.mkdir(parents=True, exist_ok=True)
     # Info.plist açıklamaları (kamera, Face ID) ayrı katalogda durur.

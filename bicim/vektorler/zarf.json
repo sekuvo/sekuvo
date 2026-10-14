@@ -304,6 +304,271 @@
       "beklenen_etiketler": []
     },
     {
+      "ad": "android-kacisli",
+      "parola": "yedek-parolasi-123",
+      "metin": "{\n  \"app\": \"vault\",\n  \"version\": 1,\n  \"kdf\": {\n    \"algo\": \"PBKDF2WithHmacSHA256\",\n    \"iterations\": 310000,\n    \"salt\": \"MDEyMzQ1Njc4OTo7PD0+Pw==\"\n  },\n  \"cipher\": \"AES-256-GCM\",\n  \"data\": \"QEFCQ0RFRkdISUpLbqfIHV\\/RXGSCrljyNxY1GYzX7W6ESqQI+rqFxpGxHMIS6CRJD+l0pM5LKf5fJZoQpY4SYwlZI9Hos\\/KnOE1ToKF2CoztT7KbBoprN9BHHsMMUfDp09NO6jXipoYaZD1OJThTW+CwWdlN\\/L3IU6OIVtu2sczYVZQWwAllMFAkasz+hcRrgeoWXKrAGdC6jzOl3xQ4fecEfCu+\\/Z0raY8NsRjzNPC983U2QwmoMvNz0rcOBFQsvYGDV7x6dgMwf30+zhxdgwUDnXgSOQRvuToUhEjJFBLF7wfUX1o0XXxfegEKWtYwlPGQVsj6IdM7YlReb\\/d35\\/ptWGg8P46WKC8govR+8zzSXBKOENBlZJu5eLvvGk15BNHjlAV44BEvljFNYbicru72qKT5vfdG97UQF4EaW2V00SbX7bGx7vHBeJe7ughX1HGnq0z+FvCCdyFfm5dK5mlgT4WwhavjDOJG6C8vSpDftpfNnVU0\\/UPPNlJoQYIMXWP00XIWDID\\/SPrpH5ZpoiUtJkwXVFxFRnaImseUcchr+hRncmtR5yi2OXsLlCw80oqO5rWWRcWJo6w24TVdnDBkkUXOPrN87zTg01BG9a7xHWElR471QmHawujz+4MXaI420OL4Mos3cYyCRYZuG0v2C\\/jWWtdRutgIhw9JXhINLiF9B4bYNvlzoa6u8d+LCZqXGm78AvWs9P8AiI\\/C0kZwhPEX8ehGfoPpd16owxNfUebfPv1B8taMxarbqBAiFoyrGpVWjZeLj\\/izyw66xut8pp+HsWZ6YRGJ+\\/hodYWdawVTuXqc+qceXiwG+Mqr5mKRgoZkAXfN0cVO0f+sirfABjXFoTSqFtxSLDW5Wu1LkebrM1mh0BRXPfRJdzTiFMZ\\/J3GQd1DguulxaEs7tm8m5CNy\\/RoydctaAbnvngM6lGDDoHRiIOEwtJVhkpzn3l1nNiuip9MsXlawcxB5GkJPACYIHiA1+wbW7s9RjBF+dxsXwGHGzIjG3O7NIqF0xe+lKq5gyOYaVq93YxQaXe6JOqM0ZwTWuVEC9+vci\\/5XvowsWveqCh5TbYhdq4jEYZ6nCRVPIl82lE6ob4cYKem2Z4DEh3aXHaAkCsqGOtYJXOM4C1\\/lg6LR+q82cleGBipcB+hVCOIlLah81SG1MwOVGXvxN2t4iZHIc5+JgV1n4t3ITQ4vtA3q3KDAL6DiKfmzEET86127c0QDH8k2vqvv+9t0JEtHka72ATir77ZbIEye08GrsytUSomnie5fFyDXADsytWr0TQjPDUNM697p8bfmJHWi9visPHNX8yezNBtJKNRIJRJxzfoHgi4hpEL6MNfQ452T0b1mks9aZz5yk5x9eUYfYXFgbqsxqVQWNPmSRUaeSm6cP0taPN0UWPotxeJ1SoNPN0xFdcX1Xl53h1GSo1OKE1AbDCJzzycZcTMY7qUYeDReRqEfbHhqO+jex+9zH5ePAI7Aoj+RkNSn\\/0vnMMkRyQfX9CJ88bRpwSy2YQI2vdkBO1yFxrSal2HnU0l9wlyXK58Jacfg\\/s6lwUeTb4iFRjFy9ileqD0gFevfLODtjzhJVjyZdaf6wgumwMauxUoc9Ykj9di2mAKtZhFIjSVF3QfpxZio\\/Rot461LpAvv3\\/+kOy\\/LC85HNY5l2YfuedqUVwdUUwXnDoyIHSTeaE8c2aQ9vsOCxgkieijqb1OsbmF1PougbIzpIiQnDiI\\/f1pQxqMqhyFnZY4NQ7q8hvL0dJgQOS4+3kbooLCB8gQymQSC\\/CqyP5r81lcDm+KvlkKVagLjkBs8+XRLdjAqt+9tPtxiBN9ylu7lMzJzDe2ykXXiPWAVw6ZmTu+vaqAYO6BGgVNUA2MtCuJoQ3G3FryXtSJLE\\/Sa3YiRITZZt8WWdbGoPmK218HhoAGjUbU7bAc5EkZJiLvbGOZF0la9dXYcU5MrPcgukEBpMvcoeTdUCVTrv8GxxNvf3zyiUJG6pAxds4Cey1K7aNfWq+HHnUjga3KLqBneoPoHM3iK03S1Z32Z0tXiQDNYqLOV1rBcLIHIq\\/6sQ8OUhxpIKL2u9KyRscjKjCBdITMck7zgIblO\\/v\\/2ASqhDEAF07uMVWW1B5p0KL47bsQ1BJTLenrCabewKZCC\\/wSQvSkN+CzUyPCcV736+2Q+JgwMdnzbYA29CbbmvV\\/GvfLhQghnDGpNzL+qgMQ8aB04MEhIw8Kb+n5ec\\/DallgfignpyiwTYhkqXfIa5ITHQ95WoEqO7HgsMuWDRcg9DuciXf162dw093+ft5ZMoPP4Bb8Zl\\/s\\/DP7XGXCHLIRuvqS9CAlvMjy51vW7E78NiWyW3WH\\/zXTnYDdFu9Eh1OkCrUfQkIgRa5cYxGLnmLGqcvnmbB3\\/j+OszfHnBxuwQ3CjUamZmPez+ixo6EPMytMFOXSTWAbPdMz9uNrTHZ5Wvjgh0nQ11oCJQuX5Tg5VpwTwcCznmB3Ngd2zSTJ7zxVA33QVhzuIEnjx8G6gYpCRiliDy2BmtR83LIKGjXFDIVhbRT3Qq\\/eyrNaIuPvEw9uSuy\\/wtyKN3zfgTQqoFZu0k50mNetvZmcUvqot1Sf0pzfKv9AoY\\/cHQarzA7MKfbju1PVZCVHFld1nZsjbg4+3H4u9uW5ZDLgANyUeAJ8MLpA8R0lWBNbVCMKC1A\\/+IVx5m0ty+y4mYtkgTR7Ql4Kgg82t3OejmoAh2WrCl0wQ29sHTRmUNXaQxKhTpEA+RBpMBcUH+amVzsXtdPNODgVqJleh+ONAvanabYv4YJw\\/lJgyR8QnBvFkV3eyK7uJ8hNfTeJd00NxOe01HphbsBldefM+d95GBiz7CI9oJpXOaSwLzVhDgIbvceZv2iHF4AMumE92dz\\/8TfCXMRZ1F9vBO48R7T277k3qybjbuRdoGFFxI75CAF72ZD8eOIocUinPqs9dDThhgYv8uurBM2Z6zKq+klZp1wBfdNEDxS5gc4ViOTUT9FhC1Y5GzoGoWkgFXANLVhmM0\\/5ehn8i3aTxhoWj0ttJQ7CT9g8ozVYq+fQjyTCPQNIJQ28JLJDSYX4vaoAeEIC+GGqPgYvckFcYKOL0wOCKBjG5palpR+WPl57WVfoMy1rEQTOSJj8J8YQdLyNoq3ibhR+KyoM20ot16NFG2Ktgz1xEu4F8VZTZmQItj6tEd2uTAsxkb7LjXo6g5ZoHYmZrMRxJpiktGjD6jIRlbzQfQME18XckbJ5ddy5McLexLWPxXN8g1+dtt7NGVCMu4QHK5xFgTUzqoKXzh0NzJBq8WyulGsNdZTJfoOmO1sYcSPD2bSkfnAGtx3oqVseB\\/AlicR4ge\\/UdRE3qH0yCNVBap98qbMTwOrjA34JTjIjXiiFRbN8a+k0JfJX\\/HtYbMZA4Vwk4b8Bo3mJ5IPdnu2P3h+DWNRsAbG3wmzWJGeWd07SRHijRFE0TP9pXDxcEq4sC84DzYWUawqyKwQ\\/E6wF\\/gvMADy42nV0RyVb5dvCIWZiETk7F2pfdoecRTUT3DVl0EF6JYYO\\/KBKkDWMZMxeSGjyB0nj447sRhpMJUTQo\\/af2OJwCP56gah2QcHODG9huH65ohVFLLMhX+87sunoTnT5im0UfT2SnqN4hE\\/Gjdtat0M6O4PThwdOFSDCIgUSCyWbT4QGwG9p7movRAwvE6CJhUaFGgncSsWgy3FXwhdmGD06GLpXz6vbZtq6c7CxP4swcO\\/iMgbOdrPXhRHEKUKxgOscjs7UR6naroV1y82gZ+6G\\/NnFTyRCD+h\\/oVCtPw4MrS+gqVPluqoRMgs8nrwo1Z4tlcVVqy\\/4\\/q9A5RgztyVyV2avydUlawOMyJCBP9HVbEremynO6L3a9lD9RWt3VAyHVICvciC+mr2aeYUDqRXZG9nl3vm0D+lBN9erQqRS6eKErM5lTxUPnBmR1e2\\/KkBkEuNKEQOPBJ+7fqIwoymhA1Z2KUzYLFOGTbHPS31BE1OxhiDXSxn3jlzPIR5zfvD+sAbW2nhCzOswAeArDEoySMMIrgvEOpnpULQ9exMBeF2XCZ4JAtjKC27vcAAXuQKQisixu\\/DSNpqt00zjQ74NODeRTCF2xXalyt38hxIziUj64U8CYhtQxXf5Dj+S\\/rUnF68gtOqeYBepmEyNyL6pIe7Km1UpsjTyfxMQ61DXQgPZLwUKvXw81z6O4DL9kot+B0txVCjGmOC1yBWhWwkLVp9neNmKPDEuKLEsMzMZbU4fHb1j+kG9ZTEH4U1ZkZq0YyqU\\/JmEEtqN1bVFarDleeSvKLkzwOyKOPWeCoFS40931JdBWmYdBFa4re7sq\\/iyi3pCVdOu5pDpArbNZ7SusMpwaRNZBYaXTfmLZPh5OhsO+954bIeCaDniVc5lidwnxL1RjO9tR\\/pAK6QEIrUeZ\\/hCt+AKZWDR+aUOJUP8H7oY89NGXPLFK+p+QDq8H0lkBwf+scQEA0+Npg\\/AfCXNEXigOQ8QeiqHDqnlcHrPkKqLEBAoxOP1yWes+chlXe9P0VmY3+QXF6wvQed5wEALQQluFfq0\\/PyJjfTbY8yja7GoUBumkA5j8kVqzAE5YLKfVKH8lzc9dR5bO7verLaUPcfHsAH1JKoCXZADxuGfu3dTeh3VFAoCPj3gLyl3DxqVxVtEMsC5MfN44RMz45zHZq1OkM71dQNOFxqtLpcEe2r4ofqrdz5SN+i9RIBgDNgFxrlKKKvKcdjguFUeChJwkmMTFlR4bNrA2nN6WeJgnUiCLwZcurarqnhOx1OjOZrP3dV9q\\/9b5ytYgMzOo54bum8rTERwL8cHmUXQy80l8GtwQE4So1HsXY7nBglj33+e6nOSdzuTCbDkkrW3\\/+H4HQ+QHWxXZiJ\\/m8t2fzaE\\/gGME1wAE91DWWuek0xI7Y1DMnFXPd0EsOXyKDlG3UNWAIYuggqFPr1I7mMeQjt\\/NyFqeggT0jI4jF0b\\/AMZKAOJzkaj5g\\/DC+LrH6DY6mNa+uWr\\/QYtskmx+9OdmR0Qii7k5lZR8F3DdygCJem\\/HGMKJ6viQeeEepqkIMjIrCEHbiL68ywbcF0oY2Tb2gj\\/n\\/934pCBwGx39aIz\\/yE5+ccE3VWh47xoPdo8mOcETNty\\/BYa\\/4l9eEN8Ty3umlB7sB7PqfvWvAvzCD5AFeOWn4Yzu6t1nDxC9wu2mhYDPI738BeqE9+MaaCTTsv5yOYMccCyl4gxk7Qf590RJq3qtQycyPYazYQ0Wqh60d4mAkqRxjC6MOVFb0r\\/j9OfOgERti9WQXFN37bHvhhjn2Kiu8ofeQ+gH3qR3HOEw1Ui21j02Bncb4SqFffTAPJBHvna0WPGJKCmCGe6jAuZ+904tLK8g7S3fbrX8SJ5Q\\/\\/84t3XrYNJuQKZVEoPCwpQ7SnLGvKvuWDWX\\/9O7cAdTyZieKWzXGtRiuAV7B47CP8sglUiJXcUYHhvUiMmNDBMRoS2lczypP04G7mG59djeI\\/vI+pjbpX2fGZq80lapnHmtNe+WNy\\/Us1G+CjXdUdpTmYYDh1dPD+DPrQuf17GuI6qfqjzg6yGhSHVaS\\/jj86OCxtkVryrvJrssAhbLuP+K0fwLoceqVhV\\/xf4rQXdN0o5tkVzjebo0aAFZjZMddxi8da4wURi19LWT4\\/NvMR9BMpEcAOrXn3F42QNsgPJLIM\\/QJR87Dl8mumlvt2\\/s9jsNJPAXofJ4og0MRKVIQZO+7NOjCLrnqGFqZQ+g+vkGBwzt1FrOD5UCirSm1sas5Z+evu6ddqcsq1wUFemLahsUaBrJqL8Ze8sXifr5nMNLLWz\\/TavpWcidITo19UjgIieWuC7aJ\\/XGFB6zXlZ6pJHV2OvbAQYlLLCVxenV3\\/1nrQRoxatXhKWvEBkF6O7uXE8O6onXvETDqfSbGoWPR+dFqv8+y0KZ10g4ainRzE9hQISFsR5DQbSS6evOYplZsXCUHYux47U1oTCPz+3iro\\/tZjylzMtUHRyOx4VevcoakyO2axbe\\/XxNGLSyNc1YibsBBzlParM1itPVKkqC9UCy+fHEpoR08y7\\/O1NVKFb8YgUmntsZ6m0G2Gk91rJa6DHFjfVNzNNn\\/Ss8aICr\\/T\\/\\/+BadMqz\\/rBaMvp4yc5TDasXDqPcSlBgGQxci\\/10YLsZUyGjV9+9+b75Odxn0trjMBSmdz5BPRy70TqhU3ltKgUAnVBBK9BYAR8\\/z+11oiuHkInoEFksxpItFU4XahRDtrUP4o0gvEXhKlTtK7TUmXk+jCnGaARPeuBY7tRQQk9zYZERhEzhco4XsXGrlNfWvNQQgtr0CeHjGQf3Boiwjy11kxrrLftchlvvOifJFVpr1K9t4zS+UPeNE7j2rTxx4TnJt0ETOJkn3hKvK+OgP32ryk9\\/mJ65qbZtwLgcSpsIyJmIi2dRXcVHqcvcabcKDUgHjwG8ivZDL\\/B5Y3Tld3nenbk4zLatIENHR3+PLnQYSUKTdgnzt+2gKMe0nA0GwaY+TcgJugSkGRuxzlNN3siXNaOusdycOjNd7mKtig61jyG9B\\/i0F6mmWYuXYeavxWKGdeoUYuv5T5+eBZ22WNQiGz1DrUv1NBmU4GufvnLLvsyUMYD4KhwCtdM84Fsx0IO8KUzfGknlzrW7Z1D4KBLwbx1XC4sBhHlsM8wz8X8gO7qj1QhVkzRd101GyvPiLAGvqXdrwe641qyX4lxqh7sY3asO3Qt+xMkXXnRK72b7jIGsn64xVtcY4UBD67vQ4VuXGkp3mhACMOXYqjdvUSn3AjfRoOXFKnfeIMShBUJI=\"\n}",
+      "beklenen_kayitlar": [
+        {
+          "type": "LOGIN",
+          "title": "GitHub",
+          "noteKind": "GENEL",
+          "createdAt": 1760000000000,
+          "updatedAt": 1760400000000,
+          "quick": true,
+          "sortIndex": 2,
+          "anchor": false,
+          "tags": [
+            "iş"
+          ],
+          "data": {
+            "username": "deniz@example.com",
+            "password": "g7#Tq9!vLm2@xPz4",
+            "url": "github.com",
+            "cardholder": "",
+            "cardNumber": "",
+            "expiry": "",
+            "cvv": "",
+            "iban": "",
+            "notes": "",
+            "fullName": "",
+            "phone": "",
+            "email": "",
+            "address": "",
+            "custom": [
+              {
+                "label": "Kurtarma PIN",
+                "value": "482915",
+                "type": "password"
+              },
+              {
+                "label": "Not alanı",
+                "value": "düz metin, türsüz",
+                "type": "text"
+              },
+              {
+                "label": "Gelecek tür",
+                "value": "x",
+                "type": "text"
+              }
+            ],
+            "passwordChangedAt": 1760300000000,
+            "passwordHistory": [
+              {
+                "value": "eski-parola-2",
+                "changedAt": 1760300000000
+              },
+              {
+                "value": "eski-parola-1",
+                "changedAt": 1755000000000
+              }
+            ]
+          }
+        },
+        {
+          "type": "EVERYDAY",
+          "title": "Kimlik ve adres",
+          "noteKind": "GENEL",
+          "createdAt": 1750000000000,
+          "updatedAt": 1750000000000,
+          "quick": false,
+          "sortIndex": 0,
+          "anchor": false,
+          "tags": [],
+          "data": {
+            "username": "",
+            "password": "",
+            "url": "",
+            "cardholder": "",
+            "cardNumber": "",
+            "expiry": "",
+            "cvv": "",
+            "iban": "",
+            "notes": "",
+            "fullName": "Deniz Yılmaz",
+            "phone": "+1 202 555 0147",
+            "email": "deniz@example.com",
+            "address": "Demo Sok. No: 7\nKadıköy / İstanbul",
+            "custom": [],
+            "passwordChangedAt": 0,
+            "passwordHistory": []
+          }
+        },
+        {
+          "type": "CARD",
+          "title": "Visa · günlük",
+          "noteKind": "GENEL",
+          "createdAt": 1751000000000,
+          "updatedAt": 1752000000000,
+          "quick": false,
+          "sortIndex": 1,
+          "anchor": false,
+          "tags": [
+            "finans"
+          ],
+          "data": {
+            "username": "",
+            "password": "",
+            "url": "",
+            "cardholder": "DENIZ YILMAZ",
+            "cardNumber": "4242424242424242",
+            "expiry": "0829",
+            "cvv": "123",
+            "iban": "DE89370400440532013000",
+            "notes": "",
+            "fullName": "",
+            "phone": "",
+            "email": "",
+            "address": "",
+            "custom": [],
+            "passwordChangedAt": 0,
+            "passwordHistory": []
+          }
+        },
+        {
+          "type": "NOTE",
+          "title": "Deploy anahtarı (ed25519)",
+          "noteKind": "ANAHTAR",
+          "createdAt": 1753000000000,
+          "updatedAt": 1753000000000,
+          "quick": false,
+          "sortIndex": 0,
+          "anchor": false,
+          "tags": [
+            "iş",
+            "finans"
+          ],
+          "data": {
+            "username": "",
+            "password": "",
+            "url": "",
+            "cardholder": "",
+            "cardNumber": "",
+            "expiry": "",
+            "cvv": "",
+            "iban": "",
+            "notes": "-----BEGIN OPENSSH PRIVATE KEY-----\nAAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8gISIjJCUmJygpKissLS4vMDEyMw\nBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyAhIiMkJSYnKCkqKywtLi8wMTIzNDU2Nzg5Og\nDg8QERITFBUWFxgZGhscHR4fICEiIyQlJicoKSorLC0uLzAxMjM0NTY3ODk6Ozw9Pj9AQQ\nFRYXGBkaGxwdHh8gISIjJCUmJygpKissLS4vMDEyMzQ1Njc4OTo7PD0+P0BBQkNERUZHSA\nHB0eHyAhIiMkJSYnKCkqKywtLi8wMTIzNDU2Nzg5Ojs8PT4/QEFCQ0RFRkdISUpLTE1OTw\nIyQlJicoKSorLC0uLzAxMjM0NTY3ODk6Ozw9Pj9AQUJDREVGR0hJSktMTU5PUFFSU1RVVg\nKissLS4vMDEyMzQ1Njc4OTo7PD0+P0BBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWltcXQ\nMTIzNDU2Nzg5Ojs8PT4/QEFCQ0RFRkdISUpLTE1OT1BRUlNUVVZXWFlaW1xdXl9gYWJjZA\nODk6Ozw9Pj9AQUJDREVGR0hJSktMTU5PUFFSU1RVVldYWVpbXF1eX2BhYmNkZWZnaGlqaw\nP0BBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWltcXV5fYGFiY2RlZmdoaWprbG1ub3Bxcg\nRkdISUpLTE1OT1BRUlNUVVZXWFlaW1xdXl9gYWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eQ\nTU5PUFFSU1RVVldYWVpbXF1eX2BhYmNkZWZnaGlqa2xtbm9wcXJzdHV2d3h5ent8fX5/gA\nVFVWV1hZWltcXV5fYGFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6e3x9fn+AgYKDhIWGhw\nW1xdXl9gYWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXp7fH1+f4CBgoOEhYaHiImKi4yNjg\nYmNkZWZnaGlqa2xtbm9wcXJzdHV2d3h5ent8fX5/gIGCg4SFhoeIiYqLjI2Oj5CRkpOUlQ\naWprbG1ub3BxcnN0dXZ3eHl6e3x9fn+AgYKDhIWGh4iJiouMjY6PkJGSk5SVlpeYmZqbnA\ncHFyc3R1dnd4eXp7fH1+f4CBgoOEhYaHiImKi4yNjo+QkZKTlJWWl5iZmpucnZ6foKGiow\nd3h5ent8fX5/gIGCg4SFhoeIiYqLjI2Oj5CRkpOUlZaXmJmam5ydnp+goaKjpKWmp6ipqg\nfn+AgYKDhIWGh4iJiouMjY6PkJGSk5SVlpeYmZqbnJ2en6ChoqOkpaanqKmqq6ytrq+wsQ\nhYaHiImKi4yNjo+QkZKTlJWWl5iZmpucnZ6foKGio6SlpqeoqaqrrK2ur7CxsrO0tba3uA\njI2Oj5CRkpOUlZaXmJmam5ydnp+goaKjpKWmp6ipqqusra6vsLGys7S1tre4ubq7vL2+vw\nk5SVlpeYmZqbnJ2en6ChoqOkpaanqKmqq6ytrq+wsbKztLW2t7i5uru8vb6/wMHCw8TFxg\nmpucnZ6foKGio6SlpqeoqaqrrK2ur7CxsrO0tba3uLm6u7y9vr/AwcLDxMXGx8jJysvMzQ\noaKjpKWmp6ipqqusra6vsLGys7S1tre4ubq7vL2+v8DBwsPExcbHyMnKy8zNzs/Q0dLT1A\nqKmqq6ytrq+wsbKztLW2t7i5uru8vb6/wMHCw8TFxsfIycrLzM3Oz9DR0tPU1dbX2Nna2w\nr7CxsrO0tba3uLm6u7y9vr/AwcLDxMXGx8jJysvMzc7P0NHS09TV1tfY2drb3N3e3+Dh4g\ntre4ubq7vL2+v8DBwsPExcbHyMnKy8zNzs/Q0dLT1NXW19jZ2tvc3d7f4OHi4+Tl5ufo6Q\nvb6/wMHCw8TFxsfIycrLzM3Oz9DR0tPU1dbX2Nna29zd3t/g4eLj5OXm5+jp6uvs7e7v8A\nxMXGx8jJysvMzc7P0NHS09TV1tfY2drb3N3e3+Dh4uPk5ebn6Onq6+zt7u/w8fLz9PX29w\ny8zNzs/Q0dLT1NXW19jZ2tvc3d7f4OHi4+Tl5ufo6err7O3u7/Dx8vP09fb3+Pn6+/z9/g\n0tPU1dbX2Nna29zd3t/g4eLj5OXm5+jp6uvs7e7v8PHy8/T19vf4+fr7/P3+/wABAgMEBQ\n2drb3N3e3+Dh4uPk5ebn6Onq6+zt7u/w8fLz9PX29/j5+vv8/f7/AAECAwQFBgcICQoLDA\n4OHi4+Tl5ufo6err7O3u7/Dx8vP09fb3+Pn6+/z9/v8AAQIDBAUGBwgJCgsMDQ4PEBESEw\n5+jp6uvs7e7v8PHy8/T19vf4+fr7/P3+/wABAgMEBQYHCAkKCwwNDg8QERITFBUWFxgZGg\n7u/w8fLz9PX29/j5+vv8/f7/AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8gIQ\n9fb3+Pn6+/z9/v8AAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyAhIiMkJSYnKA\n/P3+/wABAgMEBQYHCAkKCwwNDg8QERITFBUWFxgZGhscHR4fICEiIyQlJicoKSorLC0uLw\nAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8gISIjJCUmJygpKissLS4vMDEyMzQ1Ng\nCgsMDQ4PEBESExQVFhcYGRobHB0eHyAhIiMkJSYnKCkqKywtLi8wMTIzNDU2Nzg5Ojs8PQ\nERITFBUWFxgZGhscHR4fICEiIyQlJicoKSorLC0uLzAxMjM0NTY3ODk6Ozw9Pj9AQUJDRA\n-----END OPENSSH PRIVATE KEY-----",
+            "fullName": "",
+            "phone": "",
+            "email": "",
+            "address": "",
+            "custom": [
+              {
+                "label": "fingerprint",
+                "value": "SHA256:hcm3lXKROlj0",
+                "type": "text"
+              }
+            ],
+            "passwordChangedAt": 0,
+            "passwordHistory": []
+          }
+        },
+        {
+          "type": "NOTE",
+          "title": "aktar.html",
+          "noteKind": "PARMAK_IZI",
+          "createdAt": 1754000000000,
+          "updatedAt": 1754000000000,
+          "quick": false,
+          "sortIndex": 0,
+          "anchor": true,
+          "tags": [],
+          "data": {
+            "username": "",
+            "password": "",
+            "url": "",
+            "cardholder": "",
+            "cardNumber": "",
+            "expiry": "",
+            "cvv": "",
+            "iban": "",
+            "notes": "85ee1729fda96072b36303074f21a170d5361c0577a920ef631bd6884d5b653d",
+            "fullName": "",
+            "phone": "",
+            "email": "",
+            "address": "",
+            "custom": [],
+            "passwordChangedAt": 0,
+            "passwordHistory": []
+          }
+        },
+        {
+          "type": "NOTE",
+          "title": "Bilinmeyen not türü",
+          "noteKind": "GENEL",
+          "createdAt": 1754100000000,
+          "updatedAt": 1754100000000,
+          "quick": false,
+          "sortIndex": 0,
+          "anchor": false,
+          "tags": [],
+          "data": {
+            "username": "",
+            "password": "",
+            "url": "",
+            "cardholder": "",
+            "cardNumber": "",
+            "expiry": "",
+            "cvv": "",
+            "iban": "",
+            "notes": "eski bir sürüm bu türü tanımaz",
+            "fullName": "",
+            "phone": "",
+            "email": "",
+            "address": "",
+            "custom": [],
+            "passwordChangedAt": 0,
+            "passwordHistory": []
+          }
+        },
+        {
+          "type": "NOTE",
+          "title": "Bilinmeyen kayıt türü",
+          "noteKind": "GENEL",
+          "createdAt": 1754200000000,
+          "updatedAt": 1754200000000,
+          "quick": false,
+          "sortIndex": 0,
+          "anchor": false,
+          "tags": [],
+          "data": {
+            "username": "",
+            "password": "",
+            "url": "",
+            "cardholder": "",
+            "cardNumber": "",
+            "expiry": "",
+            "cvv": "",
+            "iban": "",
+            "notes": "Android bilinmeyen türü Güvenli Not okur",
+            "fullName": "",
+            "phone": "",
+            "email": "",
+            "address": "",
+            "custom": [],
+            "passwordChangedAt": 0,
+            "passwordHistory": []
+          }
+        }
+      ],
+      "beklenen_etiketler": [
+        {
+          "name": "iş",
+          "color": -11549705,
+          "icon": "work"
+        },
+        {
+          "name": "finans",
+          "color": -18611,
+          "icon": ""
+        },
+        {
+          "name": "ileri",
+          "color": -1739917,
+          "icon": ""
+        }
+      ]
+    },
+    {
       "ad": "bom-ve-gorunmez",
       "parola": "TransferPass2026",
       "metin": "﻿​  {\"app\": \"vault\", \"version\": 1, \"kdf\": {\"algo\": \"PBKDF2WithHmacSHA256\", \"iterations\": 310000, \"salt\": \"UFFSU1RVVldYWVpbXF1eXw==\"}, \"cipher\": \"AES-256-GCM\", \"data\": \"YGFiY2RlZmdoaWpr6ICkwjLH3v1LK7LYlEv17QaizHRPxRpfeMj0hhnJC29qlJmAbA94gKPNlA4ax1I9nFFG9UsqKrCfGI8GWKkXEzDBMETCOt1G6kbZsu9xzixM7oyJKA3JKDk5YBaXsjbG31AtE/fXJxneHShQM6a5tw9RLYxof7gvmi3BIrjYnOTZSMB00vjXGFCta6SVn4T5sW87qwDmi3lYccmbRQ5aM88TmUIG1LHccYO33JiJkjvBq2LTfNcForLrDKpMgbyGQ6qqkuyQI7/1sPtCsAqE\"}\n‎\r\n",

@@ -6,6 +6,7 @@ struct UnlockScreen: View {
     @Environment(VaultModel.self) private var kasa
     @State private var parola = ""
     @State private var tekrar = ""
+    @State private var yedegimVar = false
     @FocusState private var odak: Bool
 
     var body: some View {
@@ -43,10 +44,22 @@ struct UnlockScreen: View {
                     Text(hata).font(.callout).foregroundStyle(Theme.error)
                 }
 
+                if setup {
+                    // Android: "Yedeğim var — geri yükle". Önce bu cihazın ana
+                    // parolası belirlenir, hemen ardından yedek dosyası seçilir.
+                    Toggle(isOn: $yedegimVar) {
+                        Text(L(yedegimVar ? "unlock_restore_selected" : "unlock_have_backup")).font(.callout)
+                    }
+                    .tint(Theme.primary)
+                    if yedegimVar {
+                        Text(L("unlock_restore_hint")).font(.footnote).foregroundStyle(Theme.onSurfaceVariant)
+                    }
+                }
+
                 Button(action: gonder) {
                     HStack {
                         if kasa.busy { ProgressView().tint(Theme.onPrimaryContainer) }
-                        Text(L(setup ? "unlock_create_vault" : "unlock_open_button"))
+                        Text(L(setup ? (yedegimVar ? "unlock_create_and_restore" : "unlock_create_vault") : "unlock_open_button"))
                     }
                     .frame(maxWidth: .infinity, minHeight: 50)
                 }
@@ -69,7 +82,7 @@ struct UnlockScreen: View {
     private func gonder() {
         let p = parola, t = tekrar
         Task {
-            if setup { await kasa.setup(password: p, again: t) } else { await kasa.unlock(password: p) }
+            if setup { await kasa.setup(password: p, again: t, restoreAfter: yedegimVar) } else { await kasa.unlock(password: p) }
             if kasa.state == .unlocked { parola = ""; tekrar = "" }
         }
     }
@@ -79,10 +92,12 @@ struct UnlockScreen: View {
 struct SecretInput: View {
     let label: String
     @Binding var text: String
-    /// Ana parola için bilerek `nil`: `.password` ipucu iOS'un "Parolalar"
-    /// önerisini açar ve ana parolayı iCloud'a kaydetmeye davet eder — ağsız
-    /// bir kasanın anahtarı buluta gitmemeli.
-    var contentType: UITextContentType? = nil
+    /// Ana parola için boş içerik türü: alana "parola" ipucu verilmez, iOS onu
+    /// iCloud'a kaydedilecek bir giriş parolası saymasın — ağsız bir kasanın
+    /// anahtarı buluta gitmemeli. Sınır (iOS 26.4'te ölçüldü): klavyenin
+    /// üstündeki "Passwords" düğmesi güvenli alanda her durumda görünüyor;
+    /// kaydetme önerisinin çıkmadığı ise ancak cihazda yazarak ölçülebilir.
+    var contentType: UITextContentType? = .sekuvoNone
     @State private var gorunur = false
 
     var body: some View {
@@ -120,8 +135,14 @@ struct FilledButton: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .font(.headline)
+            .frame(maxWidth: .infinity, minHeight: 48)
             .foregroundStyle(Theme.onPrimaryContainer)
             .background(Theme.primaryContainer.opacity(etkin ? (configuration.isPressed ? 0.8 : 1) : 0.45))
             .clipShape(RoundedRectangle(cornerRadius: 25))
     }
+}
+
+extension UITextContentType {
+    /// Otomatik doldurma önerisini kapatan boş içerik türü.
+    static let sekuvoNone = UITextContentType(rawValue: "")
 }

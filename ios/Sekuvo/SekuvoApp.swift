@@ -39,7 +39,8 @@ struct RootView: View {
                     .foregroundStyle(Color(UIColor { $0.userInterfaceStyle == .dark ? UIColor(rgb: 0x332E27) : UIColor(rgb: 0xF6EFE3) }))
                     .padding(.horizontal, 16).padding(.vertical, 10)
                     .background(Color(UIColor { $0.userInterfaceStyle == .dark ? UIColor(rgb: 0xEDE3D3) : UIColor(rgb: 0x33302A) }), in: Capsule())
-                    .padding(.bottom, 24).padding(.horizontal, 24)
+                    // Alttaki arama alanının üstünde dursun.
+                    .padding(.bottom, 96).padding(.horizontal, 24)
                     .transition(.move(edge: .bottom).combined(with: .opacity))
             }
         }

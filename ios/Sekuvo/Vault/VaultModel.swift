@@ -6,40 +6,34 @@ import SwiftUI
 import UIKit
 import UniformTypeIdentifiers
 
-/// Kasanın durumu ve kayıtları — Android'deki `ui/VaultViewModel.kt`'nin karşılığı.
+/// Kasanın durumu — Android'deki `ui/VaultViewModel.kt`'nin karşılığı.
 ///
-/// `dataKey` yalnız kilit açıkken bellekte durur. Uygulama ekrandan çıkınca
-/// (arka plan) kasa kilitlenir ve anahtar bırakılır; Android'de ekranın
-/// kararması neyse burada sahnenin arka plana geçmesi odur.
+/// Kayıt mantığı `SekuvoCore.VaultStore`'da (macOS'ta sınanır); burası yalnız
+/// arayüz durumunu ve PBKDF2 gibi ağır işlerin ana iş parçacığı dışına
+/// taşınmasını tutar. `dataKey` yalnız kilit açıkken bellekte durur; uygulama
+/// arka plana geçince kasa kilitlenir (Android'de ekranın kararması).
 @Observable
 @MainActor
 final class VaultModel {
 
     enum State { case setup, locked, unlocked }
 
-    /// Listede gösterilen satır: şifre çözmeden okunabilen alanlar.
-    struct Item: Identifiable, Equatable {
-        let id: Int64
-        let type: EntryType
-        let title: String
-        let noteKind: NoteKind
-        let quick: Bool
-        let sortIndex: Int
-        let updatedAt: Int64
-    }
+    /// İçe aktarmanın kaynağı: hata ve başarı metni buna göre seçilir.
+    enum ImportSource { case qr, text, file }
 
     private(set) var state: State
-    private(set) var items: [Item] = []
+    private(set) var items: [VaultStore.Item] = []
     private(set) var busy = false
     var error: String?
     var privacyCover = false
     /// Kısa bildirim (Android'deki Toast).
     var toast: String?
+    /// Kurulum "yedeğim var" ile yapıldı: liste açılınca dosya seçici gelir.
+    var restoreAfterSetup = false
 
     private let keys: KeyManager
     private let storeFile: URL
-    private var store: EntryStore?
-    private var dataKey: SymmetricKey?
+    private var store: VaultStore?
 
     init() {
         let kok = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
@@ -49,16 +43,19 @@ final class VaultModel {
         state = keys.isInitialized ? .locked : .setup
     }
 
+    private var simdi: Int64 { Int64(Date().timeIntervalSince1970 * 1000) }
+
     // MARK: Kurulum ve kilit
 
     /// İlk kurulum. Kural Android'deki gibi: en az 8 karakter, iki kez aynı.
-    func setup(password: String, again: String) async {
+    func setup(password: String, again: String, restoreAfter: Bool = false) async {
         guard password.count >= 8 else { error = L("vm_master_password_too_short"); return }
         guard password == again else { error = L("vm_passwords_mismatch"); return }
         busy = true; defer { busy = false }
         let k = keys
         do {
             let ham = try await Task.detached { try k.setup(password: password).withUnsafeBytes { Data($0) } }.value
+            restoreAfterSetup = restoreAfter
             try open(with: SymmetricKey(data: ham))
         } catch {
             self.error = error.localizedDescription
@@ -75,8 +72,7 @@ final class VaultModel {
     }
 
     private func open(with key: SymmetricKey) throws {
-        store = try EntryStore(file: storeFile)
-        dataKey = key
+        store = try VaultStore(file: storeFile, key: key)
         error = nil
         try reload()
         state = .unlocked
@@ -84,7 +80,6 @@ final class VaultModel {
 
     func lock() {
         guard state == .unlocked else { return }
-        dataKey = nil
         store = nil
         items = []
         state = .locked
@@ -107,64 +102,126 @@ final class VaultModel {
 
     private func reload() throws {
         guard let store else { return }
-        items = try store.all().filter { !$0.anchor }.map { r in
-            Item(id: r.id, type: .of(r.type), title: r.title, noteKind: .of(r.noteKind),
-                 quick: r.quick, sortIndex: r.sortIndex, updatedAt: r.updatedAt)
-        }.sorted { $0.title.localizedStandardCompare($1.title) == .orderedAscending }
+        items = try store.items().sorted { $0.title.localizedStandardCompare($1.title) == .orderedAscending }
     }
 
-    /// Kaydı çözer; yanlış anahtar ya da bozuk kayıt `nil`.
-    func load(id: Int64) -> DecryptedEntry? {
-        guard let store, let dataKey, let r = try? store.get(id: id),
-              let acik = Crypto.decrypt(r.blob, key: dataKey),
-              let json = (try? JSONSerialization.jsonObject(with: acik)) as? [String: Any]
-        else { return nil }
-        return DecryptedEntry(id: r.id, type: .of(r.type), title: r.title, data: EntryData(json: json),
-                              createdAt: r.createdAt, updatedAt: r.updatedAt, quick: r.quick,
-                              noteKind: .of(r.noteKind), sortIndex: r.sortIndex, anchor: r.anchor)
-    }
+    func load(id: Int64) -> DecryptedEntry? { store?.load(id: id) }
 
-    /// Yeni kayıt (`id == 0`) ya da güncelleme. Parola değiştiyse eskisi
-    /// tarihiyle geçmişe girer (Android: `withNewPassword`).
     @discardableResult
     func save(_ e: DecryptedEntry) -> Int64? {
-        guard let store, let dataKey else { error = L("vm_vault_locked_retry"); return nil }
-        let simdi = Int64(Date().timeIntervalSince1970 * 1000)
-        var veri = e.data
-        if e.id != 0, let eski = load(id: e.id) {
-            if eski.data.password != veri.password {
-                if !eski.data.password.isEmpty {
-                    veri.passwordHistory.insert(OldPassword(value: eski.data.password, changedAt: simdi), at: 0)
-                }
-                veri.passwordChangedAt = simdi
-            }
-        } else if !veri.password.isEmpty {
-            veri.passwordChangedAt = simdi
-        }
+        guard let store else { error = L("vm_vault_locked_retry"); return nil }
         do {
-            let json = try JSONSerialization.data(withJSONObject: veri.json())
-            let blob = try Crypto.encrypt(json, key: dataKey)
-            var satir = EntryStore.Row(id: e.id, type: e.type.rawValue, title: e.title, blob: blob,
-                                       createdAt: e.id == 0 ? simdi : e.createdAt, updatedAt: simdi,
-                                       quick: e.quick, noteKind: e.noteKind.rawValue,
-                                       sortIndex: e.sortIndex, anchor: e.anchor)
-            if e.id == 0 {
-                satir.id = try store.insert(satir)
-            } else {
-                try store.update(satir)
-            }
+            let id = try store.save(e, now: simdi)
             try reload()
-            return satir.id
+            return id
+        } catch let VaultStore.Failure.entryTooLarge(title, bytes) {
+            error = L("entry_too_large", title, bytes / 1024, VaultStore.maxEntryBytes / 1024)
         } catch {
             self.error = error.localizedDescription
+        }
+        return nil
+    }
+
+    func delete(id: Int64) {
+        guard let store else { return }
+        do { try store.delete(id: id); try reload() } catch { self.error = error.localizedDescription }
+    }
+
+    // MARK: İçe aktarma (QR, metin, yedek dosyası)
+
+    /// Yapıştırılan metin için Android'deki dostça ön tanı: en sık iki yanlış
+    /// yapıştırma (bağlantı, zarf olmayan metin) ayrı adlandırılır.
+    func pasteProblem(_ ham: String) -> String? {
+        let t = Backup.normalize(ham)
+        if t.isEmpty { return L("vm_pasted_text_empty") }
+        if t.count > 1_000_000 { return L("vm_text_too_large") }
+        if t.hasPrefix("http://") || t.hasPrefix("https://") { return L("vm_pasted_is_link") }
+        if !(t.hasPrefix("{") && t.contains("\"app\"") && t.contains("\"vault\"")) { return L("vm_not_an_envelope") }
+        return nil
+    }
+
+    /// Zarfı açar (PBKDF2 arka planda) ve kasaya uygular. Başarıda `true`.
+    func importEnvelope(_ zarf: Data, password: String, replace: Bool, source: ImportSource) async -> Bool {
+        guard store != nil else { error = L("vm_vault_locked_retry"); return false }
+        guard !password.isEmpty else {
+            error = L(source == .file ? "settings_import_pw_missing"
+                      : (source == .qr ? "paste_err_password_required_qr" : "paste_err_password_missing"))
+            return false
+        }
+        error = nil
+        busy = true; defer { busy = false }
+        do {
+            let sonuc = try await Task.detached { try Backup.import(zarf, password: password) }.value
+            // Kilit bu arada düşmüş olabilir (uygulama arka plana gitti).
+            guard let store else { error = L("vm_vault_locked_retry"); return false }
+            let sayi = try store.apply(sonuc, replace: replace)
+            guard sayi > 0 else {
+                error = L(source == .file ? "vm_backup_empty" : "vm_envelope_empty")
+                return false
+            }
+            try reload()
+            switch source {
+            case .qr: show(Lp("ios_qr_import_added", sayi))
+            case .text:
+                // Şifreli de olsa zarf panoda sürüklenmesin (Android ile aynı).
+                UIPasteboard.general.items = []
+                show(Lp("vm_import_added", sayi))
+            case .file: show(Lp("vm_restored", sayi))
+            }
+            return true
+        } catch Backup.Failure.wrongPassword {
+            error = L("vm_backup_password_wrong")
+        } catch Backup.Failure.invalidFormat {
+            error = L(source == .file ? "vm_invalid_backup_file" : "vm_invalid_envelope")
+        } catch let VaultStore.Failure.entryTooLarge(title, bytes) {
+            error = L("entry_too_large", title, bytes / 1024, VaultStore.maxEntryBytes / 1024)
+        } catch {
+            self.error = L(source == .file ? "vm_restore_failed" : "vm_import_failed", error.localizedDescription)
+        }
+        return false
+    }
+
+    // MARK: Yedek alma
+
+    /// Şifreli yedeğin baytları; dosyaya yazmayı çağıran yapar (Dosyalar).
+    /// Önce bellekte tamamlanır: yazma yarıda kalırsa yarım bir `.vaultbak`
+    /// geride kalmaz (Android'deki denetim bulgusu).
+    func makeBackup(password: String, again: String) async -> Data? {
+        guard password.count >= 8 else { error = L("vm_backup_password_too_short"); return nil }
+        guard password == again else { error = L("vm_passwords_mismatch"); return nil }
+        guard let store else { error = L("vm_vault_locked_retry"); return nil }
+        error = nil
+        busy = true; defer { busy = false }
+        do {
+            let (kayitlar, eksik) = try store.exportable()
+            let etiketler = try store.tags()
+            let veri = try await Task.detached { try Backup.export(password: password, entries: kayitlar, tags: etiketler) }.value
+            pendingIncomplete = eksik
+            return veri
+        } catch {
+            self.error = L("vm_backup_failed", error.localizedDescription)
             return nil
         }
     }
 
+    /// Dosya yazıldıktan sonra: eksik kayıt varsa söylenir, yoksa "kaydedildi".
+    private var pendingIncomplete = 0
+    func backupWritten(_ sonuc: Result<URL, Error>) {
+        switch sonuc {
+        case .success:
+            if pendingIncomplete > 0 { error = Lp("vm_backup_saved_incomplete", pendingIncomplete) } else { show(L("vm_backup_saved")) }
+        case .failure(let e):
+            if (e as NSError).code != NSUserCancelledError { error = L("vm_backup_failed", e.localizedDescription) }
+        }
+        pendingIncomplete = 0
+    }
+
+    // MARK: Pano ve bildirim
+
     /// Panoya yalnız bu cihaz için ve 45 saniyelik koyar: `localOnly`
     /// Universal Clipboard'u kapatır, `expirationDate` silmeyi sistemin
     /// kendisine bırakır — Android'in tutamadığı 45 sn sözünü iOS platform
-    /// olarak tutar (SEC-038'in zorunlu sertleştirmesi).
+    /// olarak tutar.
     func copy(label: String, value: String) {
         UIPasteboard.general.setItems(
             [[UTType.utf8PlainText.identifier: value]],
@@ -179,11 +236,6 @@ final class VaultModel {
             try? await Task.sleep(for: .seconds(2.5))
             if toast == mesaj { toast = nil }
         }
-    }
-
-    func delete(id: Int64) {
-        guard let store else { return }
-        do { try store.delete(id: id); try reload() } catch { self.error = error.localizedDescription }
     }
 
     // MARK: Örnek kasa (yalnız Debug)

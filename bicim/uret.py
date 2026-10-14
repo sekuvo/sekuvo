@@ -266,6 +266,12 @@ def main():
             {"ad": "aktar-tek-not", "parola": "TransferPass2026", "metin": aktar_zarf_metni,
              "beklenen_kayitlar": [beklenen(e) for e in AKTAR_ICERIK["entries"]],
              "beklenen_etiketler": []},
+            # Android'in org.json'u "/" karakterini "\\/" yazar (base64'te sık geçer)
+            # ve iki boşluklu girinti kullanır: gerçek bir .vaultbak dosyasının görünümü.
+            {"ad": "android-kacisli", "parola": "yedek-parolasi-123",
+             "metin": json.dumps(tam_zarf, indent=2).replace("/", "\\/"),
+             "beklenen_kayitlar": [beklenen(e) for e in TAM_ICERIK["entries"]],
+             "beklenen_etiketler": etiketler},
             {"ad": "bom-ve-gorunmez", "parola": "TransferPass2026",
              "metin": "﻿​  " + aktar_zarf_metni + "\n‎\r\n",
              "beklenen_kayitlar": [beklenen(e) for e in AKTAR_ICERIK["entries"]],

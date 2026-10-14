@@ -165,6 +165,9 @@ struct SecureFieldRow: View {
     let placeholder: String
     @Binding var text: String
     var keyboard: UIKeyboardType = .default
+    /// Yedek ve aktarım parolalarında `.sekuvoNone`: buluta kaydedilmesinler.
+    /// Kayıt düzenlerken `nil` (sistem varsayılanı) — oradaki öneri işe yarar.
+    var contentType: UITextContentType? = nil
     @State private var gorunur = false
 
     var body: some View {
@@ -173,6 +176,7 @@ struct SecureFieldRow: View {
                 if gorunur { TextField(placeholder, text: $text) } else { SecureField(placeholder, text: $text) }
             }
             .keyboardType(keyboard)
+            .textContentType(contentType)
             .textInputAutocapitalization(.never).autocorrectionDisabled()
             .font(.body.monospaced())
             Button { gorunur.toggle() } label: { Image(systemName: gorunur ? "eye.slash" : "eye") }
