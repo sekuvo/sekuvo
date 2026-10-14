@@ -7,8 +7,10 @@ import UIKit
 ///
 /// Kamera görüntüsü cihazda çözülür (AVFoundation); kareler sırasız toplanır,
 /// küme tamamlanınca aktarım parolası istenir. Görüntü hiçbir yere gitmez ve
-/// saklanmaz.
+/// saklanmaz. `onEnvelope` verilirse zarf çağırana döner ve içe aktarma
+/// açılmaz (düzenleme ekranında "Parolayı QR ile güncelle").
 struct QrScanScreen: View {
+    var onEnvelope: ((Data) -> Void)? = nil
     @Environment(VaultModel.self) private var kasa
     @Environment(\.dismiss) private var kapat
     @State private var toplayici = QrCollector()
@@ -18,6 +20,7 @@ struct QrScanScreen: View {
     @State private var okundu = false
     @State private var izin = AVCaptureDevice.authorizationStatus(for: .video)
     @State private var zarf: Zarf?
+    @State private var teslimEdildi = false
 
     struct Zarf: Identifiable {
         let id = UUID()
@@ -84,7 +87,7 @@ struct QrScanScreen: View {
     }
 
     private func yeniMetin(_ metin: String) {
-        guard zarf == nil else { return }
+        guard zarf == nil, !teslimEdildi else { return }
         switch toplayici.add(metin) {
         case .ignored: break
         case .progress(let n, let t):
@@ -93,7 +96,13 @@ struct QrScanScreen: View {
         case .complete(let e):
             alinan = toplam; okundu = true
             durum = L("qr_status_done")
-            zarf = Zarf(data: Data(e.utf8))
+            if let onEnvelope {
+                teslimEdildi = true
+                onEnvelope(Data(e.utf8))
+                kapat()
+            } else {
+                zarf = Zarf(data: Data(e.utf8))
+            }
         case .mismatch:
             alinan = 0; toplam = 0
             durum = L("qr_status_frames_mismatch")
@@ -115,11 +124,19 @@ struct QrScanScreen: View {
     /// karelerini sırasız ve bir tekrarla besler (yalnız Debug).
     private func benzet() async {
         var veri = EntryData()
-        veri.notes = "-----BEGIN OPENSSH PRIVATE KEY-----\n" + (0..<60).map { _ in
-            Crypto.randomBytes(52).base64EncodedString()
-        }.joined(separator: "\n") + "\n-----END OPENSSH PRIVATE KEY-----"
-        let kayit = DecryptedEntry(type: .note, title: "Sunucu SSH (staging)", data: veri,
+        let kayit: DecryptedEntry
+        if onEnvelope != nil {
+            // Parola güncelleme: aktar.html'in "yeni parola" zarfı gibi.
+            veri.password = PasswordGenerator.generate()
+            kayit = DecryptedEntry(type: .login, title: "Yeni parola", data: veri,
+                                   createdAt: 1_760_500_000_000, updatedAt: 1_760_500_000_000)
+        } else {
+            veri.notes = "-----BEGIN OPENSSH PRIVATE KEY-----\n" + (0..<60).map { _ in
+                Crypto.randomBytes(52).base64EncodedString()
+            }.joined(separator: "\n") + "\n-----END OPENSSH PRIVATE KEY-----"
+            kayit = DecryptedEntry(type: .note, title: "Sunucu SSH (staging)", data: veri,
                                    createdAt: 1_760_500_000_000, updatedAt: 1_760_500_000_000, noteKind: .anahtar)
+        }
         guard let zarfVeri = try? Backup.export(password: "ornek-aktarim-2026", entries: [kayit]) else { return }
         var kareler = QrTransfer.frames(for: String(decoding: zarfVeri, as: UTF8.self)).shuffled()
         if let ilk = kareler.first { kareler.insert(ilk, at: min(2, kareler.count)) }

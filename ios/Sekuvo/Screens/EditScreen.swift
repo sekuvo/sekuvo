@@ -21,6 +21,12 @@ struct EditScreen: View {
     @State private var alanPenceresi: AlanHedefi?
     @State private var silmeOnayi = false
     @State private var cikisOnayi = false
+    @State private var ibanOnayi = false
+    @State private var uretici = false
+    /// "Parolayı QR ile güncelle": tarayıcı kapanınca açılacak zarf.
+    @State private var qrTarama = false
+    @State private var bekleyenZarf: Data?
+    @State private var qrZarfi: QrZarfi?
     @State private var hazir = false
 
     private var tur: EntryType { existing?.type ?? newType }
@@ -28,6 +34,11 @@ struct EditScreen: View {
     struct AlanHedefi: Identifiable {
         let id = UUID()
         let index: Int?
+    }
+
+    struct QrZarfi: Identifiable {
+        let id = UUID()
+        let data: Data
     }
 
     var body: some View {
@@ -42,7 +53,10 @@ struct EditScreen: View {
                         .textContentType(.username).textInputAutocapitalization(.never).autocorrectionDisabled()
                     HStack {
                         SecureFieldRow(placeholder: L("field_password"), text: $veri.password)
-                        Button { veri.password = PasswordGenerator.generate() } label: { Image(systemName: "dice.fill") }
+                        Button { qrTarama = true } label: { Image(systemName: "qrcode.viewfinder") }
+                            .accessibilityLabel(L("edit_password_from_qr"))
+                            .buttonStyle(.borderless)
+                        Button { uretici = true } label: { Image(systemName: "dice.fill") }
                             .accessibilityLabel(L("edit_generate_password"))
                             .buttonStyle(.borderless)
                     }
@@ -163,7 +177,11 @@ struct EditScreen: View {
                 Button(L("edit_cancel")) { degisti ? (cikisOnayi = true) : kapat() }
             }
             ToolbarItem(placement: .confirmationAction) {
-                Button(L("edit_save"), action: kaydet)
+                Button(L("edit_save")) {
+                    // Geçersiz IBAN engellenmez, sorulur (Android ile aynı): MOD-97'ye
+                    // uymayan meşru bir değeri olan tıkanmasın, yanlış yazan da fark etsin.
+                    if tur == .card && !FieldFormats.ibanIsValid(veri.iban) { ibanOnayi = true } else { kaydet() }
+                }
                     .disabled(baslik.trimmingCharacters(in: .whitespaces).isEmpty
                               || !FieldFormats.emailIsValid(veri.email) || !FieldFormats.expiryIsValid(veri.expiry))
             }
@@ -192,7 +210,37 @@ struct EditScreen: View {
                 TagEditSheet(initial: nil) { id in if !etiketler.contains(id) { etiketler.append(id) } }
             }
         }
+        .alert(L("edit_iban_confirm_title"), isPresented: $ibanOnayi) {
+            Button(L("edit_iban_confirm_save"), role: .destructive) { kaydet() }
+            Button(L("edit_iban_confirm_fix"), role: .cancel) {}
+        } message: { Text(L("edit_iban_confirm_text")) }
+        .sheet(isPresented: $uretici) {
+            NavigationStack { GeneratorSheet { veri.password = $0 } }
+        }
+        .fullScreenCover(isPresented: $qrTarama, onDismiss: {
+            // Parola penceresi tarayıcı kapandıktan sonra açılır: iki pencere
+            // aynı anda sunulamaz.
+            if let z = bekleyenZarf { bekleyenZarf = nil; qrZarfi = QrZarfi(data: z) }
+        }) {
+            QrScanScreen { bekleyenZarf = $0 }
+        }
+        .sheet(item: $qrZarfi) { z in
+            NavigationStack { PasswordFromQrSheet(envelope: z.data) { veri.password = $0 } }
+        }
         .onAppear(perform: yukle)
+        #if DEBUG
+        .task {
+            // `-ornekIban <değer>` (yeni kart): başlık ve IBAN dolu, sonra Kaydet'e basılmış gibi.
+            let a = ProcessInfo.processInfo.arguments
+            if let i = a.firstIndex(of: "-ornekIban"), i + 1 < a.count, existing == nil, tur == .card {
+                baslik = "  Deneme kartı  "
+                veri.iban = FieldFormats.ibanInput(a[i + 1])
+                veri.cardholder = "  DENIZ YILMAZ "
+                try? await Task.sleep(for: .seconds(1))
+                if !FieldFormats.ibanIsValid(veri.iban) { ibanOnayi = true } else { kaydet() }
+            }
+        }
+        #endif
     }
 
     private var degisti: Bool {
@@ -210,6 +258,9 @@ struct EditScreen: View {
             baslik = e.title; veri = e.data; notTuru = e.noteKind; hizli = e.quick
             oncelik = e.sortIndex > 0 ? String(e.sortIndex) : ""
             etiketler = e.tagIds
+        } else {
+            // Gündelik bilgiler klavyede parolasız kullanılsın diye açık başlar (Android ile aynı).
+            hizli = newType == .everyday
         }
         hazir = true
     }
@@ -217,7 +268,7 @@ struct EditScreen: View {
     private func kaydet() {
         var e = existing ?? DecryptedEntry(type: tur, title: "", createdAt: 0, updatedAt: 0)
         e.title = baslik.trimmingCharacters(in: .whitespaces)
-        e.data = veri
+        e.data = veri.trimmedForSave()
         e.noteKind = tur == .note ? notTuru : .genel
         e.quick = hizli
         e.sortIndex = Int(oncelik) ?? 0
@@ -257,3 +308,56 @@ struct SecureFieldRow: View {
 private extension Character {
     var isASCIIDigitApp: Bool { isASCII && isNumber }
 }
+
+/// "Parolayı QR ile güncelle" (Android: düzenleme ekranındaki pencere). Zarf
+/// aktarım parolasıyla açılır, içindeki parola alınır ve yalnız forma
+/// yazılır: zarfın taşıdığı kayıt kasaya eklenmez.
+struct PasswordFromQrSheet: View {
+    let envelope: Data
+    let onValue: (String) -> Void
+
+    @Environment(VaultModel.self) private var kasa
+    @Environment(\.dismiss) private var kapat
+    @State private var parola = ""
+
+    var body: some View {
+        Form {
+            Section {
+                Text(L("edit_password_qr_hint")).font(.footnote).foregroundStyle(Theme.onSurfaceVariant)
+                SecureFieldRow(placeholder: L("paste_label_backup_password"), text: $parola, contentType: .sekuvoNone)
+            } footer: {
+                if let hata = kasa.error { Text(hata).foregroundStyle(Theme.error) }
+            }
+        }
+        .scrollContentBackground(.hidden)
+        .background(Theme.background)
+        .navigationTitle(L("edit_password_from_qr"))
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) { Button(L("settings_cancel")) { kapat() } }
+            ToolbarItem(placement: .confirmationAction) {
+                Button {
+                    let p = parola
+                    Task {
+                        if let deger = await kasa.passwordFromEnvelope(envelope, password: p) {
+                            onValue(deger)
+                            kapat()
+                        }
+                    }
+                } label: {
+                    if kasa.busy { ProgressView() } else { Text(L("paste_btn_import")) }
+                }
+                .disabled(parola.isEmpty || kasa.busy)
+            }
+        }
+        .onAppear { kasa.error = nil }
+        #if DEBUG
+        .task {
+            // `-ornekQrParola <parola>`: benzetimli zarfı dokunmadan açmak için.
+            let a = ProcessInfo.processInfo.arguments
+            if let i = a.firstIndex(of: "-ornekQrParola"), i + 1 < a.count { parola = a[i + 1] }
+        }
+        #endif
+    }
+}
+

@@ -10,12 +10,13 @@ locking when the app leaves the screen; adding, editing and deleting all
 four entry types; the entry list with search, type and tag filters and
 Android's six sort orders; tags with a colour and an icon, assigned while
 editing and managed from the list; custom fields of seven types; old
-passwords kept with their dates; the detail screen with masked fields;
-copying a value to the clipboard for this iPhone only, cleared after 45
-seconds; importing a QR transfer or pasted text; and backing up to and
-restoring from a `.vaultbak` file. Screens use the Android app's
-translations in all sixteen languages; the few strings that exist only on
-iOS are in English and Turkish for now.
+passwords kept with their dates; Android's password generator; refreshing a
+password from a QR transfer; the detail screen with masked fields; copying a
+value to the clipboard for this iPhone only, cleared after 45 seconds;
+importing a QR transfer or pasted text; and backing up to and restoring from
+a `.vaultbak` file. Screens use the Android app's translations in all
+sixteen languages; the few strings that exist only on iOS are in English and
+Turkish for now.
 
 ## Layout
 

@@ -164,6 +164,10 @@ struct HomeScreen: View {
                 let a = ProcessInfo.processInfo.arguments
                 if a.contains("-ornekQr") { qr = true }
                 if a.contains("-ornekAyarlar") { ayarlar = true }
+                // `-ornekYeni <TÜR>`: o türde yeni kayıt ekranı (LOGIN, EVERYDAY, CARD, NOTE).
+                if let i = a.firstIndex(of: "-ornekYeni"), i + 1 < a.count, let t = EntryType(rawValue: a[i + 1]) {
+                    yeni = NewEntry(type: t)
+                }
                 // `-ornekElleKilitle`: kilit düğmesine basılmış gibi, süreç başına bir kez.
                 if a.contains("-ornekElleKilitle"), !Self.elleKilitlendi {
                     Self.elleKilitlendi = true

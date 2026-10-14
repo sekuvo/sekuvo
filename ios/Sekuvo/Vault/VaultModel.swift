@@ -455,6 +455,29 @@ final class VaultModel {
         return false
     }
 
+    /// Zarftaki ilk kaydın parolası (Android: `readFromEnvelope`): düzenleme
+    /// ekranında "Parolayı QR ile güncelle". Kasaya hiçbir şey eklenmez,
+    /// yalnız değer döner. Olmazsa `error` dolar ve `nil` döner.
+    func passwordFromEnvelope(_ zarf: Data, password: String) async -> String? {
+        error = nil
+        busy = true; defer { busy = false }
+        do {
+            let sonuc = try await Task.detached { try Backup.import(zarf, password: password) }.value
+            guard let deger = sonuc.entries.first?.data.password, !deger.isEmpty else {
+                error = L("vm_envelope_no_value")
+                return nil
+            }
+            return deger
+        } catch Backup.Failure.wrongPassword {
+            error = L("vm_backup_password_wrong")
+        } catch Backup.Failure.invalidFormat {
+            error = L("vm_invalid_envelope")
+        } catch {
+            self.error = L("vm_import_failed", error.localizedDescription)
+        }
+        return nil
+    }
+
     // MARK: Yedek alma
 
     /// Şifreli yedeğin baytları; dosyaya yazmayı çağıran yapar (Dosyalar).

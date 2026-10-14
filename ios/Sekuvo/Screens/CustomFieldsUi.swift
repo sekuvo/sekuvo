@@ -46,6 +46,7 @@ struct CustomFieldSheet: View {
     @State private var ad = ""
     @State private var deger = ""
     @State private var tur: CustomFieldType = .text
+    @State private var uretici = false
     @State private var hazir = false
 
     var body: some View {
@@ -86,6 +87,11 @@ struct CustomFieldSheet: View {
             if let f = initial { ad = f.label; deger = f.value; tur = f.type }
             hazir = true
         }
+        .sheet(isPresented: $uretici) {
+            // Pano bildiriminde alanın adı; adsızsa "Şifre" (Android ile aynı).
+            let etiket = ad.trimmingCharacters(in: .whitespacesAndNewlines)
+            NavigationStack { GeneratorSheet(copyLabel: etiket.isEmpty ? L("field_password") : etiket) { deger = $0 } }
+        }
     }
 
     @ViewBuilder private var degerAlani: some View {
@@ -93,7 +99,7 @@ struct CustomFieldSheet: View {
         case .password:
             HStack {
                 SecureFieldRow(placeholder: L("edit_field_value"), text: $deger)
-                Button { deger = PasswordGenerator.generate() } label: { Image(systemName: "dice.fill") }
+                Button { uretici = true } label: { Image(systemName: "dice.fill") }
                     .accessibilityLabel(L("edit_generate_password"))
                     .buttonStyle(.borderless)
             }

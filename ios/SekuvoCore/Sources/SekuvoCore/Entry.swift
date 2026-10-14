@@ -41,7 +41,9 @@ public struct CustomField: Equatable, Sendable {
     }
 }
 
-/// Geride bırakılmış bir parola ve ne zaman bırakıldığı (epoch ms).
+/// Geride bırakılmış bir parola ve **konduğu** an (epoch ms): o günkü
+/// `passwordChangedAt`. Bilinmiyorsa geçmişe düştüğü an; 0 = bilinmiyor.
+/// Kural `bicim/README.md`'de, Android ile aynı.
 public struct OldPassword: Equatable, Sendable {
     public var value: String
     public var changedAt: Int64
@@ -80,6 +82,24 @@ public struct EntryData: Equatable, Sendable {
          (\.cardholder, "cardholder"), (\.cardNumber, "cardNumber"), (\.expiry, "expiry"),
          (\.cvv, "cvv"), (\.iban, "iban"), (\.notes, "notes"), (\.fullName, "fullName"),
          (\.phone, "phone"), (\.email, "email"), (\.address, "address")]
+    }
+
+    /// Kaydetmeden önceki hâli (Android: `EditScreen.kaydet`): parola ve not
+    /// dışındaki metin alanları kırpılır; ek alanlarda ad ve değer kırpılır,
+    /// adsız ek alan düşer. Parola bilerek kırpılmaz: baştaki ya da sondaki
+    /// boşluk parolanın parçası olabilir. Not da kırpılmaz: girinti içeriktir.
+    public func trimmedForSave() -> EntryData {
+        var d = self
+        let kirpilan: [WritableKeyPath<EntryData, String>] = [
+            \.username, \.url, \.cardholder, \.cardNumber, \.expiry, \.cvv, \.iban,
+            \.fullName, \.phone, \.email, \.address,
+        ]
+        for yol in kirpilan { d[keyPath: yol] = d[keyPath: yol].trimmingCharacters(in: .whitespacesAndNewlines) }
+        d.custom = custom
+            .map { CustomField(label: $0.label.trimmingCharacters(in: .whitespacesAndNewlines),
+                               value: $0.value.trimmingCharacters(in: .whitespacesAndNewlines), type: $0.type) }
+            .filter { !$0.label.isEmpty }
+        return d
     }
 
     public init(json o: [String: Any]) {
