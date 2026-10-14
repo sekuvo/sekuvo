@@ -106,7 +106,7 @@ missing: `username`, `password`, `url`, `cardholder`, `cardNumber`,
 |---|---|
 | `custom` | `[{"label", "value", "type"?}]`; entries with an empty label are dropped; `type` is one of `text` · `password` · `email` · `phone` · `url` · `number` · `multiline`, omitted for `text`, unknown reads as `text` |
 | `passwordChangedAt` | epoch ms, written only when > 0 |
-| `passwordHistory` | `[{"value", "changedAt"}]`, newest first; entries with an empty value are dropped |
+| `passwordHistory` | `[{"value", "changedAt"}]`, newest first; entries with an empty value are dropped. `changedAt` is when that password was set, its `passwordChangedAt` at the time; if that was unknown (0), the moment it was replaced. 0 means unknown |
 
 ### Tag definition
 

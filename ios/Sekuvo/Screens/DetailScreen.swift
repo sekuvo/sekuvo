@@ -50,9 +50,18 @@ struct DetailScreen: View {
                     .padding(.horizontal, 16).padding(.vertical, 10)
                     .overlay(RoundedRectangle(cornerRadius: 14).stroke(Theme.outlineVariant, lineWidth: 1))
                     .padding(.top, 8)
-                    Text(L("detail_dates", tarih(k.createdAt), tarih(k.updatedAt)))
-                        .font(.footnote).foregroundStyle(Theme.onSurfaceVariant)
-                        .padding(.horizontal, 4).padding(.top, 6)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(L("detail_dates", tarihMetni(k.createdAt), tarihMetni(k.updatedAt)))
+                        if k.data.passwordChangedAt > 0 {
+                            Text(L("detail_password_changed", tarihMetni(k.data.passwordChangedAt)))
+                        }
+                    }
+                    .font(.footnote).foregroundStyle(Theme.onSurfaceVariant)
+                    .padding(.horizontal, 4).padding(.top, 6)
+                    if !k.data.passwordHistory.isEmpty {
+                        OldPasswordsCard(history: k.data.passwordHistory) { kasa.copy(label: L("field_password"), value: $0) }
+                            .padding(.top, 8)
+                    }
                 }
                 .padding(16)
             }
@@ -73,10 +82,6 @@ struct DetailScreen: View {
     }
 
     private func yenile() { kayit = kasa.load(id: id) }
-
-    private func tarih(_ ms: Int64) -> String {
-        Date(timeIntervalSince1970: Double(ms) / 1000).formatted(date: .abbreviated, time: .shortened)
-    }
 
     private func alanlar(_ k: DecryptedEntry) -> [Field] {
         let d = k.data

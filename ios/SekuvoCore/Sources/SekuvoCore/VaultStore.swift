@@ -82,14 +82,19 @@ public final class VaultStore {
     // MARK: Yazma
 
     /// Yeni kayıt (`id == 0`) ya da güncelleme. Parola değiştiyse eskisi
-    /// tarihiyle geçmişe girer, en yenisi başta (Android: `withNewPassword`).
+    /// geçmişe girer, en yenisi başta (Android: `EditScreen.kaydet`).
+    ///
+    /// Geçmişteki tarih, eski parolanın **konduğu** andır (o günkü
+    /// `passwordChangedAt`). Bilinmiyorsa (damgasız eski kayıt) geçmişe
+    /// düştüğü an yazılır: uydurulmuş bir tarih değil, gerçek bir olay.
     @discardableResult
     public func save(_ e: DecryptedEntry, now: Int64) throws -> Int64 {
         var veri = e.data
         if e.id != 0, let eski = load(id: e.id) {
             if eski.data.password != veri.password {
                 if !eski.data.password.isEmpty {
-                    veri.passwordHistory.insert(OldPassword(value: eski.data.password, changedAt: now), at: 0)
+                    let kondugu = eski.data.passwordChangedAt > 0 ? eski.data.passwordChangedAt : now
+                    veri.passwordHistory.insert(OldPassword(value: eski.data.password, changedAt: kondugu), at: 0)
                 }
                 veri.passwordChangedAt = veri.password.isEmpty ? 0 : now
             }

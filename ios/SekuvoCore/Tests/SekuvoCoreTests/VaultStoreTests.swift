@@ -125,17 +125,42 @@ struct VaultStoreTests {
         #expect(try k.tags().first?.color == TagPalette.color(for: 0))
     }
 
-    @Test func parolaDegisinceEskisiTarihiyleGecmiseGirer() throws {
+    @Test func parolaDegisinceEskisiKonduguTarihleGecmiseGirer() throws {
         let k = try kasa()
         let id = try k.save(kayit("Hesap", sifre: "bir"), now: 100)
         var e = try #require(k.load(id: id))
         #expect(e.data.passwordChangedAt == 100)
         e.data.password = "iki"
         try k.save(e, now: 200)
-        let son = try #require(k.load(id: id))
-        #expect(son.data.passwordHistory == [OldPassword(value: "bir", changedAt: 200)])
+        var son = try #require(k.load(id: id))
+        // Android ile aynı: geçmişteki tarih, eski parolanın konduğu an.
+        #expect(son.data.passwordHistory == [OldPassword(value: "bir", changedAt: 100)])
         #expect(son.data.passwordChangedAt == 200)
         #expect(son.createdAt == 100 && son.updatedAt == 200)
+        // Üçüncü parola: en yenisi başta, her biri kendi konduğu anla.
+        son.data.password = "uc"
+        try k.save(son, now: 300)
+        let ucuncu = try #require(k.load(id: id))
+        #expect(ucuncu.data.passwordHistory.map(\.value) == ["iki", "bir"])
+        #expect(ucuncu.data.passwordHistory.map(\.changedAt) == [200, 100])
+        // Parola aynı kalınca geçmiş büyümez.
+        try k.save(ucuncu, now: 400)
+        #expect(try #require(k.load(id: id)).data.passwordHistory.count == 2)
+    }
+
+    @Test func damgasizEskiParolaGecmiseDustuguAnlaGirer() throws {
+        let k = try kasa()
+        var d = EntryData(); d.password = "eski"   // passwordChangedAt 0: eski sürümün kaydı
+        let gelen = DecryptedEntry(type: .login, title: "Eski", data: d, createdAt: 50, updatedAt: 50)
+        try k.apply(Backup.ImportResult(entries: [gelen], tagDefs: [:]), replace: false)
+        let id = try #require(try k.items().first?.id)
+        var e = try #require(k.load(id: id))
+        #expect(e.data.passwordChangedAt == 0)
+        e.data.password = "yeni"
+        try k.save(e, now: 400)
+        let son = try #require(k.load(id: id))
+        #expect(son.data.passwordHistory == [OldPassword(value: "eski", changedAt: 400)])
+        #expect(son.data.passwordChangedAt == 400)
     }
 }
 

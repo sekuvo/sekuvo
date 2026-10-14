@@ -68,3 +68,9 @@ struct FieldCard: View {
         .overlay(RoundedRectangle(cornerRadius: 14).stroke(Theme.outlineVariant, lineWidth: 1))
     }
 }
+
+/// Tarih ve saat, cihazın dilinde (Android: `d MMM yyyy HH:mm`).
+func tarihMetni(_ ms: Int64) -> String {
+    Date(timeIntervalSince1970: Double(ms) / 1000).formatted(date: .abbreviated, time: .shortened)
+}
+

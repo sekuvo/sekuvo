@@ -103,6 +103,18 @@ extension NoteKind {
 }
 
 extension CustomFieldType {
+    var label: String {
+        switch self {
+        case .text: L("field_type_text")
+        case .password: L("field_type_password")
+        case .email: L("field_type_email")
+        case .phone: L("field_type_phone")
+        case .url: L("field_type_url")
+        case .number: L("field_type_number")
+        case .multiline: L("field_type_multiline")
+        }
+    }
+
     var symbol: String {
         switch self {
         case .text: "textformat"

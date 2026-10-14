@@ -17,11 +17,18 @@ struct EditScreen: View {
     @State private var oncelik = ""
     @State private var etiketler: [Int64] = []
     @State private var yeniEtiket = false
+    /// Açık ek alan penceresi: `index == nil` yeni alan, değilse o sıradaki alan.
+    @State private var alanPenceresi: AlanHedefi?
     @State private var silmeOnayi = false
     @State private var cikisOnayi = false
     @State private var hazir = false
 
     private var tur: EntryType { existing?.type ?? newType }
+
+    struct AlanHedefi: Identifiable {
+        let id = UUID()
+        let index: Int?
+    }
 
     var body: some View {
         Form {
@@ -85,6 +92,17 @@ struct EditScreen: View {
                     }
                 }
             }
+            // Ek alanlar her türde düzenlenebilir: aktarımla gelen bir kaydın
+            // içeriği "ad + değer" çiftlerinde olabilir (Android ile aynı).
+            Section(L("edit_custom_fields")) {
+                ForEach(Array(veri.custom.enumerated()), id: \.offset) { i, alan in
+                    CustomFieldRow(field: alan,
+                                   onEdit: { alanPenceresi = AlanHedefi(index: i) },
+                                   onRemove: { veri.custom.remove(at: i) })
+                }
+                Button(L("edit_add_field")) { alanPenceresi = AlanHedefi(index: nil) }
+                    .foregroundStyle(Theme.primary)
+            }
             Section(L("field_notes")) {
                 TextField(L("field_notes"), text: $veri.notes, axis: .vertical)
                     .lineLimit(tur == .note ? 6...20 : 2...8)
@@ -115,6 +133,19 @@ struct EditScreen: View {
                             .foregroundStyle(Theme.primary)
                     }
                     .padding(.vertical, 2)
+                }
+            }
+            // Eski parolalar salt okunur: form alanı değil, kaydın geçmişi.
+            // Parola değiştikçe kaydederken kendiliğinden büyür.
+            if !veri.passwordHistory.isEmpty {
+                Section {
+                    ForEach(Array(veri.passwordHistory.enumerated()), id: \.offset) { _, eski in
+                        OldPasswordRow(old: eski) { kasa.copy(label: L("field_password"), value: eski.value) }
+                    }
+                } header: {
+                    Text(L("old_passwords_title"))
+                } footer: {
+                    Text(L("old_passwords_desc"))
                 }
             }
             if existing != nil {
@@ -148,6 +179,13 @@ struct EditScreen: View {
             Button(L("edit_discard_confirm"), role: .destructive) { kapat() }
             Button(L("edit_discard_cancel"), role: .cancel) {}
         } message: { Text(L("edit_discard_text")) }
+        .sheet(item: $alanPenceresi) { h in
+            NavigationStack {
+                CustomFieldSheet(initial: h.index.map { veri.custom[$0] }) { alan in
+                    if let i = h.index, veri.custom.indices.contains(i) { veri.custom[i] = alan } else { veri.custom.append(alan) }
+                }
+            }
+        }
         .sheet(isPresented: $yeniEtiket) {
             // Yeni etiket bu kayıt için açıldı: hemen seçili gelir (Android ile aynı).
             NavigationStack {
