@@ -37,7 +37,7 @@ struct UnlockScreen: View {
                               systemImage: kasa.biometry == .touchID ? "touchid" : (kasa.biometry == .opticID ? "opticid" : "faceid"))
                     }
                     .buttonStyle(FilledButton())
-                    .disabled(kasa.busy)
+                    .disabled(kasa.busy || kasa.biometricBusy)
                 } else if !setup && kasa.biometricEnabled && kasa.masterPasswordDue {
                     // Hatırlatıcı: bu sefer biyometri yerine ana parola (unutmayı önlemek için).
                     Label(L("ios_master_reminder", kasa.biometryName), systemImage: "exclamationmark.circle")
@@ -78,7 +78,8 @@ struct UnlockScreen: View {
                     .frame(maxWidth: .infinity, minHeight: 50)
                 }
                 .buttonStyle(FilledButton())
-                .disabled(kasa.busy || parola.isEmpty)
+                // Biyometri istemi açıkken parola düğmesi bekler ama gösterge dönmez.
+                .disabled(kasa.busy || kasa.biometricBusy || parola.isEmpty)
 
                 if !setup {
                     Label(L("ios_locked_hint"), systemImage: "eye.slash")

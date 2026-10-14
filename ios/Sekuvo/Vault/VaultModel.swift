@@ -35,6 +35,9 @@ final class VaultModel {
     /// Liste sırası (Android: `EntrySort`). Sır değil: UserDefaults'ta durur.
     private(set) var sort = EntrySort.of(UserDefaults.standard.string(forKey: "entrySort"))
     private(set) var busy = false
+    /// Face ID / Touch ID okuması sürüyor. `busy`'den ayrı: biyometri istemi
+    /// açıkken parola düğmesinde gösterge dönmesin.
+    private(set) var biometricBusy = false
     var error: String?
     var privacyCover = false
     /// Kısa bildirim (Android'deki Toast).
@@ -170,12 +173,13 @@ final class VaultModel {
 
     /// Biyometriyle açar; PIN açıksa ikinci aşamaya (PIN ekranı) geçer.
     func unlockWithBiometric() async {
-        guard biometricUsable, state == .locked, !busy else { return }
-        busy = true; defer { busy = false }
+        guard biometricUsable, state == .locked, !busy, !biometricBusy else { return }
+        biometricBusy = true; defer { biometricBusy = false }
         let b = biometric, sebep = L("ios_biometric_reason")
         #if DEBUG
         let baslangic = Date()
-        Log.kilit.debug("biyometri: okuma başlıyor")
+        // Parola düğmesindeki gösterge yalnız `busy`'ye bağlı: okuma sürerken false olmalı.
+        Log.kilit.debug("biyometri: okuma başlıyor (busy: \(self.busy), biometricBusy: \(self.biometricBusy))")
         defer { Log.kilit.debug("biyometri: okuma bitti, \(Date().timeIntervalSince(baslangic), format: .fixed(precision: 3)) sn") }
         #endif
         do {

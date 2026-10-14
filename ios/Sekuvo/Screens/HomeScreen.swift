@@ -91,7 +91,9 @@ struct HomeScreen: View {
             .scrollContentBackground(.hidden)
             .background(Theme.background)
             .overlay {
-                if gorunen.isEmpty {
+                // Kilitlenirken liste 0,2 sn solarak çıkar ve kayıtlar o an boşalmıştır:
+                // boş kasa metni yalnız kasa açıkken (videoda iki karede görünüyordu).
+                if gorunen.isEmpty && kasa.state == .unlocked {
                     ContentUnavailableView {
                         Label(kasa.items.isEmpty ? L("ios_empty_add_hint") : L("home_empty_filter"),
                               systemImage: kasa.items.isEmpty ? "lock" : "magnifyingglass")
