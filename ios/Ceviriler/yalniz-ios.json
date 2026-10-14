@@ -134,6 +134,10 @@
     "ios_biometric_enable_failed": {
       "en": "Could not enable %1$@: %2$@",
       "tr": "%1$@ etkinleştirilemedi: %2$@"
+    },
+    "ios_settings_backup_desc": {
+      "en": "The backup file is encrypted with AES-256 and opens only with the backup password. Save it wherever you like in Files: iCloud Drive, this device or another location. Even if this device is wiped, the file plus the password restores everything.",
+      "tr": "Yedek dosyası AES-256 ile şifrelenir ve yalnızca yedek parolasıyla açılır. Dosyayı Dosyalar'da istediğin yere kaydedebilirsin: iCloud Drive, bu cihaz ya da başka bir konum. Cihaz sıfırlansa bile dosya ve parola ile her şey geri yüklenir."
     }
   },
   "infoplist": {
@@ -144,6 +148,10 @@
     "NSFaceIDUsageDescription": {
       "en": "Face ID opens your vault without typing the master password. The master password always works on its own.",
       "tr": "Face ID kasanı ana parolayı yazmadan açar. Ana parola her zaman tek başına da açar."
+    },
+    "Sekuvo backup": {
+      "en": "Sekuvo backup",
+      "tr": "Sekuvo yedeği"
     }
   }
 }

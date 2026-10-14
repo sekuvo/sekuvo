@@ -478,6 +478,47 @@ final class VaultModel {
         return nil
     }
 
+    // MARK: Dosyalar'dan "Sekuvo ile aç"
+
+    /// Dosyalar'dan ya da paylaşımdan gelen, okunmuş ve geri yüklenmeyi
+    /// bekleyen yedek. Kasa kilitliyse kilit açılınca sunulur.
+    struct IncomingFile: Identifiable {
+        let id = UUID()
+        let data: Data
+    }
+    var incomingBackup: IncomingFile?
+
+    /// `onOpenURL` ile gelen dosyayı okur. Yerinde açılan dosya güvenlik
+    /// kapsamlıdır ve koordineli okunur (iCloud'da inmemişse önce iner).
+    /// Dosya uygulamanın kendi Inbox'ına kopyalanarak geldiyse (AirDrop,
+    /// paylaşım) okunduktan sonra kopya silinir: şifreli de olsa yedeğin
+    /// fazladan bir kopyası cihazda kalmasın.
+    func receive(fileAt url: URL) {
+        guard url.isFileURL else { return }
+        let erisim = url.startAccessingSecurityScopedResource()
+        defer { if erisim { url.stopAccessingSecurityScopedResource() } }
+        var veri: Data?
+        var buyuk = false
+        var hata: NSError?
+        NSFileCoordinator().coordinate(readingItemAt: url, options: [], error: &hata) { u in
+            let boyut = (try? u.resourceValues(forKeys: [.fileSizeKey]).fileSize) ?? 0
+            if boyut > Backup.maxEnvelopeBytes { buyuk = true; return }
+            veri = try? Data(contentsOf: u)
+        }
+        if let inbox = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?
+            .appendingPathComponent("Inbox", isDirectory: true).resolvingSymlinksInPath().path,
+           url.resolvingSymlinksInPath().path.hasPrefix(inbox + "/") {
+            try? FileManager.default.removeItem(at: url)
+        }
+        guard let veri else {
+            let m = L(buyuk ? "vm_invalid_backup_file" : "vm_file_open_failed")
+            error = m
+            show(m)
+            return
+        }
+        incomingBackup = IncomingFile(data: veri)
+    }
+
     // MARK: Yedek alma
 
     /// Şifreli yedeğin baytları; dosyaya yazmayı çağıran yapar (Dosyalar).

@@ -46,6 +46,9 @@ struct RootView: View {
             }
         }
         .animation(.spring(duration: 0.3), value: kasa.toast)
+        // Dosyalar'dan "Sekuvo ile aç" ya da paylaşım: dosya hemen okunur,
+        // geri yükleme penceresi kasa açıkken gelir (HomeScreen).
+        .onOpenURL { kasa.receive(fileAt: $0) }
         #if DEBUG
         .task { await kasa.seedDemoIfRequested() }
         #endif

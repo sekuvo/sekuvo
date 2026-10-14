@@ -25703,6 +25703,23 @@
         }
       }
     },
+    "ios_settings_backup_desc": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The backup file is encrypted with AES-256 and opens only with the backup password. Save it wherever you like in Files: iCloud Drive, this device or another location. Even if this device is wiped, the file plus the password restores everything."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yedek dosyası AES-256 ile şifrelenir ve yalnızca yedek parolasıyla açılır. Dosyayı Dosyalar'da istediğin yere kaydedebilirsin: iCloud Drive, bu cihaz ya da başka bir konum. Cihaz sıfırlansa bile dosya ve parola ile her şey geri yüklenir."
+          }
+        }
+      }
+    },
     "ios_unlock_biometric": {
       "extractionState": "manual",
       "localizations": {

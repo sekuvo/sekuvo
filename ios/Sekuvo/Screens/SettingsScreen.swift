@@ -47,7 +47,8 @@ struct SettingsScreen: View {
                     Text(L("ios_security"))
                 }
                 Section {
-                    Text(L("settings_backup_desc")).font(.footnote).foregroundStyle(Theme.onSurfaceVariant)
+                    // Android'in metni "Drive, SD kart" ve "telefon" diyor; iOS'ta Dosyalar.
+                    Text(L("ios_settings_backup_desc")).font(.footnote).foregroundStyle(Theme.onSurfaceVariant)
                     Button { parolaSor = true } label: { Label(L("settings_backup_export"), systemImage: "square.and.arrow.down.on.square") }
                     Button { geriYukle = true } label: { Label(L("settings_backup_restore"), systemImage: "clock.arrow.circlepath") }
                     Button { metinden = true } label: { Label(L("settings_import_paste"), systemImage: "doc.on.clipboard") }
@@ -76,7 +77,7 @@ struct SettingsScreen: View {
                     }
                 }
             }
-            .fileExporter(isPresented: $disaAktar, document: belge, contentType: .data,
+            .fileExporter(isPresented: $disaAktar, document: belge, contentType: .vaultbak,
                           defaultFilename: VaultbakDocument.defaultName) { sonuc in
                 kasa.backupWritten(sonuc)
                 belge = nil
@@ -145,9 +146,16 @@ struct BackupPasswordSheet: View {
     }
 }
 
+extension UTType {
+    /// `.vaultbak`: şifreli yedek. Tür `Sekuvo-Info.plist`'te bildirildi;
+    /// Dosyalar bu uzantıyı Sekuvo'ya bağlar ("Sekuvo ile aç").
+    static let vaultbak = UTType(exportedAs: "com.sekuvo.vaultbak")
+}
+
 /// `.vaultbak` dosyası: şifreli zarfın baytları, olduğu gibi.
 struct VaultbakDocument: FileDocument {
-    static var readableContentTypes: [UTType] { [.data] }
+    static var readableContentTypes: [UTType] { [.vaultbak, .data] }
+    static var writableContentTypes: [UTType] { [.vaultbak] }
     var data: Data
 
     init(data: Data) { self.data = data }
@@ -155,8 +163,10 @@ struct VaultbakDocument: FileDocument {
 
     func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper { FileWrapper(regularFileWithContents: data) }
 
+    /// Ad yerel tarihle: `.iso8601` biçimi varsayılan olarak UTC'dir ve gece
+    /// yarısına yakın bir yedeğe önceki günün tarihini yazıyordu (ölçüldü).
     static var defaultName: String {
-        "\(L("ios_backup_file_name"))-\(Date().formatted(.iso8601.year().month().day())).vaultbak"
+        "\(L("ios_backup_file_name"))-\(Date().formatted(Date.ISO8601FormatStyle(timeZone: .current).year().month().day())).vaultbak"
     }
 }
 
@@ -174,7 +184,8 @@ struct RestoreFlow: ViewModifier {
 
     func body(content: Content) -> some View {
         content
-            .fileImporter(isPresented: $isPresented, allowedContentTypes: [.data, .json, .item]) { sonuc in
+            // Uzantısı değişmiş ya da başka bir uygulamanın yazdığı dosya da seçilebilsin.
+            .fileImporter(isPresented: $isPresented, allowedContentTypes: [.vaultbak, .data, .item]) { sonuc in
                 guard case .success(let url) = sonuc else { return }
                 let erisim = url.startAccessingSecurityScopedResource()
                 defer { if erisim { url.stopAccessingSecurityScopedResource() } }

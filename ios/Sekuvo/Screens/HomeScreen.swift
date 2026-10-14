@@ -158,6 +158,13 @@ struct HomeScreen: View {
             ), onDismiss: geriYukleGerekirse) {
                 BiometricOfferSheet(pin: kasa.offerBiometricPin)
             }
+            // Dosyalar'dan gelen yedek: biyometri önerisi açıksa o kapandıktan sonra.
+            .sheet(item: Binding(
+                get: { kasa.offerBiometric || kasa.offerBiometricPin != nil ? nil : kasa.incomingBackup },
+                set: { kasa.incomingBackup = $0 }
+            )) { f in
+                NavigationStack { ImportSheet(source: .file, envelope: f.data) }
+            }
             .onAppear(perform: geriYukleGerekirse)
             #if DEBUG
             .task {
@@ -208,7 +215,8 @@ extension HomeScreen {
     func geriYukleGerekirse() {
         guard kasa.restoreAfterSetup, !kasa.offerBiometric, kasa.offerBiometricPin == nil else { return }
         kasa.restoreAfterSetup = false
-        geriYukle = true
+        // Dosyalar'dan bir yedek geldiyse seçiciye gerek yok: o pencere açılır.
+        if kasa.incomingBackup == nil { geriYukle = true }
     }
 }
 

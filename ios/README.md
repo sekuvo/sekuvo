@@ -14,9 +14,9 @@ passwords kept with their dates; Android's password generator; refreshing a
 password from a QR transfer; the detail screen with masked fields; copying a
 value to the clipboard for this iPhone only, cleared after 45 seconds;
 importing a QR transfer or pasted text; and backing up to and restoring from
-a `.vaultbak` file. Screens use the Android app's translations in all
-sixteen languages; the few strings that exist only on iOS are in English and
-Turkish for now.
+a `.vaultbak` file, which also opens from the Files app. Screens use the
+Android app's translations in all sixteen languages; the few strings that
+exist only on iOS are in English and Turkish for now.
 
 ## Layout
 
@@ -27,6 +27,7 @@ Turkish for now.
 | `Sekuvo.xcodeproj` | Xcode project (Xcode 26+, iOS 18+). |
 | `araclar/ceviri_aktar.py` | Builds `Sekuvo/Localizable.xcstrings` from the Android app's `strings.xml` in all sixteen languages. |
 | `Ceviriler/yalniz-ios.json` | The few strings that exist only on iOS. |
+| `Sekuvo-Info.plist` | Info.plist keys Xcode cannot generate: the `.vaultbak` type, so that the Files app opens backups in Sekuvo. Merged with the generated file. |
 
 ## Same format as Android
 
