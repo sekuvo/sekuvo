@@ -23,6 +23,20 @@ struct DetailScreen: View {
         ScrollView {
             if let k = kayit {
                 VStack(alignment: .leading, spacing: 8) {
+                    let etiketler = kasa.tags.filter { k.tagIds.contains($0.id) }
+                    if !etiketler.isEmpty {
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 12) {
+                                ForEach(etiketler) { t in
+                                    HStack(spacing: 4) {
+                                        TagDot(color: t.color, icon: t.icon, size: 12)
+                                        Text(t.name).font(.caption.weight(.medium)).foregroundStyle(Theme.onSurface)
+                                    }
+                                }
+                            }
+                        }
+                        .padding(.bottom, 4)
+                    }
                     ForEach(alanlar(k)) { a in
                         FieldCard(label: a.label, value: a.value, display: a.display, hidden: a.hidden, icon: a.icon) {
                             kasa.copy(label: a.label, value: a.value)

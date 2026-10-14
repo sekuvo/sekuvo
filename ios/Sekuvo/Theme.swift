@@ -115,3 +115,48 @@ extension CustomFieldType {
         }
     }
 }
+
+// MARK: Etiket ikonları ve sıralama adları
+
+/// Etiket ikon anahtarının SF Symbols karşılığı (Android: `tagIcon`, Material
+/// ikonları). Tanınmayan anahtar `nil` döner; o zaman renk noktası çizilir.
+enum TagSymbol {
+    static func of(_ key: String) -> String? {
+        switch key {
+        case "work": "briefcase.fill"
+        case "home": "house.fill"
+        case "person": "person.fill"
+        case "group": "person.3.fill"
+        case "bank": "building.columns.fill"
+        case "card": "creditcard.fill"
+        case "shopping": "cart.fill"
+        case "mail": "envelope.fill"
+        case "cloud": "cloud.fill"
+        case "server": "server.rack"
+        case "code": "chevron.left.forwardslash.chevron.right"
+        case "key": "key.fill"
+        case "shield": "shield.fill"
+        case "wifi": "wifi"
+        case "game": "gamecontroller.fill"
+        case "media": "film.fill"
+        case "music": "music.note"
+        case "school": "graduationcap.fill"
+        case "health": "cross.case.fill"
+        case "travel": "airplane"
+        default: nil
+        }
+    }
+}
+
+extension EntrySort {
+    var label: String {
+        switch self {
+        case .titleAsc: L("sort_title_asc")
+        case .titleDesc: L("sort_title_desc")
+        case .updatedDesc: L("sort_updated_desc")
+        case .createdDesc: L("sort_created_desc")
+        case .type: L("sort_type")
+        case .manual: L("sort_manual")
+        }
+    }
+}

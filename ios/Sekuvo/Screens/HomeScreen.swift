@@ -1,12 +1,15 @@
 import SekuvoCore
 import SwiftUI
 
-/// Ana liste — Android'deki `HomeScreen.kt`: arama, tür süzgeci, kayıtlar,
-/// + menüsü. Liste şifre çözmeden çizilir (başlık ve tür açık durur).
+/// Ana liste — Android'deki `HomeScreen.kt`: arama, tür ve etiket süzgeçleri,
+/// sıralama, kayıtlar, + menüsü. Liste şifre çözmeden çizilir (başlık, tür ve
+/// etiketler açık durur).
 struct HomeScreen: View {
     @Environment(VaultModel.self) private var kasa
     @State private var arama = ""
     @State private var tur: EntryType?
+    @State private var etiketSecimi: [Int64] = []
+    @State private var etiketYonetimi = false
     @State private var yeni: NewEntry?
     @State private var yol: [Int64] = []
     @State private var qr = false
@@ -22,16 +25,30 @@ struct HomeScreen: View {
         let type: EntryType
     }
 
+    /// Seçimler daraltarak birleşir: tür VE seçili etiketlerin tamamı. Sıra
+    /// modelin sırasıdır (`EntrySort`).
     private var gorunen: [VaultStore.Item] {
         kasa.items.filter { i in
             (arama.isEmpty || i.title.localizedStandardContains(arama)) && (tur == nil || i.type == tur)
+                && etiketSecimi.allSatisfy(i.tagIds.contains)
         }
+    }
+
+    /// Etiket satırı seçili türe göre daralır: tür seçiliyken yalnız o türdeki
+    /// kayıtlarda geçen etiketler görünür. Kaynak arama sonucu değil bütün
+    /// liste; aramaya göre de daralsa çipler kullanıcı yazarken kayardı.
+    private var gorunenEtiketler: [VaultStore.Tag] {
+        guard let tur else { return kasa.tags }
+        let kullanilan = Set(kasa.items.filter { $0.type == tur }.flatMap(\.tagIds))
+        return kasa.tags.filter { kullanilan.contains($0.id) }
     }
 
     var body: some View {
         NavigationStack(path: $yol) {
             List {
                 Section {
+                    // Süzgeçler iki sabit satır: üstte türler, altta etiketler
+                    // (Android ile aynı). Satırlar sarmaz, yatay kayar.
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 8) {
                             ForEach(EntryType.allCases, id: \.self) { t in
@@ -43,9 +60,29 @@ struct HomeScreen: View {
                     .listRowInsets(EdgeInsets())
                     .listRowSeparator(.hidden)
                     .listRowBackground(Color.clear)
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 8) {
+                            ForEach(gorunenEtiketler) { t in
+                                TagChip(tag: t, selected: etiketSecimi.contains(t.id)) {
+                                    if let i = etiketSecimi.firstIndex(of: t.id) { etiketSecimi.remove(at: i) } else { etiketSecimi.append(t.id) }
+                                }
+                            }
+                            Button { etiketYonetimi = true } label: {
+                                Image(systemName: "tag").font(.subheadline.weight(.semibold))
+                                    .frame(width: 40, height: 32)
+                            }
+                            .buttonStyle(.borderless)
+                            .foregroundStyle(Theme.primary)
+                            .accessibilityLabel(L("home_manage_tags_cd"))
+                        }
+                        .padding(.horizontal, 16)
+                    }
+                    .listRowInsets(EdgeInsets(top: 2, leading: 0, bottom: 4, trailing: 0))
+                    .listRowSeparator(.hidden)
+                    .listRowBackground(Color.clear)
                 }
                 ForEach(gorunen) { item in
-                    NavigationLink(value: item.id) { EntryRow(item: item) }
+                    NavigationLink(value: item.id) { EntryRow(item: item, tags: etiketler) }
                         .listRowBackground(Theme.surfaceContainer)
                         .listRowSeparator(.hidden)
                 }
@@ -73,6 +110,17 @@ struct HomeScreen: View {
                         .accessibilityLabel(L("home_lock_cd"))
                 }
                 ToolbarItem(placement: .topBarTrailing) {
+                    Menu {
+                        Picker(L("home_sort_cd", kasa.sort.label),
+                               selection: Binding(get: { kasa.sort }, set: { kasa.selectSort($0) })) {
+                            ForEach(EntrySort.allCases, id: \.self) { Text($0.label).tag($0) }
+                        }
+                    } label: {
+                        Image(systemName: "arrow.up.arrow.down")
+                    }
+                    .accessibilityLabel(L("home_sort_cd", kasa.sort.label))
+                }
+                ToolbarItem(placement: .topBarTrailing) {
                     Button { ayarlar = true } label: { Image(systemName: "gearshape.fill") }
                         .accessibilityLabel(L("home_settings_cd"))
                 }
@@ -96,6 +144,13 @@ struct HomeScreen: View {
             .fullScreenCover(isPresented: $qr) { QrScanScreen() }
             .sheet(isPresented: $metinden) { NavigationStack { ImportSheet(source: .text) } }
             .sheet(isPresented: $ayarlar) { SettingsScreen() }
+            .sheet(isPresented: $etiketYonetimi) { NavigationStack { TagManageSheet() } }
+            // Görünmez süzgeç bırakılmaz: seçili bir etiket tür değişince ya da
+            // silinince satırdan düşerse seçimi de düşer. Yoksa liste boşalır ve
+            // boşaltan çip ekranda olmadığı için geri alınamaz.
+            .onChange(of: gorunenEtiketler.map(\.id)) { _, ids in
+                etiketSecimi.removeAll { !ids.contains($0) }
+            }
             .restoreFlow(isPresented: $geriYukle)
             .sheet(isPresented: Binding(
                 get: { kasa.offerBiometric || kasa.offerBiometricPin != nil },
@@ -136,6 +191,10 @@ struct HomeScreen: View {
 }
 
 extension HomeScreen {
+    private var etiketler: [Int64: VaultStore.Tag] {
+        Dictionary(kasa.tags.map { ($0.id, $0) }, uniquingKeysWith: { a, _ in a })
+    }
+
     #if DEBUG
     static var elleKilitlendi = false
     #endif
@@ -149,16 +208,24 @@ extension HomeScreen {
     }
 }
 
-/// Liste satırı (Android: kart satırı): tür rozeti, başlık, tür adı, ⚡, öncelik.
+/// Liste satırı (Android: kart satırı): tür rozeti, başlık; alt satırda tür
+/// adı ve etiket işaretleri; sağ uçta ⚡ ve öncelik.
 struct EntryRow: View {
     let item: VaultStore.Item
+    var tags: [Int64: VaultStore.Tag] = [:]
 
     var body: some View {
         HStack(spacing: 14) {
             TypeBadge(type: item.type, kind: item.noteKind)
             VStack(alignment: .leading, spacing: 2) {
                 Text(item.title).font(.body.weight(.semibold)).foregroundStyle(Theme.onSurface).lineLimit(1)
-                Text(item.type.label).font(.caption).foregroundStyle(Theme.onSurfaceVariant)
+                HStack(spacing: 6) {
+                    Text(item.type.label).font(.caption).foregroundStyle(Theme.onSurfaceVariant)
+                    ForEach(item.tagIds.compactMap { tags[$0] }) { t in
+                        TagDot(color: t.color, icon: t.icon, size: 11)
+                            .accessibilityLabel(t.name)
+                    }
+                }
             }
             Spacer(minLength: 8)
             if item.quick { Text(verbatim: "⚡").font(.callout) }

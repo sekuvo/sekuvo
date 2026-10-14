@@ -28,7 +28,12 @@ final class VaultModel {
     enum ImportSource { case qr, text, file }
 
     private(set) var state: State
+    /// Kayıtlar, seçili sırada (`sort`).
     private(set) var items: [VaultStore.Item] = []
+    /// Etiketler, ada göre.
+    private(set) var tags: [VaultStore.Tag] = []
+    /// Liste sırası (Android: `EntrySort`). Sır değil: UserDefaults'ta durur.
+    private(set) var sort = EntrySort.of(UserDefaults.standard.string(forKey: "entrySort"))
     private(set) var busy = false
     var error: String?
     var privacyCover = false
@@ -141,6 +146,7 @@ final class VaultModel {
         store = nil
         dataKey = nil
         items = []
+        tags = []
         state = .locked
     }
 
@@ -337,7 +343,40 @@ final class VaultModel {
 
     private func reload() throws {
         guard let store else { return }
-        items = try store.items().sorted { $0.title.localizedStandardCompare($1.title) == .orderedAscending }
+        items = sort.sorted(try store.items())
+        tags = try store.tags()
+    }
+
+    func selectSort(_ s: EntrySort) {
+        sort = s
+        UserDefaults.standard.set(s.rawValue, forKey: "entrySort")
+        items = s.sorted(items)
+    }
+
+    // MARK: Etiketler (Android: VaultViewModel.addTag / updateTag / deleteTag)
+
+    /// Yeni etiketin id'si; aynı adda etiket varsa onunki.
+    @discardableResult
+    func addTag(name: String, color: Int32, icon: String = "") -> Int64? {
+        guard let store else { error = L("vm_vault_locked_retry"); return nil }
+        do {
+            let id = try store.addTag(name: name, color: color, icon: icon)
+            try reload()
+            return id
+        } catch {
+            self.error = error.localizedDescription
+            return nil
+        }
+    }
+
+    func updateTag(_ t: VaultStore.Tag) {
+        guard let store else { error = L("vm_vault_locked_retry"); return }
+        do { try store.updateTag(t); try reload() } catch { self.error = error.localizedDescription }
+    }
+
+    func deleteTag(id: Int64) {
+        guard let store else { error = L("vm_vault_locked_retry"); return }
+        do { try store.deleteTag(id: id); try reload() } catch { self.error = error.localizedDescription }
     }
 
     func load(id: Int64) -> DecryptedEntry? { store?.load(id: id) }
@@ -497,26 +536,30 @@ final class VaultModel {
             await enablePin(password: parola, pin: a[i + 1], again: a[i + 1])
         }
         guard items.isEmpty else { return }
+        let is_ = addTag(name: "İş", color: TagPalette.color(for: 4), icon: "work") ?? 0
+        let gelistirici = addTag(name: "Geliştirici", color: TagPalette.color(for: 5), icon: "code") ?? 0
+        let banka = addTag(name: "Banka", color: TagPalette.color(for: 3), icon: "bank") ?? 0
+        let ev = addTag(name: "Ev", color: TagPalette.color(for: 1)) ?? 0
         func kayit(_ tur: EntryType, _ baslik: String, kind: NoteKind = .genel, quick: Bool = false,
-                   sira: Int = 0, _ doldur: (inout EntryData) -> Void) {
+                   sira: Int = 0, etiket: [Int64] = [], _ doldur: (inout EntryData) -> Void) {
             var d = EntryData(); doldur(&d)
             save(DecryptedEntry(type: tur, title: baslik, data: d, createdAt: 0, updatedAt: 0,
-                                quick: quick, noteKind: kind, sortIndex: sira))
+                                quick: quick, tagIds: etiket, noteKind: kind, sortIndex: sira))
         }
-        kayit(.login, "GitHub") { $0.username = "deniz.dev@example.com"; $0.password = PasswordGenerator.generate(); $0.url = "github.com" }
+        kayit(.login, "GitHub", etiket: [is_, gelistirici]) { $0.username = "deniz.dev@example.com"; $0.password = PasswordGenerator.generate(); $0.url = "github.com" }
         kayit(.login, "Google hesabı") { $0.username = "deniz@example.com"; $0.password = PasswordGenerator.generate(); $0.url = "accounts.google.com" }
-        kayit(.login, "Ev Wi-Fi", quick: true) {
+        kayit(.login, "Ev Wi-Fi", quick: true, etiket: [ev]) {
             $0.password = PasswordGenerator.generate()
             $0.custom = [CustomField(label: "Ağ adı (SSID)", value: "EvAgi_5G")]
         }
-        kayit(.login, "Northwind Bank", sira: 1) { $0.username = "48213907"; $0.password = "604918"; $0.url = "Northwind mobil" }
-        kayit(.card, "Visa · günlük") { $0.cardholder = "DENIZ YILMAZ"; $0.cardNumber = "4242424242424242"; $0.expiry = "0829"; $0.cvv = "123" }
-        kayit(.everyday, "Kimlik ve adres") { $0.fullName = "Deniz Yılmaz"; $0.email = "deniz@example.com"; $0.address = "Demo Sok. No: 7, Kadıköy / İstanbul" }
-        kayit(.note, "Deploy anahtarı (ed25519)", kind: .anahtar) {
+        kayit(.login, "Northwind Bank", sira: 1, etiket: [banka]) { $0.username = "48213907"; $0.password = "604918"; $0.url = "Northwind mobil" }
+        kayit(.card, "Visa · günlük", etiket: [banka]) { $0.cardholder = "DENIZ YILMAZ"; $0.cardNumber = "4242424242424242"; $0.expiry = "0829"; $0.cvv = "123" }
+        kayit(.everyday, "Kimlik ve adres", etiket: [ev]) { $0.fullName = "Deniz Yılmaz"; $0.email = "deniz@example.com"; $0.address = "Demo Sok. No: 7, Kadıköy / İstanbul" }
+        kayit(.note, "Deploy anahtarı (ed25519)", kind: .anahtar, etiket: [is_, gelistirici]) {
             $0.notes = "-----BEGIN OPENSSH PRIVATE KEY-----\nb3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZW\n-----END OPENSSH PRIVATE KEY-----"
             $0.custom = [CustomField(label: "parmak izi", value: "SHA256:hcm3lXKROlj0")]
         }
-        kayit(.note, "prod.env · API anahtarları", kind: .yapilandirma) {
+        kayit(.note, "prod.env · API anahtarları", kind: .yapilandirma, etiket: [is_, gelistirici]) {
             $0.notes = "DATABASE_URL=postgres://app:\(PasswordGenerator.generate())@db.internal:5432/app\nSTRIPE_SECRET_KEY=sk_test_example"
         }
         kayit(.note, "Yedek kodlar · Google", kind: .kurtarma) { $0.notes = "4821 9930\n1187 2045\n6390 7712" }

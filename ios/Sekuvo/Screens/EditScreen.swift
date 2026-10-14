@@ -15,6 +15,8 @@ struct EditScreen: View {
     @State private var notTuru: NoteKind = .genel
     @State private var hizli = false
     @State private var oncelik = ""
+    @State private var etiketler: [Int64] = []
+    @State private var yeniEtiket = false
     @State private var silmeOnayi = false
     @State private var cikisOnayi = false
     @State private var hazir = false
@@ -97,6 +99,24 @@ struct EditScreen: View {
             } footer: {
                 Text(L(hizli ? "edit_quick_desc" : "edit_priority_desc"))
             }
+            Section(L("edit_tags")) {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 8) {
+                        ForEach(kasa.tags) { t in
+                            TagChip(tag: t, selected: etiketler.contains(t.id)) {
+                                if let i = etiketler.firstIndex(of: t.id) { etiketler.remove(at: i) } else { etiketler.append(t.id) }
+                            }
+                        }
+                        Button(L("edit_new_tag")) { yeniEtiket = true }
+                            .font(.subheadline.weight(.semibold))
+                            .padding(.horizontal, 12).frame(height: 32)
+                            .overlay(RoundedRectangle(cornerRadius: 10).stroke(Theme.outline, lineWidth: 1))
+                            .buttonStyle(.borderless)
+                            .foregroundStyle(Theme.primary)
+                    }
+                    .padding(.vertical, 2)
+                }
+            }
             if existing != nil {
                 Section {
                     Button(L("edit_delete"), role: .destructive) { silmeOnayi = true }
@@ -128,6 +148,12 @@ struct EditScreen: View {
             Button(L("edit_discard_confirm"), role: .destructive) { kapat() }
             Button(L("edit_discard_cancel"), role: .cancel) {}
         } message: { Text(L("edit_discard_text")) }
+        .sheet(isPresented: $yeniEtiket) {
+            // Yeni etiket bu kayıt için açıldı: hemen seçili gelir (Android ile aynı).
+            NavigationStack {
+                TagEditSheet(initial: nil) { id in if !etiketler.contains(id) { etiketler.append(id) } }
+            }
+        }
         .onAppear(perform: yukle)
     }
 
@@ -135,9 +161,9 @@ struct EditScreen: View {
         guard hazir else { return false }
         if let e = existing {
             return e.title != baslik || e.data != veri || e.noteKind != notTuru || e.quick != hizli
-                || e.sortIndex != (Int(oncelik) ?? 0)
+                || e.sortIndex != (Int(oncelik) ?? 0) || Set(e.tagIds) != Set(etiketler)
         }
-        return !baslik.isEmpty || veri != EntryData()
+        return !baslik.isEmpty || veri != EntryData() || !etiketler.isEmpty
     }
 
     private func yukle() {
@@ -145,6 +171,7 @@ struct EditScreen: View {
         if let e = existing {
             baslik = e.title; veri = e.data; notTuru = e.noteKind; hizli = e.quick
             oncelik = e.sortIndex > 0 ? String(e.sortIndex) : ""
+            etiketler = e.tagIds
         }
         hazir = true
     }
@@ -156,6 +183,8 @@ struct EditScreen: View {
         e.noteKind = tur == .note ? notTuru : .genel
         e.quick = hizli
         e.sortIndex = Int(oncelik) ?? 0
+        // Bu arada silinmiş bir etiket kayda geri yazılmaz.
+        e.tagIds = etiketler.filter { id in kasa.tags.contains { $0.id == id } }
         if kasa.save(e) != nil { kapat() }
     }
 }

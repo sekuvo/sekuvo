@@ -134,6 +134,27 @@ final class EntryStore {
         return sqlite3_last_insert_rowid(db)
     }
 
+    func updateTag(id: Int64, name: String, color: Int32, icon: String) throws {
+        try run("UPDATE tags SET name = ?, color = ?, icon = ? WHERE id = ?") { s in
+            sqlite3_bind_text(s, 1, name, -1, Self.transient)
+            sqlite3_bind_int64(s, 2, Int64(color))
+            sqlite3_bind_text(s, 3, icon, -1, Self.transient)
+            sqlite3_bind_int64(s, 4, id)
+        }
+    }
+
+    func deleteTag(id: Int64) throws {
+        try run("DELETE FROM tags WHERE id = ?") { s in sqlite3_bind_int64(s, 1, id) }
+    }
+
+    /// Yalnız kaydın etiket listesini yazar; şifreli gövde ve tarihler aynen kalır.
+    func setTags(entry id: Int64, tags: String) throws {
+        try run("UPDATE entries SET tags = ? WHERE id = ?") { s in
+            sqlite3_bind_text(s, 1, tags, -1, Self.transient)
+            sqlite3_bind_int64(s, 2, id)
+        }
+    }
+
     // MARK: İşlem
 
     /// Gövde hata atarsa her şey geri alınır: yarıda kesilen bir "tümünü

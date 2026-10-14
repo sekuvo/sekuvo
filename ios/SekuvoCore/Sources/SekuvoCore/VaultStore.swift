@@ -26,8 +26,19 @@ public final class VaultStore {
         public let quick: Bool
         public let sortIndex: Int
         public let tagIds: [Int64]
+        public let createdAt: Int64
         public let updatedAt: Int64
+
+        public init(id: Int64, type: EntryType, title: String, noteKind: NoteKind = .genel, quick: Bool = false,
+                    sortIndex: Int = 0, tagIds: [Int64] = [], createdAt: Int64 = 0, updatedAt: Int64 = 0) {
+            self.id = id; self.type = type; self.title = title; self.noteKind = noteKind; self.quick = quick
+            self.sortIndex = sortIndex; self.tagIds = tagIds; self.createdAt = createdAt; self.updatedAt = updatedAt
+        }
     }
+
+    /// Etiket: ad ve görünüm (renk, ikon). Ad ve renk Android'deki gibi şifresiz
+    /// durur; süzgeç liste ekranında, şifre çözmeden çalışır.
+    public typealias Tag = Backup.Tag
 
     private let store: EntryStore
     private let key: SymmetricKey
@@ -43,7 +54,7 @@ public final class VaultStore {
     public func items() throws -> [Item] {
         try store.all().filter { !$0.anchor }.map { r in
             Item(id: r.id, type: .of(r.type), title: r.title, noteKind: .of(r.noteKind), quick: r.quick,
-                 sortIndex: r.sortIndex, tagIds: TagIds.parse(r.tags), updatedAt: r.updatedAt)
+                 sortIndex: r.sortIndex, tagIds: TagIds.parse(r.tags), createdAt: r.createdAt, updatedAt: r.updatedAt)
         }
     }
 
@@ -61,8 +72,11 @@ public final class VaultStore {
         return (cozulen, satirlar.count - cozulen.count)
     }
 
-    public func tags() throws -> [Backup.Tag] {
-        try store.allTags().map { Backup.Tag(id: $0.id, name: $0.name, color: $0.color, icon: $0.icon) }
+    /// Etiketler ada göre (Android: `ORDER BY name COLLATE NOCASE`).
+    public func tags() throws -> [Tag] {
+        try store.allTags()
+            .map { Tag(id: $0.id, name: $0.name, color: $0.color, icon: $0.icon) }
+            .sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
     }
 
     // MARK: Yazma
@@ -96,6 +110,36 @@ public final class VaultStore {
     }
 
     public func delete(id: Int64) throws { try store.delete(id: id) }
+
+    // MARK: Etiketler
+
+    /// Yeni etiket; aynı adda (büyük/küçük harf gözetmeden) etiket varsa yenisi
+    /// açılmaz, onun id'si döner. Android ikinci bir kopya açıyor; içe
+    /// aktarma ise adla eşlediği için iki kopyadan birini sessizce seçerdi.
+    @discardableResult
+    public func addTag(name: String, color: Int32, icon: String = "") throws -> Int64 {
+        let ad = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        if let mevcut = try store.allTags().first(where: { $0.name.lowercased() == ad.lowercased() }) { return mevcut.id }
+        return try store.insertTag(name: ad, color: color, icon: TagIcons.normalize(icon))
+    }
+
+    public func updateTag(_ t: Tag) throws {
+        let ad = t.name.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !ad.isEmpty else { return }
+        try store.updateTag(id: t.id, name: ad, color: t.color, icon: TagIcons.normalize(t.icon))
+    }
+
+    /// Etiketi siler ve taşıyan her kayıttan düşürür, tek işlemde. Kayıtların
+    /// kendisi ve güncellenme tarihleri değişmez (Android: `deleteTag`).
+    public func deleteTag(id: Int64) throws {
+        try store.transaction {
+            try store.deleteTag(id: id)
+            for r in try store.all() {
+                let ids = TagIds.parse(r.tags)
+                if ids.contains(id) { try store.setTags(entry: r.id, tags: TagIds.serialize(ids.filter { $0 != id })) }
+            }
+        }
+    }
 
     // MARK: İçe aktarma
 

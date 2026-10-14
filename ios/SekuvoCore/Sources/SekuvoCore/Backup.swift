@@ -163,3 +163,5 @@ public enum Backup {
         return Data(base64Encoded: s + String(repeating: "=", count: eksik))
     }
 }
+
+extension Backup.Tag: Identifiable {}
