@@ -130,6 +130,9 @@ struct EditScreen: View {
                     .textInputAutocapitalization(.never).autocorrectionDisabled(tur == .note)
             }
             Section {
+                // Kurum logosu: otomatik (başlık ve adresten) ya da elle seçilen.
+                BrandRow(choice: $veri.brand,
+                         auto: Brands.match(title: baslik, url: veri.url, isCard: tur == .card, cardNumber: veri.cardNumber))
                 if Features.keyboardExtension {
                     Toggle(L("edit_quick_title"), isOn: $hizli)
                 }

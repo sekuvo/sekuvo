@@ -100,7 +100,7 @@ struct HomeScreen: View {
                     .listRowBackground(Color.clear)
                 }
                 ForEach(gorunen) { item in
-                    NavigationLink(value: item.id) { EntryRow(item: item, tags: etiketler) }
+                    NavigationLink(value: item.id) { EntryRow(item: item, tags: etiketler, brand: kasa.brandIds[item.id].flatMap(Brands.byId)) }
                         .listRowBackground(Theme.surfaceContainer)
                         .listRowSeparator(.hidden)
                 }
@@ -249,10 +249,11 @@ extension HomeScreen {
 struct EntryRow: View {
     let item: VaultStore.Item
     var tags: [Int64: VaultStore.Tag] = [:]
+    var brand: Brand? = nil
 
     var body: some View {
         HStack(spacing: 14) {
-            TypeBadge(type: item.type, kind: item.noteKind)
+            if let brand { BrandBadge(brand: brand) } else { TypeBadge(type: item.type, kind: item.noteKind) }
             VStack(alignment: .leading, spacing: 2) {
                 Text(item.title).font(.body.weight(.semibold)).foregroundStyle(Theme.onSurface).lineLimit(1)
                 HStack(spacing: 6) {

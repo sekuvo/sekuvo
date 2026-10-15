@@ -72,9 +72,13 @@ struct DetailScreen: View {
         .navigationTitle(kayit?.title ?? "")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            if kayit != nil {
-                Button { duzenle = true } label: { Image(systemName: "pencil") }
-                    .accessibilityLabel(L("detail_edit"))
+            // Başlıkta kurum logosu (Android: TopAppBar'daki BrandBadge).
+            ToolbarItem(placement: .principal) { baslikSatiri }
+            ToolbarItem(placement: .primaryAction) {
+                if kayit != nil {
+                    Button { duzenle = true } label: { Image(systemName: "pencil") }
+                        .accessibilityLabel(L("detail_edit"))
+                }
             }
         }
         .sheet(isPresented: $duzenle, onDismiss: yenile) {
@@ -84,6 +88,20 @@ struct DetailScreen: View {
     }
 
     private func yenile() { kayit = kasa.load(id: id) }
+
+    /// Başlıkta kurum logosu ve başlık (Android: TopAppBar'daki BrandBadge).
+    @ViewBuilder private var baslikSatiri: some View {
+        if let k = kayit {
+            HStack(spacing: 8) {
+                if let b = marka(k) { BrandBadge(brand: b, size: 26) }
+                Text(k.title).font(.headline).foregroundStyle(Theme.onSurface).lineLimit(1)
+            }
+        }
+    }
+
+    private func marka(_ k: DecryptedEntry) -> Brand? {
+        Brands.match(title: k.title, url: k.data.url, choice: k.data.brand, isCard: k.type == .card, cardNumber: k.data.cardNumber)
+    }
 
     private func alanlar(_ k: DecryptedEntry) -> [Field] {
         let d = k.data

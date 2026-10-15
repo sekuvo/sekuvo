@@ -33,6 +33,8 @@ final class VaultModel {
     private(set) var state: State
     /// Kayıtlar, seçili sırada (`sort`).
     private(set) var items: [VaultStore.Item] = []
+    /// Kayıt kimliği → kurum logosu kimliği; kilitliyken boş.
+    private(set) var brandIds: [Int64: String] = [:]
     /// Etiketler, ada göre.
     private(set) var tags: [VaultStore.Tag] = []
     /// Liste sırası (Android: `EntrySort`). Sır değil: UserDefaults'ta durur.
@@ -243,6 +245,7 @@ final class VaultModel {
         dataKey = nil
         items = []
         tags = []
+        brandIds = [:]
         state = .locked
     }
 
@@ -479,6 +482,7 @@ final class VaultModel {
         guard let store else { return }
         items = sort.sorted(try store.items())
         tags = try store.tags()
+        brandIds = (try? store.brandIds()) ?? [:]
     }
 
     func selectSort(_ s: EntrySort) {
