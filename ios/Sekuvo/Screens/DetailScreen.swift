@@ -42,14 +42,16 @@ struct DetailScreen: View {
                             kasa.copy(label: a.label, value: a.value)
                         }
                     }
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(L("detail_quick_title")).font(.caption.weight(.medium)).foregroundStyle(Theme.primary)
-                        Text(L(k.quick ? "detail_quick_on" : "detail_quick_off")).font(.subheadline).foregroundStyle(Theme.onSurface)
+                    if Features.keyboardExtension {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(L("detail_quick_title")).font(.caption.weight(.medium)).foregroundStyle(Theme.primary)
+                            Text(L(k.quick ? "detail_quick_on" : "detail_quick_off")).font(.subheadline).foregroundStyle(Theme.onSurface)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal, 16).padding(.vertical, 10)
+                        .overlay(RoundedRectangle(cornerRadius: 14).stroke(Theme.outlineVariant, lineWidth: 1))
+                        .padding(.top, 8)
                     }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.horizontal, 16).padding(.vertical, 10)
-                    .overlay(RoundedRectangle(cornerRadius: 14).stroke(Theme.outlineVariant, lineWidth: 1))
-                    .padding(.top, 8)
                     VStack(alignment: .leading, spacing: 2) {
                         Text(L("detail_dates", tarihMetni(k.createdAt), tarihMetni(k.updatedAt)))
                         if k.data.passwordChangedAt > 0 {

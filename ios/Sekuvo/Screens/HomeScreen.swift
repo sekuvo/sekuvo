@@ -25,6 +25,24 @@ struct HomeScreen: View {
         let type: EntryType
     }
 
+    /// Biyometri önerisi: Ayarlar açıkken öneriyi Ayarlar sunar; iki görünüm
+    /// aynı anda sunmaya kalkmaz.
+    private var oneriBagi: Binding<Bool> {
+        Binding(
+            get: { !ayarlar && (kasa.offerBiometric || kasa.offerBiometricPin != nil) },
+            set: { if !$0 { kasa.offerBiometric = false; kasa.offerBiometricPin = nil } }
+        )
+    }
+
+    private var taslakBagi: Binding<VaultModel.Draft?> {
+        Binding(get: { kasa.restoredDraft }, set: { kasa.restoredDraft = $0 })
+    }
+
+    private func taslakEkrani(_ d: VaultModel.Draft) -> some View {
+        let mevcut: DecryptedEntry? = d.existingId.flatMap { kasa.load(id: $0) }
+        return NavigationStack { EditScreen(existing: mevcut, newType: d.type, draft: d) }
+    }
+
     /// Seçimler daraltarak birleşir: tür VE seçili etiketlerin tamamı. Sıra
     /// modelin sırasıdır (`EntrySort`).
     private var gorunen: [VaultStore.Item] {
@@ -154,12 +172,11 @@ struct HomeScreen: View {
                 etiketSecimi.removeAll { !ids.contains($0) }
             }
             .restoreFlow(isPresented: $geriYukle)
-            .sheet(isPresented: Binding(
-                get: { kasa.offerBiometric || kasa.offerBiometricPin != nil },
-                set: { if !$0 { kasa.offerBiometric = false; kasa.offerBiometricPin = nil } }
-            ), onDismiss: geriYukleGerekirse) {
+            .sheet(isPresented: oneriBagi, onDismiss: geriYukleGerekirse) {
                 BiometricOfferSheet(pin: kasa.offerBiometricPin)
             }
+            // Kilitlenirken saklanan düzenleme taslağı: kilit açılınca aynı ekran.
+            .sheet(item: taslakBagi, content: taslakEkrani)
             // Dosyalar'dan gelen yedek: biyometri önerisi açıksa o kapandıktan sonra.
             .sheet(item: Binding(
                 get: { kasa.offerBiometric || kasa.offerBiometricPin != nil ? nil : kasa.incomingBackup },
@@ -247,7 +264,7 @@ struct EntryRow: View {
                 }
             }
             Spacer(minLength: 8)
-            if item.quick { Text(verbatim: "⚡").font(.callout) }
+            if Features.keyboardExtension && item.quick { Text(verbatim: "⚡").font(.callout) }
             if item.sortIndex > 0 { PriorityBadge(number: item.sortIndex) }
         }
         .padding(.vertical, 4)

@@ -73,8 +73,9 @@ struct QrScanScreen: View {
         .sensoryFeedback(.impact(weight: .light), trigger: alinan)
         .sensoryFeedback(.success, trigger: okundu) { _, yeni in yeni }
         .sheet(item: $zarf, onDismiss: {
-            // Parola penceresi vazgeçilerek kapandıysa yeniden taramaya dön.
-            if kasa.toast == nil { okundu = false; durum = L("qr_status_aim") }
+            // Parola penceresi vazgeçilerek kapandıysa yeniden taramaya dön;
+            // toplayıcı sıfırlanır ki aynı kareler "zaten alındı" diye düşmesin.
+            if kasa.toast == nil { okundu = false; durum = L("qr_status_aim"); toplayici.reset() }
         }) { z in
             NavigationStack { ImportSheet(source: .qr, envelope: z.data) { kapat() } }
         }

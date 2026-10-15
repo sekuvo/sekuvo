@@ -68,6 +68,51 @@ final class VaultModel {
     /// dönüşte kimlik doğrulaması yapılmıyordu.
     private var unlockGeneration = 0
 
+    /// Düzenleme ekranındaki yarım form. Kasa açıkken burada düz durur,
+    /// kilitlenince `dataKey` ile mühürlenir (`sealedDraft`), kilit açılınca
+    /// `restoredDraft` olarak ekrana döner. Böylece "ekrandan çıkınca kilitle"
+    /// kuralı korunur, kullanıcı adı kopyalamak için çıkıp dönen kullanıcı
+    /// formu boş bulmaz.
+    struct Draft: Equatable, Identifiable, Sendable {
+        var existingId: Int64?
+        var type: EntryType
+        var title: String
+        var data: EntryData
+        var noteKind: NoteKind
+        var quick: Bool
+        var sortIndex: Int
+        var tagIds: [Int64]
+        var id: Int64 { existingId ?? -1 }
+
+        func json() -> [String: Any] {
+            var o: [String: Any] = ["type": type.rawValue, "title": title, "data": data.json(),
+                                    "noteKind": noteKind.rawValue, "quick": quick, "sortIndex": sortIndex, "tagIds": tagIds]
+            if let existingId { o["existingId"] = existingId }
+            return o
+        }
+
+        init(existingId: Int64?, type: EntryType, title: String, data: EntryData, noteKind: NoteKind,
+             quick: Bool, sortIndex: Int, tagIds: [Int64]) {
+            self.existingId = existingId; self.type = type; self.title = title; self.data = data
+            self.noteKind = noteKind; self.quick = quick; self.sortIndex = sortIndex; self.tagIds = tagIds
+        }
+
+        init?(json o: [String: Any]) {
+            guard let t = o["type"] as? String, let data = o["data"] as? [String: Any] else { return nil }
+            existingId = (o["existingId"] as? NSNumber)?.int64Value
+            type = EntryType.of(t)
+            title = o["title"] as? String ?? ""
+            self.data = EntryData(json: data)
+            noteKind = NoteKind.of(o["noteKind"] as? String)
+            quick = o["quick"] as? Bool ?? false
+            sortIndex = o["sortIndex"] as? Int ?? 0
+            tagIds = (o["tagIds"] as? [NSNumber])?.map(\.int64Value) ?? []
+        }
+    }
+    var liveDraft: Draft?
+    private var sealedDraft: Data?
+    var restoredDraft: Draft?
+
     private let keys: KeyManager
     private let storeFile: URL
     private var store: VaultStore?
@@ -105,6 +150,12 @@ final class VaultModel {
     }
 
     private var simdi: Int64 { Int64(Date().timeIntervalSince1970 * 1000) }
+    /// Monoton saat (ms): uyku dâhil ilerler, yeniden başlatmada sıfırlanır; saat ayarından etkilenmez.
+    private var simdiMono: Int64 {
+        var ts = timespec()
+        clock_gettime(CLOCK_MONOTONIC, &ts)
+        return Int64(ts.tv_sec) * 1000 + Int64(ts.tv_nsec / 1_000_000)
+    }
 
     // MARK: Kurulum ve kilit
 
@@ -116,11 +167,11 @@ final class VaultModel {
         let k = keys
         do {
             let nesil = unlockGeneration
-            let ham = try await Task.detached { try k.setup(password: password).withUnsafeBytes { Data($0) } }.value
+            let anahtar = try await Task.detached { try k.setup(password: password) }.value
             await debugUnlockDelay()
             guard nesil == unlockGeneration else { return }   // kurulum sürerken kilitlendi: anahtar atılır
             restoreAfterSetup = restoreAfter
-            try open(with: SymmetricKey(data: ham))
+            try open(with: anahtar)
             lockPrefs.markMasterPasswordUsed()
             // Teklif kurulumun hemen ardından: sonraya bırakılırsa özellik çoğu
             // zaman hiç fark edilmez (Android ile aynı gerekçe).
@@ -135,7 +186,7 @@ final class VaultModel {
         let k = keys
         // PBKDF2 (310.000 tur) arayüzü dondurmasın.
         let nesil = unlockGeneration
-        let ham = await Task.detached { k.unlock(password: password)?.withUnsafeBytes { Data($0) } }.value
+        let anahtar = await Task.detached { k.unlock(password: password) }.value
         await debugUnlockDelay()
         guard nesil == unlockGeneration else {
             #if DEBUG
@@ -143,9 +194,9 @@ final class VaultModel {
             #endif
             return
         }
-        guard let ham else { error = L("vm_wrong_password"); return }
+        guard let anahtar else { error = L("vm_wrong_password"); return }
         do {
-            try open(with: SymmetricKey(data: ham))
+            try open(with: anahtar)
             // Ana parola tek başına açar: PIN yalnız biyometrik yolu korur.
             lockPrefs.markMasterPasswordUsed()
         } catch { self.error = error.localizedDescription }
@@ -160,6 +211,18 @@ final class VaultModel {
         error = nil
         try reload()
         state = .unlocked
+        // Kilitlenirken mühürlenen taslak varsa aynı anahtarla açılır ve ekrana geri verilir.
+        if let muhur = sealedDraft {
+            sealedDraft = nil
+            if let acik = Crypto.decrypt(muhur, key: key),
+               let o = try? JSONSerialization.jsonObject(with: acik) as? [String: Any],
+               let d = Draft(json: o) {
+                restoredDraft = d
+                #if DEBUG
+                Log.kilit.notice("taslak geri verildi: \(d.title.count) karakterlik başlık")
+                #endif
+            }
+        }
     }
 
     func lock() {
@@ -167,11 +230,42 @@ final class VaultModel {
         autoBiometricArmed = false   // elle kilit; arka plana geçiş bunu yeniden kurar
         if state == .needsPin { pendingInner = nil; state = .locked; return }
         guard state == .unlocked else { return }
+        // Düzenleme taslağı kaybolmasın: dataKey silinmeden önce onunla mühürlenir.
+        if let d = liveDraft, let key = dataKey,
+           let acik = try? JSONSerialization.data(withJSONObject: d.json()) {
+            sealedDraft = try? Crypto.encrypt(acik, key: key)
+            #if DEBUG
+            Log.kilit.notice("taslak mühürlendi: \(acik.count) bayt")
+            #endif
+        }
+        liveDraft = nil
         store = nil
         dataKey = nil
         items = []
         tags = []
         state = .locked
+    }
+
+    /// Ana parolayı değiştirir (Android: `changePassword`). `dataKey` aynı kalır,
+    /// yalnız ana parola sargısı yenilenir; biyometrik ve PIN kayıtları geçerli kalır.
+    @discardableResult
+    func changeMasterPassword(current: String, new: String, again: String) async -> Bool {
+        guard new.count >= 8 else { error = L("vm_new_password_too_short"); return false }
+        guard new == again else { error = L("vm_passwords_mismatch"); return false }
+        busy = true; defer { busy = false }
+        let k = keys
+        let sonuc = await Task.detached { Result { try k.changePassword(old: current, new: new) } }.value
+        switch sonuc {
+        case .success(true):
+            lockPrefs.markMasterPasswordUsed()
+            error = nil
+            show(L("vm_master_password_changed"))
+            return true
+        case .success(false):
+            error = L("vm_current_password_wrong"); return false
+        case .failure(let e):
+            error = e.localizedDescription; return false
+        }
     }
 
     /// Sahne etkin değilken perde iner (uygulama değiştirici anlık görüntüsü),
@@ -230,7 +324,8 @@ final class VaultModel {
     /// İkinci aşama: Face ID'den gelen iç sargıyı PIN ile çözer (Android: `unlockWithPin`).
     func unlockWithPin(_ pin: String) async {
         guard let ic = pendingInner, var kayit = pins.load() else { cancelPin(); return }
-        let kalan = PinBackoff.remainingMs(fails: kayit.fails, lastFailAt: kayit.failAt, now: simdi)
+        let kalan = PinBackoff.remainingMs(fails: kayit.fails, failWall: kayit.failAt, failMono: kayit.failAtMono,
+                                           nowWall: simdi, nowMono: simdiMono)
         if kalan > 0 { error = Lp("vm_pin_locked_wait", Int(max(kalan / 1000, 1))); return }
         busy = true; defer { busy = false }
         let tuz = kayit.salt
@@ -260,7 +355,7 @@ final class VaultModel {
             error = L("ios_biometric_stale", biometryName)
             return
         }
-        kayit.fails += 1; kayit.failAt = simdi
+        kayit.fails += 1; kayit.failAt = simdi; kayit.failAtMono = simdiMono
         try? pins.save(kayit)
         if kayit.fails >= PinBackoff.maxFails {
             // Çok fazla yanlış: biyometrik yol tamamen kapanır, yalnız ana parola kalır.
@@ -268,7 +363,8 @@ final class VaultModel {
             pendingInner = nil; state = .locked
             error = L("ios_pin_biometric_off", biometryName)
         } else {
-            let yeni = PinBackoff.remainingMs(fails: kayit.fails, lastFailAt: kayit.failAt, now: simdi)
+            let yeni = PinBackoff.remainingMs(fails: kayit.fails, failWall: kayit.failAt, failMono: kayit.failAtMono,
+                                              nowWall: simdi, nowMono: simdiMono)
             error = yeni > 0 ? Lp("vm_pin_wrong_wait", Int(max(yeni / 1000, 1))) : L("vm_pin_wrong")
         }
     }

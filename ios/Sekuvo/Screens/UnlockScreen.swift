@@ -123,6 +123,7 @@ struct SecretInput: View {
     /// kaydetme önerisinin çıkmadığı ise ancak cihazda yazarak ölçülebilir.
     var contentType: UITextContentType? = .sekuvoNone
     @State private var gorunur = false
+    @Environment(\.scenePhase) private var faz
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
@@ -148,6 +149,12 @@ struct SecretInput: View {
             .padding(.horizontal, 14)
             .frame(minHeight: 52)
             .overlay(RoundedRectangle(cornerRadius: 10).stroke(Theme.outline, lineWidth: 1))
+        }
+        // Uygulama değiştiriciye görünür parola girmesin: sahne pasifleşince
+        // maske geri gelir; arka planda yazılan parola da bellekte tutulmaz.
+        .onChange(of: faz) { _, yeni in
+            if yeni != .active { gorunur = false }
+            if yeni == .background { text = "" }
         }
     }
 }

@@ -7,6 +7,8 @@ import SwiftUI
 struct EditScreen: View {
     let existing: DecryptedEntry?
     let newType: EntryType
+    /// Kilitlenme sırasında saklanıp geri verilen taslak (bkz. `VaultModel.Draft`).
+    var draft: VaultModel.Draft? = nil
 
     @Environment(VaultModel.self) private var kasa
     @Environment(\.dismiss) private var kapat
@@ -45,6 +47,10 @@ struct EditScreen: View {
         Form {
             Section {
                 TextField(L("edit_field_title"), text: $baslik)
+            } footer: {
+                // Kaydetme hatası (ör. 256 KB sınırı) burada görünür; eskiden
+                // yalnız Ayarlar'da, bayat olarak çıkıyordu.
+                if let hata = kasa.error { Text(hata).foregroundStyle(Theme.error) }
             }
             switch tur {
             case .login:
@@ -124,12 +130,14 @@ struct EditScreen: View {
                     .textInputAutocapitalization(.never).autocorrectionDisabled(tur == .note)
             }
             Section {
-                Toggle(L("edit_quick_title"), isOn: $hizli)
+                if Features.keyboardExtension {
+                    Toggle(L("edit_quick_title"), isOn: $hizli)
+                }
                 TextField(L("edit_priority"), text: Binding(
                     get: { oncelik }, set: { oncelik = String($0.filter(\.isASCIIDigitApp).prefix(3)) }))
                     .keyboardType(.numberPad)
             } footer: {
-                Text(L(hizli ? "edit_quick_desc" : "edit_priority_desc"))
+                Text(L(Features.keyboardExtension && hizli ? "edit_quick_desc" : "edit_priority_desc"))
             }
             Section(L("edit_tags")) {
                 ScrollView(.horizontal, showsIndicators: false) {
@@ -228,6 +236,11 @@ struct EditScreen: View {
             NavigationStack { PasswordFromQrSheet(envelope: z.data) { veri.password = $0 } }
         }
         .onAppear(perform: yukle)
+        // Taslak modelde düz durur; kilitlenince dataKey ile mühürlenir ve
+        // kilit açılınca aynı ekran aynı taslakla geri gelir. Yalnız gerçekten
+        // değişmiş bir form taslak sayılır.
+        .onChange(of: taslak) { _, t in if hazir { kasa.liveDraft = degisti ? t : nil } }
+        .onDisappear { kasa.liveDraft = nil }
         #if DEBUG
         .task {
             // `-ornekIban <değer>` (yeni kart): başlık ve IBAN dolu, sonra Kaydet'e basılmış gibi.
@@ -252,9 +265,19 @@ struct EditScreen: View {
         return !baslik.isEmpty || veri != EntryData() || !etiketler.isEmpty
     }
 
+    private var taslak: VaultModel.Draft {
+        VaultModel.Draft(existingId: existing?.id, type: tur, title: baslik, data: veri, noteKind: notTuru,
+                         quick: hizli, sortIndex: Int(oncelik) ?? 0, tagIds: etiketler)
+    }
+
     private func yukle() {
         guard !hazir else { return }
-        if let e = existing {
+        kasa.error = nil
+        if let draft {
+            baslik = draft.title; veri = draft.data; notTuru = draft.noteKind; hizli = draft.quick
+            oncelik = draft.sortIndex > 0 ? String(draft.sortIndex) : ""
+            etiketler = draft.tagIds
+        } else if let e = existing {
             baslik = e.title; veri = e.data; notTuru = e.noteKind; hizli = e.quick
             oncelik = e.sortIndex > 0 ? String(e.sortIndex) : ""
             etiketler = e.tagIds

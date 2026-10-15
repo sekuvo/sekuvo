@@ -6,6 +6,14 @@ import UIKit
 /// pirinç birincil, açık temada sıcak kâğıt üzerine beyaz içerik, koyu temada
 /// sıcak kömür. Renk, kategorideki her rakibin mavisine karşı kasa donanımının
 /// pirinci; iki platformda da aynı kimlik.
+/// Henüz olmayan özelliklerin arayüzü: yalan vaat gösterilmez.
+enum Features {
+    /// Sekuvo Klavyesi uzantısı yok (karar bekliyor). Olmayan klavye için
+    /// "klavyede parolasız kullan" anahtarı ve ⚡ işareti gizli; veri alanı
+    /// (`quick`) korunur, yedekle gelir ve gider.
+    static let keyboardExtension = false
+}
+
 enum Theme {
     static let primary = renk(0x856520, 0xF0C87A)
     static let onPrimary = renk(0xFFFFFF, 0x3F2E00)

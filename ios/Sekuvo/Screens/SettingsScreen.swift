@@ -14,6 +14,7 @@ struct SettingsScreen: View {
     @State private var metinden = false
     @State private var pinPenceresi = false
     @State private var biyometriPin = false
+    @State private var parolaDegistir = false
 
     var body: some View {
         NavigationStack {
@@ -28,20 +29,23 @@ struct SettingsScreen: View {
                                 if kasa.pinEnabled { biyometriPin = true } else { Task { await kasa.enableBiometric() } }
                             } label: { Label(L("ios_biometric_enable", tur.name), systemImage: tur == .touchID ? "touchid" : "faceid") }
                         }
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(L("ios_pin_heading", tur.name)).font(.subheadline.weight(.semibold))
-                            Text(L(kasa.pinEnabled ? "ios_pin_on_desc" : "ios_pin_off_desc", tur.name))
-                                .font(.footnote).foregroundStyle(Theme.onSurfaceVariant)
-                        }
-                        Button { pinPenceresi = true } label: {
-                            Label(L(kasa.pinEnabled ? "settings_pin_turn_off" : "settings_pin_set"), systemImage: "number.square")
-                        }
-                        Picker(L("settings_reminder_heading"), selection: Binding(get: { kasa.reminderDays }, set: { kasa.setReminder(days: $0) })) {
-                            Text(L("settings_reminder_never")).tag(0)
-                            ForEach([30, 60, 90, 180], id: \.self) { g in Text(L("settings_reminder_days", g)).tag(g) }
-                        }
-                        Text(L("ios_reminder_desc", tur.name)).font(.footnote).foregroundStyle(Theme.onSurfaceVariant)
                     }
+                    // PIN ve hatırlatıcı biyometriye bağlı değil: Face ID izni
+                    // kalksa da açık bir PIN ya da hatırlatıcı kapatılabilmeli.
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(L("ios_pin_heading", kasa.biometryName)).font(.subheadline.weight(.semibold))
+                        Text(L(kasa.pinEnabled ? "ios_pin_on_desc" : "ios_pin_off_desc", kasa.biometryName))
+                            .font(.footnote).foregroundStyle(Theme.onSurfaceVariant)
+                    }
+                    Button { pinPenceresi = true } label: {
+                        Label(L(kasa.pinEnabled ? "settings_pin_turn_off" : "settings_pin_set"), systemImage: "number.square")
+                    }
+                    Picker(L("settings_reminder_heading"), selection: Binding(get: { kasa.reminderDays }, set: { kasa.setReminder(days: $0) })) {
+                        Text(L("settings_reminder_never")).tag(0)
+                        ForEach([30, 60, 90, 180], id: \.self) { g in Text(L("settings_reminder_days", g)).tag(g) }
+                    }
+                    Text(L("ios_reminder_desc", kasa.biometryName)).font(.footnote).foregroundStyle(Theme.onSurfaceVariant)
+                    Button { parolaDegistir = true } label: { Label(L("settings_change_password"), systemImage: "key.fill") }
                     if let hata = kasa.error { Text(hata).font(.footnote).foregroundStyle(Theme.error) }
                 } header: {
                     Text(L("ios_security"))
@@ -91,6 +95,9 @@ struct SettingsScreen: View {
             }
             .sheet(isPresented: $biyometriPin) {
                 NavigationStack { BiometricPinSheet() }
+            }
+            .sheet(isPresented: $parolaDegistir) {
+                NavigationStack { ChangePasswordSheet() }
             }
             // PIN burada açılınca biyometriyi PIN'e bağlama önerisi de burada gelir.
             .sheet(isPresented: Binding(
@@ -213,5 +220,55 @@ extension Bundle {
         let v = object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "?"
         let b = object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "?"
         return "\(v) (\(b))"
+    }
+}
+
+/// Ana parolayı değiştirme (Android: "Ana parolayı değiştir"). `dataKey` aynı
+/// kalır, yalnız sargı yenilenir; Face ID ve PIN kayıtları `dataKey`'i sardığı
+/// için geçerliliğini korur.
+struct ChangePasswordSheet: View {
+    @Environment(VaultModel.self) private var kasa
+    @Environment(\.dismiss) private var kapat
+    @State private var eski = ""
+    @State private var yeni = ""
+    @State private var tekrar = ""
+
+    var body: some View {
+        Form {
+            Section {
+                SecureFieldRow(placeholder: L("settings_label_current_password"), text: $eski, contentType: .sekuvoNone)
+                SecureFieldRow(placeholder: L("settings_label_new_password"), text: $yeni, contentType: .sekuvoNone)
+                SecureFieldRow(placeholder: L("settings_label_new_password_again"), text: $tekrar, contentType: .sekuvoNone)
+            } footer: {
+                if let hata = kasa.error { Text(hata).foregroundStyle(Theme.error) }
+            }
+        }
+        .scrollContentBackground(.hidden)
+        .background(Theme.background)
+        .navigationTitle(L("settings_change_password"))
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) { Button(L("settings_cancel")) { kapat() } }
+            ToolbarItem(placement: .confirmationAction) {
+                Button {
+                    let e = eski, y = yeni, t = tekrar
+                    Task { if await kasa.changeMasterPassword(current: e, new: y, again: t) { kapat() } }
+                } label: {
+                    if kasa.busy { ProgressView() } else { Text(L("settings_ok")) }
+                }
+                .disabled(kasa.busy || eski.isEmpty || yeni.isEmpty || tekrar.isEmpty)
+            }
+        }
+        .onAppear { kasa.error = nil }
+        #if DEBUG
+        .task {
+            // `-ornekParolaDegistir <eski> <yeni>`: dokunmadan çalıştırmak için.
+            let a = ProcessInfo.processInfo.arguments
+            if let i = a.firstIndex(of: "-ornekParolaDegistir"), i + 2 < a.count {
+                try? await Task.sleep(for: .seconds(1))
+                if await kasa.changeMasterPassword(current: a[i + 1], new: a[i + 2], again: a[i + 2]) { kapat() }
+            }
+        }
+        #endif
     }
 }

@@ -265,11 +265,14 @@ struct PinStore: Sendable {
         var check: Data
         var fails: Int = 0
         var failAt: Int64 = 0
+        /// Son yanlışın monoton saat damgası (ms); saat ayarıyla oynanmasına karşı.
+        var failAtMono: Int64 = 0
         /// `check` enclave anahtarıyla sarılı mı. Eski kayıtlarda alan yok → düz.
         var sealed: Bool = false
 
-        init(salt: Data, check: Data, fails: Int = 0, failAt: Int64 = 0, sealed: Bool = false) {
-            self.salt = salt; self.check = check; self.fails = fails; self.failAt = failAt; self.sealed = sealed
+        init(salt: Data, check: Data, fails: Int = 0, failAt: Int64 = 0, failAtMono: Int64 = 0, sealed: Bool = false) {
+            self.salt = salt; self.check = check; self.fails = fails; self.failAt = failAt
+            self.failAtMono = failAtMono; self.sealed = sealed
         }
 
         init(from decoder: Decoder) throws {
@@ -278,6 +281,7 @@ struct PinStore: Sendable {
             check = try c.decode(Data.self, forKey: .check)
             fails = try c.decodeIfPresent(Int.self, forKey: .fails) ?? 0
             failAt = try c.decodeIfPresent(Int64.self, forKey: .failAt) ?? 0
+            failAtMono = try c.decodeIfPresent(Int64.self, forKey: .failAtMono) ?? 0
             sealed = try c.decodeIfPresent(Bool.self, forKey: .sealed) ?? false
         }
     }
