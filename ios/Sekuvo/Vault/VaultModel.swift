@@ -61,6 +61,12 @@ final class VaultModel {
     /// plandan dönüşte evet; elle kilitlenince ya da PIN'den vazgeçilince hayır:
     /// Face ID ekrana bakan yüzü anında tanır, kasa hemen yeniden açılırdı.
     var autoBiometricArmed = true
+    /// Kilit açma yarışına karşı nesil sayacı. Her kilitlenmede artar; PBKDF2
+    /// ya da Keychain okuması bitip anahtar gelince, bekleme sırasında kilit
+    /// (arka plana geçiş) olduysa anahtar ATILIR. Yoksa kullanıcı "Kilidi aç"a
+    /// basıp uygulamayı ana ekrana atınca kasa arka planda perdesiz açılıyor ve
+    /// dönüşte kimlik doğrulaması yapılmıyordu.
+    private var unlockGeneration = 0
 
     private let keys: KeyManager
     private let storeFile: URL
@@ -109,7 +115,10 @@ final class VaultModel {
         busy = true; defer { busy = false }
         let k = keys
         do {
+            let nesil = unlockGeneration
             let ham = try await Task.detached { try k.setup(password: password).withUnsafeBytes { Data($0) } }.value
+            await debugUnlockDelay()
+            guard nesil == unlockGeneration else { return }   // kurulum sürerken kilitlendi: anahtar atılır
             restoreAfterSetup = restoreAfter
             try open(with: SymmetricKey(data: ham))
             lockPrefs.markMasterPasswordUsed()
@@ -125,7 +134,15 @@ final class VaultModel {
         busy = true; defer { busy = false }
         let k = keys
         // PBKDF2 (310.000 tur) arayüzü dondurmasın.
+        let nesil = unlockGeneration
         let ham = await Task.detached { k.unlock(password: password)?.withUnsafeBytes { Data($0) } }.value
+        await debugUnlockDelay()
+        guard nesil == unlockGeneration else {
+            #if DEBUG
+            Log.kilit.notice("kilit açma: bekleme sırasında kilitlendi, anahtar atıldı")
+            #endif
+            return
+        }
         guard let ham else { error = L("vm_wrong_password"); return }
         do {
             try open(with: SymmetricKey(data: ham))
@@ -146,6 +163,7 @@ final class VaultModel {
     }
 
     func lock() {
+        unlockGeneration &+= 1       // süren bir kilit açma varsa sonucu geçersiz
         autoBiometricArmed = false   // elle kilit; arka plana geçiş bunu yeniden kurar
         if state == .needsPin { pendingInner = nil; state = .locked; return }
         guard state == .unlocked else { return }
@@ -186,7 +204,10 @@ final class VaultModel {
         defer { Log.kilit.notice("biyometri: okuma bitti, \(Date().timeIntervalSince(baslangic), format: .fixed(precision: 3)) sn") }
         #endif
         do {
+            let nesil = unlockGeneration
             let icerik = try await b.read(reason: sebep)
+            await debugUnlockDelay()
+            guard nesil == unlockGeneration else { return }   // okuma sürerken kilitlendi
             if pinEnabled {
                 pendingInner = icerik
                 error = nil
@@ -212,11 +233,16 @@ final class VaultModel {
         let kalan = PinBackoff.remainingMs(fails: kayit.fails, lastFailAt: kayit.failAt, now: simdi)
         if kalan > 0 { error = Lp("vm_pin_locked_wait", Int(max(kalan / 1000, 1))); return }
         busy = true; defer { busy = false }
-        let tuz = kayit.salt, kontrol = kayit.check
+        let tuz = kayit.salt
+        let kontrol = pins.openCheck(kayit)   // cihaz anahtarıyla sarılıysa burada açılır; açılamazsa yalnız sargı sınanır
+        let nesil = unlockGeneration
         let (anahtar, pinDogru) = await Task.detached { () -> (Data?, Bool) in
             if let k = PinLock.unwrap(ic, pin: pin, salt: tuz) { return (k, true) }
+            guard let kontrol else { return (nil, false) }
             return (nil, PinLock.unwrapCheck(kontrol, pin: pin, salt: tuz))
         }.value
+        await debugUnlockDelay()
+        guard nesil == unlockGeneration else { return }   // PIN çözülürken kilitlendi
         if let anahtar, anahtar.count == Crypto.keyBytes {
             kayit.fails = 0; kayit.failAt = 0
             try? pins.save(kayit)
@@ -263,9 +289,10 @@ final class VaultModel {
         var icerik = ham
         if let kayit = pins.load() {
             guard let pin, PinLock.isValid(pin) else { error = L("vm_pin_wrong"); return false }
+            guard let kontrol = pins.openCheck(kayit) else { error = L("vm_pin_wrong"); return false }
             busy = true
             let sarili = await Task.detached { () -> Data? in
-                guard PinLock.unwrapCheck(kayit.check, pin: pin, salt: kayit.salt) else { return nil }
+                guard PinLock.unwrapCheck(kontrol, pin: pin, salt: kayit.salt) else { return nil }
                 return try? PinLock.wrap(dataKey: ham, pin: pin, salt: kayit.salt)
             }.value
             busy = false
@@ -312,9 +339,13 @@ final class VaultModel {
             return try? PinLock.wrapCheck(pin: pin, salt: tuz)
         }.value
         guard let kontrol else { error = L("vm_pin_enable_failed"); return false }
-        do { try pins.save(PinStore.Record(salt: tuz, check: kontrol)) } catch {
+        let kayit = pins.sealedRecord(salt: tuz, check: kontrol)
+        do { try pins.save(kayit) } catch {
             self.error = L("vm_pin_enable_failed"); return false
         }
+        #if DEBUG
+        Log.kilit.notice("PIN kaydı yazıldı, doğrulama blobu enclave anahtarıyla sarılı: \(kayit.sealed)")
+        #endif
         biometric.clear()
         lockPrefs.markMasterPasswordUsed()
         refreshLockOptions()
@@ -585,6 +616,17 @@ final class VaultModel {
             try? await Task.sleep(for: .seconds(2.5))
             if toast == mesaj { toast = nil }
         }
+    }
+
+    /// `-ornekAcilisGecikmesi <sn>` (yalnız Debug): kilit açma sonucunu bu kadar
+    /// geciktirir, böylece "açılırken arka plana at" yarışı elle sınanabilir.
+    private func debugUnlockDelay() async {
+        #if DEBUG
+        let a = ProcessInfo.processInfo.arguments
+        if let i = a.firstIndex(of: "-ornekAcilisGecikmesi"), i + 1 < a.count, let sn = Double(a[i + 1]), sn > 0 {
+            try? await Task.sleep(for: .seconds(sn))
+        }
+        #endif
     }
 
     // MARK: Örnek kasa (yalnız Debug)

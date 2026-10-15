@@ -1,6 +1,9 @@
 import Foundation
 import LocalAuthentication
 import Security
+#if DEBUG
+import os
+#endif
 
 /// Face ID / Touch ID kaydı — Android'deki biyometrik Keystore anahtarının
 /// karşılığı.
@@ -164,13 +167,97 @@ struct BiometricStore: Sendable {
     func clear() { SecItemDelete(temel as CFDictionary) }
 }
 
+/// PIN doğrulama blobunu cihaza bağlayan Secure Enclave anahtarı.
+///
+/// Android'de `pin_check` Keystore anahtarıyla sarılır ([SEC-030]): cihaz
+/// dökümünü ya da Keychain kopyasını ele geçiren biri blobu çözemez, yani
+/// 4 haneli PIN'i çevrimdışı deneyemez. Burada aynı iş enclave'deki bir
+/// P-256 anahtarıyla yapılır: blob ECIES ile şifrelenir, özel anahtar
+/// enclave'den çıkmaz, çözme yalnız bu cihazda ve cihaz kilidi açıkken olur
+/// (`WhenUnlockedThisDeviceOnly`). Enclave yoksa (simülatör) blob sarılmadan
+/// durur ve kayıt bunu `sealed: false` ile söyler — Android'in "Keystore
+/// yoksa eski davranışa düş" kuralı.
+struct PinCheckSealer: Sendable {
+
+    static let tag = Data("com.sekuvo.app.pin.sealer".utf8)
+    static let algorithm: SecKeyAlgorithm = .eciesEncryptionCofactorVariableIVX963SHA256AESGCM
+
+    private var query: [String: Any] {
+        [kSecClass as String: kSecClassKey,
+         kSecAttrApplicationTag as String: Self.tag,
+         kSecAttrKeyType as String: kSecAttrKeyTypeECSECPrimeRandom]
+    }
+
+    private func existingKey() -> SecKey? {
+        var q = query
+        q[kSecReturnRef as String] = true
+        var ref: CFTypeRef?
+        guard SecItemCopyMatching(q as CFDictionary, &ref) == errSecSuccess, let ref else { return nil }
+        return (ref as! SecKey)
+    }
+
+    private func makeKey() -> SecKey? {
+        var hata: Unmanaged<CFError>?
+        guard let erisim = SecAccessControlCreateWithFlags(
+            nil, kSecAttrAccessibleWhenUnlockedThisDeviceOnly, .privateKeyUsage, &hata) else { return nil }
+        let ozel: [String: Any] = [
+            kSecAttrIsPermanent as String: true,
+            kSecAttrApplicationTag as String: Self.tag,
+            kSecAttrAccessControl as String: erisim
+        ]
+        let attrs: [String: Any] = [
+            kSecAttrKeyType as String: kSecAttrKeyTypeECSECPrimeRandom,
+            kSecAttrKeySizeInBits as String: 256,
+            kSecAttrTokenID as String: kSecAttrTokenIDSecureEnclave,
+            kSecPrivateKeyAttrs as String: ozel
+        ]
+        return SecKeyCreateRandomKey(attrs as CFDictionary, &hata)
+    }
+
+    /// Blobu yeni bir enclave anahtarıyla sarar; enclave yoksa `nil`.
+    func seal(_ plain: Data) -> Data? {
+        clear()   // her PIN kurulumu kendi anahtarını alır
+        guard let ozel = makeKey(), let acik = SecKeyCopyPublicKey(ozel) else { return nil }
+        var hata: Unmanaged<CFError>?
+        let sarili = SecKeyCreateEncryptedData(acik, Self.algorithm, plain as CFData, &hata) as Data?
+        #if DEBUG
+        if sarili == nil {
+            let aciklama = hata?.takeRetainedValue().localizedDescription ?? "?"
+            Logger(subsystem: "com.sekuvo.app", category: "kilit").notice("PIN blobu: enclave sarması düştü: \(aciklama, privacy: .public)")
+        }
+        #endif
+        return sarili
+    }
+
+    /// Sarılı blobu açar; anahtar yoksa (silinmiş, başka cihaz) `nil`.
+    func open(_ sealed: Data) -> Data? {
+        guard let ozel = existingKey() else {
+            #if DEBUG
+            Logger(subsystem: "com.sekuvo.app", category: "kilit").notice("PIN blobu: enclave anahtarı bulunamadı")
+            #endif
+            return nil
+        }
+        var hata: Unmanaged<CFError>?
+        let acik = SecKeyCreateDecryptedData(ozel, Self.algorithm, sealed as CFData, &hata) as Data?
+        #if DEBUG
+        if acik == nil {
+            let aciklama = hata?.takeRetainedValue().localizedDescription ?? "?"
+            Logger(subsystem: "com.sekuvo.app", category: "kilit").notice("PIN blobu: enclave çözmesi düştü: \(aciklama, privacy: .public)")
+        }
+        #endif
+        return acik
+    }
+
+    func clear() { SecItemDelete(query as CFDictionary) }
+}
+
 /// PIN'in tuzu, doğrulama blobu ve yanlış deneme sayacı.
 ///
-/// Keychain'de, yalnız bu cihaza bağlı (`AfterFirstUnlockThisDeviceOnly`)
-/// durur: cihazdan alınmış bir dosya dökümü doğrulama blobunu içermez, yani
-/// PIN çevrimdışı denenemez (Android'de aynı iş blobu Keystore anahtarıyla
-/// sarmakla yapılıyor). Sayaç da aynı yerde; uygulama verisini silerek
-/// sıfırlanamaz.
+/// Keychain'de, yalnız bu cihaza bağlı ve yalnız cihaz kilidi açıkken
+/// (`WhenUnlockedThisDeviceOnly`) durur; doğrulama blobu ayrıca
+/// [PinCheckSealer] ile enclave anahtarına bağlıdır. Böylece cihazdan alınmış
+/// bir dosya dökümü ya da Keychain kopyası PIN'i çevrimdışı denemeye yetmez.
+/// Sayaç da aynı yerde; uygulama verisini silerek sıfırlanamaz.
 struct PinStore: Sendable {
 
     struct Record: Codable, Sendable {
@@ -178,7 +265,33 @@ struct PinStore: Sendable {
         var check: Data
         var fails: Int = 0
         var failAt: Int64 = 0
+        /// `check` enclave anahtarıyla sarılı mı. Eski kayıtlarda alan yok → düz.
+        var sealed: Bool = false
+
+        init(salt: Data, check: Data, fails: Int = 0, failAt: Int64 = 0, sealed: Bool = false) {
+            self.salt = salt; self.check = check; self.fails = fails; self.failAt = failAt; self.sealed = sealed
+        }
+
+        init(from decoder: Decoder) throws {
+            let c = try decoder.container(keyedBy: CodingKeys.self)
+            salt = try c.decode(Data.self, forKey: .salt)
+            check = try c.decode(Data.self, forKey: .check)
+            fails = try c.decodeIfPresent(Int.self, forKey: .fails) ?? 0
+            failAt = try c.decodeIfPresent(Int64.self, forKey: .failAt) ?? 0
+            sealed = try c.decodeIfPresent(Bool.self, forKey: .sealed) ?? false
+        }
     }
+
+    private let sealer = PinCheckSealer()
+
+    /// Yeni PIN kaydı: blob mümkünse sarılı.
+    func sealedRecord(salt: Data, check: Data) -> Record {
+        if let sarili = sealer.seal(check) { return Record(salt: salt, check: sarili, sealed: true) }
+        return Record(salt: salt, check: check, sealed: false)
+    }
+
+    /// Kayıttaki doğrulama blobunun düz hâli; sarılıysa enclave açar, açamazsa `nil`.
+    func openCheck(_ r: Record) -> Data? { r.sealed ? sealer.open(r.check) : r.check }
 
     static let service = "com.sekuvo.app.pin"
 
@@ -193,24 +306,31 @@ struct PinStore: Sendable {
         q[kSecReturnData as String] = true
         var sonuc: CFTypeRef?
         guard SecItemCopyMatching(q as CFDictionary, &sonuc) == errSecSuccess, let veri = sonuc as? Data else { return nil }
-        return try? JSONDecoder().decode(Record.self, from: veri)
+        guard var kayit = try? JSONDecoder().decode(Record.self, from: veri) else { return nil }
+        if !kayit.sealed, let sarili = sealer.seal(kayit.check) {
+            // Eski (düz) kayıt: ilk okumada enclave'e bağlanır.
+            kayit.check = sarili; kayit.sealed = true
+            try? save(kayit)
+        }
+        return kayit
     }
 
+    /// Kaydı siler ve yeniden yazar: erişilebilirlik sınıfı da böylece eski
+    /// kayıtlarda (`AfterFirstUnlock`) `WhenUnlocked`a çekilir.
     func save(_ r: Record) throws {
         let veri = try JSONEncoder().encode(r)
-        let guncelle = SecItemUpdate(temel as CFDictionary, [kSecValueData as String: veri] as CFDictionary)
-        if guncelle == errSecItemNotFound {
-            var q = temel
-            q[kSecValueData as String] = veri
-            q[kSecAttrAccessible as String] = kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly
-            let durum = SecItemAdd(q as CFDictionary, nil)
-            guard durum == errSecSuccess else { throw BiometricStore.Failure.failed(durum) }
-        } else if guncelle != errSecSuccess {
-            throw BiometricStore.Failure.failed(guncelle)
-        }
+        SecItemDelete(temel as CFDictionary)
+        var q = temel
+        q[kSecValueData as String] = veri
+        q[kSecAttrAccessible as String] = kSecAttrAccessibleWhenUnlockedThisDeviceOnly
+        let durum = SecItemAdd(q as CFDictionary, nil)
+        guard durum == errSecSuccess else { throw BiometricStore.Failure.failed(durum) }
     }
 
-    func clear() { SecItemDelete(temel as CFDictionary) }
+    func clear() {
+        SecItemDelete(temel as CFDictionary)
+        sealer.clear()
+    }
 }
 
 /// Kilit tercihleri (gizli değil): ana parola hatırlatıcısı.
