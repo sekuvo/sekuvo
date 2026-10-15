@@ -30,10 +30,16 @@ oluşur. Yedek parolası sorulur, hiçbir yerde saklanmaz.
     ./vault-clip.py "Ev adresi" --tur gundelik --push
     ./vault-clip.py "Banka" --tur hesap --alan sifre --push
     ./vault-clip.py "Wi-Fi" --tur not --alan not --korumali
+Göç (başka yöneticiden): dışa aktarılmış CSV'yi tek .vaultbak'a çevirir.
+    ./vault-clip.py --csv bitwarden_export.csv            # kaynak başlıktan anlaşılır
+    ./vault-clip.py --csv "Chrome Passwords.csv" --push
+    ./vault-clip.py --csv keepassxc.csv --kaynak keepass
+CSV düz metindir: içe aktardıktan sonra silinir (betik hatırlatır).
 """
 
 import argparse
 import base64
+import csv
 import getpass
 import hashlib
 import json
@@ -152,6 +158,160 @@ def ask_password():
             print("Parolalar eşleşmedi.")
             continue
         return pw
+
+
+def parola_zayif(pw):
+    """aktar.html'deki sezgiyle aynı: 16'dan kısa ya da tek karakter sınıfı."""
+    if len(pw) < 16:
+        return True
+    siniflar = sum(1 for test in (str.islower, str.isupper, str.isdigit) if any(test(c) for c in pw))
+    if any(not c.isalnum() for c in pw):
+        siniflar += 1
+    return siniflar < 2
+
+
+# ---- Göç: Bitwarden / Chrome / KeePass CSV → .vaultbak ----
+
+def _ilk_satir(metin):
+    return (metin or "").strip().splitlines()[0].strip() if (metin or "").strip() else ""
+
+
+def _ek_alanlar(metin):
+    """Bitwarden 'fields' sütunu: her satır 'ad: değer'. Adsız satır notlara düşer."""
+    ek, kalan = [], []
+    for satir in (metin or "").splitlines():
+        if ": " in satir:
+            ad, deger = satir.split(": ", 1)
+            if ad.strip():
+                ek.append({"label": ad.strip(), "value": deger})
+                continue
+        if satir.strip():
+            kalan.append(satir)
+    return ek, "\n".join(kalan)
+
+
+def csv_kaynak_sez(basliklar):
+    b = {h.strip().lower() for h in basliklar if h}
+    if {"login_uri", "login_username", "login_password"} <= b:
+        return "bitwarden"
+    if {"name", "url", "username", "password"} <= b:
+        return "chrome"
+    if {"title", "username", "password"} <= b and ("group" in b or "url" in b):
+        return "keepass"
+    return None
+
+
+def csv_kayitlari(path, kaynak):
+    """CSV satırlarını uygulamanın yedek kayıtlarına çevirir.
+    Dönüş: (kayıtlar, atlanan açıklamaları)."""
+    with open(path, newline="", encoding="utf-8-sig") as f:
+        okuyucu = csv.DictReader(f)
+        basliklar = okuyucu.fieldnames or []
+        satirlar = list(okuyucu)
+    if kaynak == "auto":
+        kaynak = csv_kaynak_sez(basliklar)
+        if not kaynak:
+            die("CSV başlığı tanınmadı; --kaynak bitwarden|chrome|keepass ver. Başlık: " + ", ".join(basliklar))
+    # Sütun adları kaynağa göre; büyük/küçük harf gözetmeden okunur.
+    def al(satir, *adlar):
+        for ad in adlar:
+            for k, v in satir.items():
+                if k and k.strip().lower() == ad.lower() and v:
+                    return v
+        return ""
+    now = int(time.time() * 1000)
+    kayitlar, atlanan = [], []
+    for i, s in enumerate(satirlar, 2):
+        etiketler = []
+        if kaynak == "bitwarden":
+            tur = al(s, "type").lower()
+            ad = al(s, "name") or _ilk_satir(al(s, "login_uri")) or f"Kayıt {i}"
+            ek, notlar = _ek_alanlar(al(s, "fields"))
+            notlar = "\n\n".join(x for x in (al(s, "notes"), notlar) if x)
+            if al(s, "login_totp"):
+                ek.append({"label": "TOTP", "value": al(s, "login_totp"), "type": "password"})
+            if al(s, "folder"):
+                etiketler = [al(s, "folder").split("/")[-1].strip()]
+            if tur == "login":
+                data = {"username": al(s, "login_username"), "password": al(s, "login_password"),
+                        "url": _ilk_satir(al(s, "login_uri")), "notes": notlar}
+                kayit = {"type": "LOGIN", "title": ad, "data": data}
+            elif tur in ("note", "securenote"):
+                kayit = {"type": "NOTE", "title": ad, "data": {"notes": notlar}}
+            else:
+                atlanan.append(f"satır {i}: Bitwarden türü '{tur}' (kart/kimlik CSV'de taşınmaz)")
+                continue
+            if ek:
+                kayit["data"]["custom"] = ek
+        elif kaynak == "chrome":
+            ad = al(s, "name") or _ilk_satir(al(s, "url")) or f"Kayıt {i}"
+            kayit = {"type": "LOGIN", "title": ad, "data": {
+                "username": al(s, "username"), "password": al(s, "password"),
+                "url": al(s, "url"), "notes": al(s, "note")}}
+        else:  # keepass (KeePassXC CSV)
+            ad = al(s, "title") or _ilk_satir(al(s, "url")) or f"Kayıt {i}"
+            grup = al(s, "group").replace("\\", "/").split("/")
+            grup = [g for g in grup if g and g.lower() != "root"]
+            if grup:
+                etiketler = [grup[-1].strip()]
+            ek = []
+            if al(s, "totp"):
+                ek.append({"label": "TOTP", "value": al(s, "totp"), "type": "password"})
+            if al(s, "username") or al(s, "password") or al(s, "url"):
+                kayit = {"type": "LOGIN", "title": ad, "data": {
+                    "username": al(s, "username"), "password": al(s, "password"),
+                    "url": al(s, "url"), "notes": al(s, "notes")}}
+            else:
+                kayit = {"type": "NOTE", "title": ad, "data": {"notes": al(s, "notes")}}
+            if ek:
+                kayit["data"]["custom"] = ek
+        kayit["data"] = {k: v for k, v in kayit["data"].items() if v}
+        kayit.update({"createdAt": now, "updatedAt": now, "quick": False})
+        if kayit["data"].get("password"):
+            kayit["data"]["passwordChangedAt"] = now
+        if etiketler:
+            kayit["tags"] = etiketler
+        kayitlar.append(kayit)
+    return kaynak, kayitlar, atlanan
+
+
+def goc(args):
+    kaynak, kayitlar, atlanan = csv_kayitlari(args.csv, args.kaynak)
+    if not kayitlar:
+        die("CSV'den hiç kayıt çıkmadı")
+    buyuk = [k["title"] for k in kayitlar
+             if len(json.dumps(k, ensure_ascii=False).encode("utf-8")) > MAX_PLAIN_BYTES]
+    if buyuk:
+        die("256 KB sınırını aşan kayıt(lar): " + ", ".join(buyuk))
+    turler = {}
+    for k in kayitlar:
+        turler[k["type"]] = turler.get(k["type"], 0) + 1
+    print(f"Kaynak: {kaynak} · {len(kayitlar)} kayıt · "
+          + ", ".join(f"{t.lower()} {n}" for t, n in sorted(turler.items())))
+    for a in atlanan:
+        print("  atlandı — " + a)
+    password = ask_password()
+    payload = json.dumps({"entries": kayitlar}, ensure_ascii=False)
+    envelope = encrypt(payload, password)
+    path = args.cikti or os.path.expanduser(
+        f"~/Desktop/vault-goc-{kaynak}-{time.strftime('%Y%m%d-%H%M%S')}.vaultbak")
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(envelope, f, indent=2, ensure_ascii=False)
+    os.chmod(path, 0o600)
+    print(f"\nŞifreli dosya: {path}")
+    remote = None
+    if args.push:
+        remote = push(path)
+        print(f"Telefona kopyalandı: {remote}")
+    print(
+        "\nTelefonda: Ayarlar → Yedekten geri yükle → dosyayı seç → yedek parolası\n"
+        "→ \"Mevcuta ekle\" (mevcut kayıtların korunur).\n"
+        "Klasörler/gruplar etiket olarak gelir; TOTP sırları ek alan olarak\n"
+        "taşınır (uygulama kod üretmez).\n"
+        "CSV DÜZ METİNDİR: içe aktardıktan sonra ikisini de sil:\n"
+        f"  rm \"{args.csv}\" {path}"
+        + (f"\n  {ADB} shell rm {remote}" if remote else "")
+    )
 
 
 def build_entry(args, value, note=None):
@@ -291,7 +451,11 @@ def main():
         description="Mac panosundaki metni Vault yedeği (.vaultbak) olarak paketler.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
-    parser.add_argument("baslik", help="Kaydın başlığı (uygulamada listede görünen ad)")
+    parser.add_argument("baslik", nargs="?", help="Kaydın başlığı (uygulamada listede görünen ad)")
+    parser.add_argument("--csv", metavar="DOSYA",
+                        help="Göç: Bitwarden / Chrome / KeePass(XC) CSV dışa aktarımını tek .vaultbak'a çevir")
+    parser.add_argument("--kaynak", choices=["auto", "bitwarden", "chrome", "keepass"], default="auto",
+                        help="--csv kaynağı (varsayılan: başlıktan sezilir)")
     parser.add_argument("--tur", choices=sorted(TYPES), default="hesap", help="Kayıt türü (varsayılan: hesap)")
     parser.add_argument("--alan", choices=sorted(FIELDS), help="Panodakinin yazılacağı alan")
     parser.add_argument("--ek", metavar="ETIKET", help="Hazır alan yerine bu adla bir ek alan oluştur")
@@ -312,6 +476,14 @@ def main():
     parser.add_argument("--ttl", type=int, default=86_400, metavar="SANIYE",
                         help="--yayinla süresi: blob en geç bu kadar saniye sonra silinir (60-86400, varsayılan 24 saat)")
     args = parser.parse_args()
+
+    if args.csv:
+        if args.baslik or args.qr or args.yayinla:
+            parser.error("--csv ile başlık, --qr ve --yayinla kullanılmaz")
+        goc(args)
+        return
+    if not args.baslik:
+        parser.error("başlık gerekli (ya da --csv)")
 
     if args.alan and args.ek:
         die("--alan ile --ek birlikte kullanılamaz")
@@ -386,6 +558,15 @@ def main():
             return
 
     if args.yayinla:
+        # Relay herkese açık bir blobdur: insan uydurması parola konmasın
+        # (aktar.html'deki uyarının aynısı; QR ve dosya yolunda sorulmaz).
+        if parola_zayif(password):
+            try:
+                cevap = input("Parola kısa ya da tek tip görünüyor; relay'e yine de yüklensin mi? [e/H] ")
+            except EOFError:
+                cevap = ""
+            if cevap.strip().lower() != "e":
+                die("iptal edildi — üretilmiş uzun bir parola kullan (docs/kendi-zarfini-uret.md)")
         zarf_metni = json.dumps(envelope, separators=(",", ":"), ensure_ascii=False)
         if len(zarf_metni) > 64 * 1024:
             die(
