@@ -211,6 +211,19 @@ struct QrCollectorTests {
 }
 
 extension VaultStoreTests {
+    @Test func logoHaritasiAdresVeSecimdenKurulur() throws {
+        let k = try kasa()
+        var a = kayit("İş"); a.data.url = "https://github.com/x"
+        var b = kayit("GitHub"); b.data.brand = Brands.none
+        let c = kayit("Akbank")
+        try k.apply(Backup.ImportResult(entries: [a, b, c], tagDefs: [:]), replace: false)
+        let harita = try k.brandIds()
+        let adla = Dictionary(uniqueKeysWithValues: try k.items().map { ($0.title, harita[$0.id]) })
+        #expect(adla["İş"] == "github")
+        #expect(adla["GitHub"] == .some(nil))
+        #expect(adla["Akbank"] == "akbank")
+    }
+
     @Test func yalnizCipaTasiyanZarfTumunuDegistirIleKasayiBosaltmaz() throws {
         let k = try kasa()
         try k.apply(Backup.ImportResult(entries: [kayit("Kalsın")], tagDefs: [:]), replace: false)

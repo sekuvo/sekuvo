@@ -72,6 +72,8 @@ public struct EntryData: Equatable, Sendable {
     public var passwordChangedAt: Int64 = 0
     /// Eski parolalar, en yenisi başta.
     public var passwordHistory: [OldPassword] = []
+    /// Kurum logosu seçimi: "" = otomatik, `none` = yok, ya da katalogdaki kimlik (`Brands`).
+    public var brand = ""
 
     public init() {}
 
@@ -111,6 +113,7 @@ public struct EntryData: Equatable, Sendable {
                                type: .of(c["type"] as? String))
         }
         passwordChangedAt = JSON.long(o, "passwordChangedAt")
+        brand = JSON.string(o, "brand")
         passwordHistory = JSON.objects(o["passwordHistory"]).compactMap { p in
             let v = JSON.string(p, "value")
             return v.isEmpty ? nil : OldPassword(value: v, changedAt: JSON.long(p, "changedAt"))
@@ -128,6 +131,7 @@ public struct EntryData: Equatable, Sendable {
             }
         }
         if passwordChangedAt > 0 { o["passwordChangedAt"] = passwordChangedAt }
+        if !brand.isEmpty { o["brand"] = brand }
         if !passwordHistory.isEmpty {
             o["passwordHistory"] = passwordHistory.map { ["value": $0.value, "changedAt": $0.changedAt] as [String: Any] }
         }

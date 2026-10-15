@@ -63,6 +63,21 @@ public final class VaultStore {
         return cozulmus(r)
     }
 
+    /// Kayıt kimliği → kurum logosu kimliği (`Brands.match`). Adres ve elle
+    /// seçim şifreli veride durduğu için kilit açıkken bellekte hesaplanır;
+    /// veritabanına açık yazılmaz.
+    public func brandIds() throws -> [Int64: String] {
+        var sonuc: [Int64: String] = [:]
+        for r in try store.all() where !r.anchor {
+            guard let e = cozulmus(r) else { continue }
+            if let b = Brands.match(title: e.title, url: e.data.url, choice: e.data.brand,
+                                    isCard: e.type == .card, cardNumber: e.data.cardNumber) {
+                sonuc[r.id] = b.id
+            }
+        }
+        return sonuc
+    }
+
     /// Yedek için bütün kayıtlar (çıpa dahil) ve çözülemeyenlerin sayısı.
     /// Çözülemeyen kayıt sessizce düşmez: eksik bir yedeği tam sanmak, kaybın
     /// en sinsi biçimi (Android'deki denetim bulgusu).
