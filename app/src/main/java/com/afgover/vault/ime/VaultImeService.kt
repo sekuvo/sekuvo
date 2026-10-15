@@ -23,6 +23,7 @@ import com.afgover.vault.data.UsageKind
 import com.afgover.vault.data.EntrySort
 import com.afgover.vault.data.EntryType
 import com.afgover.vault.data.sortedBy
+import android.os.SystemClock
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -57,6 +58,22 @@ class VaultImeService : InputMethodService() {
 
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+    /** Son `refresh()` anı: `onStartInputView` ve `onWindowShown` art arda gelince kasa iki kez çözülmesin. */
+    private var sonTazeleme = 0L
+
+    override fun onCreate() {
+        super.onCreate()
+        // Klavye görünürken kasa kilitlenirse (zaman aşımı) çözülmüş kayıtlar
+        // bellekte kalmasın: pencere açıksa yalnız hızlı erişim kopyalarıyla
+        // yeniden kurulur, kapalıysa liste boşaltılır.
+        scope.launch {
+            VaultSession.unlocked.collect { acik ->
+                if (!acik && !locked) {
+                    if (isInputViewShown) refresh() else { selected = null; entries = emptyList(); locked = true }
+                }
+            }
+        }
+    }
 
     /**
      * `attachBaseContext` yalnız BİR KEZ çalışır; servis ayakta kalırken
@@ -223,7 +240,8 @@ class VaultImeService : InputMethodService() {
      */
     override fun onWindowShown() {
         super.onWindowShown()
-        refresh()
+        // onStartInputView az önce tazelediyse ikinci çözme gereksiz.
+        if (SystemClock.uptimeMillis() - sonTazeleme > 300) refresh()
     }
 
     /** Pencere gizlenince çözülmüş kayıtları bellekte tutma. */
@@ -243,6 +261,7 @@ class VaultImeService : InputMethodService() {
      * dokunulmaz, yani korumalı kayıtlar kilitliyken çözülemez.
      */
     private fun refresh() {
+        sonTazeleme = SystemClock.uptimeMillis()
         val key = VaultSession.key()
         locked = key == null
         scope.launch {
