@@ -681,4 +681,12 @@
     <string name="tour_backup_body">Salve um backup .vaultbak criptografado onde quiser. O arquivo e a senha dele trazem tudo de volta, mesmo em um telefone novo.</string>
     <string name="tour_bt_title">Digite no computador como um teclado</string>
     <string name="tour_bt_body">O telefone se conecta ao computador como um teclado Bluetooth e digita a senha tecla por tecla onde o cursor estiver. Nada é instalado no computador. Vamos configurar juntos, ao vivo.</string>
+    <string name="edit_brand_title">Logo</string>
+    <string name="edit_brand_auto">Automático</string>
+    <string name="edit_brand_auto_found">Automático · %1$s</string>
+    <string name="edit_brand_auto_none">Automático · ainda sem correspondência</string>
+    <string name="edit_brand_none">Sem logo</string>
+    <string name="edit_brand_search">Pesquisar</string>
+    <string name="edit_brand_choose">Escolher um logo</string>
+    <string name="edit_brand_note">Os logotipos são marcas de seus donos e aparecem só para você reconhecer suas próprias contas.</string>
 </resources>

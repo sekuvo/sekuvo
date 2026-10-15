@@ -681,4 +681,12 @@
     <string name="tour_backup_body">যেখানে খুশি একটি এনক্রিপ্টেড .vaultbak ব্যাকআপ সংরক্ষণ করুন। ফাইল আর এর পাসওয়ার্ড দিয়ে নতুন ফোনেও সব ফিরে আসে।</string>
     <string name="tour_bt_title">কীবোর্ডের মতো কম্পিউটারে টাইপ করুন</string>
     <string name="tour_bt_body">ফোনটি ব্লুটুথ কীবোর্ড হিসেবে কম্পিউটারের সাথে সংযুক্ত হয় এবং কার্সার যেখানে আছে সেখানে একটার পর একটা কী চেপে পাসওয়ার্ড টাইপ করে। কম্পিউটারে কিছুই ইনস্টল করতে হয় না। চলুন, একসাথে সরাসরি সেট আপ করি।</string>
+    <string name="edit_brand_title">লোগো</string>
+    <string name="edit_brand_auto">স্বয়ংক্রিয়</string>
+    <string name="edit_brand_auto_found">স্বয়ংক্রিয় · %1$s</string>
+    <string name="edit_brand_auto_none">স্বয়ংক্রিয় · এখনো মেলেনি</string>
+    <string name="edit_brand_none">লোগো নেই</string>
+    <string name="edit_brand_search">খুঁজুন</string>
+    <string name="edit_brand_choose">লোগো বেছে নিন</string>
+    <string name="edit_brand_note">লোগোগুলো তাদের মালিকদের ট্রেডমার্ক; শুধু আপনার নিজের অ্যাকাউন্ট চেনাতে দেখানো হয়।</string>
 </resources>

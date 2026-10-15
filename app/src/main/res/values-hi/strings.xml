@@ -681,4 +681,12 @@
     <string name="tour_backup_body">एन्क्रिप्टेड .vaultbak बैकअप जहाँ चाहें सहेजें। फ़ाइल और उसका पासवर्ड नए फ़ोन पर भी सब कुछ लौटा देते हैं।</string>
     <string name="tour_bt_title">कीबोर्ड की तरह कंप्यूटर पर टाइप करें</string>
     <string name="tour_bt_body">फ़ोन ब्लूटूथ कीबोर्ड के रूप में कंप्यूटर से जुड़ता है और कर्सर जहाँ है वहाँ पासवर्ड को एक-एक कुंजी करके टाइप करता है। कंप्यूटर पर कुछ भी इंस्टॉल नहीं होता। आइए, इसे साथ मिलकर अभी, कदम-दर-कदम सेट करें।</string>
+    <string name="edit_brand_title">लोगो</string>
+    <string name="edit_brand_auto">स्वचालित</string>
+    <string name="edit_brand_auto_found">स्वचालित · %1$s</string>
+    <string name="edit_brand_auto_none">स्वचालित · अभी कोई मेल नहीं</string>
+    <string name="edit_brand_none">कोई लोगो नहीं</string>
+    <string name="edit_brand_search">खोजें</string>
+    <string name="edit_brand_choose">लोगो चुनें</string>
+    <string name="edit_brand_note">लोगो अपने मालिकों के ट्रेडमार्क हैं और केवल आपके अपने खातों को पहचानने में मदद के लिए दिखाए जाते हैं।</string>
 </resources>

@@ -697,4 +697,12 @@
     <string name="tour_backup_body">Сохраните зашифрованную резервную копию .vaultbak где угодно. Файл и его пароль вернут всё, даже на новом телефоне.</string>
     <string name="tour_bt_title">Ввод на компьютере, как с клавиатуры</string>
     <string name="tour_bt_body">Телефон подключается к компьютеру как клавиатура Bluetooth и вводит пароль клавиша за клавишей туда, где стоит курсор. На компьютер ничего не устанавливается. Давайте настроим всё вместе, в реальном времени.</string>
+    <string name="edit_brand_title">Логотип</string>
+    <string name="edit_brand_auto">Автоматически</string>
+    <string name="edit_brand_auto_found">Автоматически · %1$s</string>
+    <string name="edit_brand_auto_none">Автоматически · пока нет совпадения</string>
+    <string name="edit_brand_none">Без логотипа</string>
+    <string name="edit_brand_search">Поиск</string>
+    <string name="edit_brand_choose">Выберите логотип</string>
+    <string name="edit_brand_note">Логотипы — товарные знаки их владельцев и показываются только для того, чтобы вы узнавали свои аккаунты.</string>
 </resources>

@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import com.afgover.vault.core.Brands
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.rememberScrollState
@@ -124,6 +125,7 @@ fun EditScreen(
     var initialSnap by remember { mutableStateOf<String?>(null) }
     var kaydedildi by remember { mutableStateOf(false) }
     var ibanOnayi by remember { mutableStateOf(false) }
+    var marka by remember { mutableStateOf("") }
 
     // Kaydedilmemiş değişiklikte geri çıkış tüm girilenleri kaybettiriyordu
     // (denetim). Alanların anlık özetini yükleme anındaki özetle karşılaştırıp
@@ -131,7 +133,7 @@ fun EditScreen(
     fun snapshot(): String = listOf(
         title, username, password, url, cardholder, cardNumber, expiry, cvv, iban,
         notes, fullName, phone, email, address, quick.toString(), noteKind.name, oncelik,
-        selectedTagIds.sorted().joinToString(","),
+        selectedTagIds.sorted().joinToString(","), marka,
         customFields.joinToString("|") { it.label + "=" + it.value + ":" + it.type.stable }
     ).joinToString(String(charArrayOf('\u0001')))
 
@@ -190,7 +192,8 @@ fun EditScreen(
                                 ?: System.currentTimeMillis()
                         )
                     ) + originalHistory
-                }
+                },
+                brand = marka
             ),
             quick = quick,
             tagIds = selectedTagIds.toList(),
@@ -228,6 +231,7 @@ fun EditScreen(
                 originalPasswordChangedAt = e.data.passwordChangedAt
                 originalHistory.clear()
                 originalHistory.addAll(e.data.passwordHistory)
+                marka = e.data.brand
             }
             loaded = true
         }
@@ -533,6 +537,14 @@ fun EditScreen(
                 label = { Text(stringResource(R.string.edit_field_notes)) },
                 minLines = if (type == EntryType.NOTE) 6 else 2,
                 modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(Modifier.height(12.dp))
+            // Kurum logosu: otomatik (başlık ve adresten) ya da elle seçilen.
+            BrandRow(
+                choice = marka,
+                auto = Brands.match(title, url, "", type == EntryType.CARD, cardNumber),
+                onChoose = { marka = it }
             )
 
             Spacer(Modifier.height(16.dp))

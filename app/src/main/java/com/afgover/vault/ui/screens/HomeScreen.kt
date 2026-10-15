@@ -76,6 +76,7 @@ import com.afgover.vault.data.EntryType
 import com.afgover.vault.ui.VaultViewModel
 import androidx.compose.ui.res.stringResource
 import com.afgover.vault.R
+import com.afgover.vault.core.Brands
 
 fun EntryType.icon(): ImageVector = when (this) {
     EntryType.LOGIN -> Icons.Filled.Key
@@ -166,6 +167,7 @@ fun HomeScreen(
     onAnchor: () -> Unit
 ) {
     val entries by viewModel.entries.collectAsState()
+    val markalar by viewModel.brands.collectAsState()
     val tags by viewModel.tags.collectAsState()
     var query by remember { mutableStateOf("") }
     var addMenuOpen by remember { mutableStateOf(false) }
@@ -451,7 +453,8 @@ fun HomeScreen(
                                 ),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                TypeBadge(item.type, kind = item.noteKind)
+                                val marka = markalar[item.id]?.let { Brands.byId(it) }
+                                if (marka != null) BrandBadge(marka) else TypeBadge(item.type, kind = item.noteKind)
                                 Spacer(Modifier.width(14.dp))
                                 Column(Modifier.weight(1f)) {
                                     Text(

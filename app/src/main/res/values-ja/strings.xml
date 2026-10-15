@@ -674,4 +674,12 @@
     <string name="tour_backup_body">暗号化された.vaultbakバックアップを好きな場所に保存できます。ファイルとそのパスワードがあれば、新しい端末でもすべてを復元できます。</string>
     <string name="tour_bt_title">キーボードのようにコンピューターに入力</string>
     <string name="tour_bt_body">端末はBluetoothキーボードとしてコンピューターに接続し、カーソルのある場所にパスワードを1文字ずつ入力します。コンピューターには何もインストールしません。さあ、一緒にその場で設定しましょう。</string>
+    <string name="edit_brand_title">ロゴ</string>
+    <string name="edit_brand_auto">自動</string>
+    <string name="edit_brand_auto_found">自動 · %1$s</string>
+    <string name="edit_brand_auto_none">自動 · まだ一致なし</string>
+    <string name="edit_brand_none">ロゴなし</string>
+    <string name="edit_brand_search">検索</string>
+    <string name="edit_brand_choose">ロゴを選択</string>
+    <string name="edit_brand_note">ロゴは各所有者の商標であり、ご自身のアカウントを見分けるためだけに表示されます。</string>
 </resources>

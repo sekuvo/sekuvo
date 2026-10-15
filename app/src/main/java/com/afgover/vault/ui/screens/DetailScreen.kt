@@ -42,6 +42,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
@@ -49,6 +50,7 @@ import androidx.compose.ui.unit.dp
 import com.afgover.vault.core.FieldFormats
 import com.afgover.vault.data.FieldKey
 import com.afgover.vault.R
+import com.afgover.vault.core.Brands
 import com.afgover.vault.core.Fingerprint
 import com.afgover.vault.data.DecryptedEntry
 import com.afgover.vault.data.EntryType
@@ -92,7 +94,16 @@ fun DetailScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(e?.title ?: "") },
+                title = {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        val marka = e?.let { Brands.match(it.title, it.data.url, it.data.brand, it.type == EntryType.CARD, it.data.cardNumber) }
+                        if (marka != null) {
+                            BrandBadge(marka, size = 30)
+                            Spacer(Modifier.width(10.dp))
+                        }
+                        Text(e?.title ?: "", maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    }
+                },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(

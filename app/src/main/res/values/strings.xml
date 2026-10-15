@@ -690,4 +690,12 @@
     <string name="tour_backup_body">Save an encrypted .vaultbak backup wherever you like. The file and its password bring everything back, even on a new phone.</string>
     <string name="tour_bt_title">Type on your computer like a keyboard</string>
     <string name="tour_bt_body">The phone connects to the computer as a Bluetooth keyboard and types the password key by key where the cursor is. Nothing is installed on the computer. Let\'s set it up together, live.</string>
+    <string name="edit_brand_title">Logo</string>
+    <string name="edit_brand_auto">Automatic</string>
+    <string name="edit_brand_auto_found">Automatic · %1$s</string>
+    <string name="edit_brand_auto_none">Automatic · no match yet</string>
+    <string name="edit_brand_none">No logo</string>
+    <string name="edit_brand_search">Search</string>
+    <string name="edit_brand_choose">Choose a logo</string>
+    <string name="edit_brand_note">Logos are trademarks of their owners and are shown only to help you recognise your own accounts.</string>
 </resources>
