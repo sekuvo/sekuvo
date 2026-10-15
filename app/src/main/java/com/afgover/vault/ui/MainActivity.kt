@@ -129,7 +129,7 @@ class MainActivity : FragmentActivity() {
     private fun biometricUnlock() {
         BiometricAuth.unlock(
             this, viewModel.keyManager,
-            onError = { viewModel.error = it }
+            onError = { viewModel.error = it; viewModel.refreshLockOptions() }
         ) { viewModel.onStage1Payload(it) }
     }
 

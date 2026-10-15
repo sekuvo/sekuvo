@@ -2,6 +2,8 @@ package com.afgover.vault.core
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.os.Build
+import android.os.SystemClock
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyPermanentlyInvalidatedException
 import android.security.keystore.KeyProperties
@@ -41,6 +43,10 @@ class KeyManager(context: Context) {
         private const val PREF_LAST_MASTER = "last_master_password_at"
         private const val PREF_PIN_FAILS = "pin_fail_count"
         private const val PREF_PIN_FAIL_AT = "pin_fail_at"
+        private const val PREF_PIN_FAIL_MONO = "pin_fail_mono"
+        /** Hızlı erişim anahtarının üretildiği kural sürümü; artınca anahtar yenilenir. */
+        private const val PREF_QUICK_KEY_VER = "quick_key_ver"
+        private const val QUICK_KEY_VER = 2
         /** Bu kadar art arda yanlış PIN'den sonra parmak izi yolu tamamen kapanır. */
         private const val PIN_MAX_FAILS = 10
         private const val KEYSTORE_ALIAS = "vault_biometric_key"
@@ -101,31 +107,34 @@ class KeyManager(context: Context) {
     // üssel bekleme bunu kapatır; sayaç yalnız doğru PIN'de sıfırlanır ve
     // süreç ölümünden etkilenmez (SharedPreferences).
 
-    /** Şu an denemeye izin verilene kadar kalan süre (ms); 0 = serbest. */
-    fun pinLockRemainingMs(now: Long = System.currentTimeMillis()): Long {
-        val fails = prefs.getInt(PREF_PIN_FAILS, 0)
-        val bekleme = pinBackoffMs(fails)
-        if (bekleme == 0L) return 0L
-        val son = prefs.getLong(PREF_PIN_FAIL_AT, 0L)
-        return (son + bekleme - now).coerceAtLeast(0L)
-    }
-
-    private fun pinBackoffMs(fails: Int): Long = when {
-        fails < 5 -> 0L
-        fails == 5 -> 30_000L
-        fails == 6 -> 60_000L
-        fails == 7 -> 5 * 60_000L
-        else -> 15 * 60_000L
-    }
+    /**
+     * Şu an denemeye izin verilene kadar kalan süre (ms); 0 = serbest.
+     * Duvar saati ve monoton saat birlikte ([PinBackoff]): saati ileri almak
+     * beklemeyi atlatmaz.
+     */
+    fun pinLockRemainingMs(
+        now: Long = System.currentTimeMillis(),
+        mono: Long = SystemClock.elapsedRealtime()
+    ): Long = PinBackoff.remainingMs(
+        fails = prefs.getInt(PREF_PIN_FAILS, 0),
+        failWall = prefs.getLong(PREF_PIN_FAIL_AT, 0L),
+        failMono = prefs.getLong(PREF_PIN_FAIL_MONO, 0L),
+        nowWall = now,
+        nowMono = mono
+    )
 
     /**
      * Yanlış PIN'i kaydeder ve kalan bekleme süresini döndürür. [PIN_MAX_FAILS]
      * aşılınca parmak izi yolu tamamen kapatılır (yalnız ana parola kalır) —
      * çevrimdışı deneme kahini de böylece işe yaramaz hâle gelir.
      */
-    fun notePinFailure(now: Long = System.currentTimeMillis()): Boolean {
+    fun notePinFailure(
+        now: Long = System.currentTimeMillis(),
+        mono: Long = SystemClock.elapsedRealtime()
+    ): Boolean {
         val fails = prefs.getInt(PREF_PIN_FAILS, 0) + 1
-        prefs.edit().putInt(PREF_PIN_FAILS, fails).putLong(PREF_PIN_FAIL_AT, now).apply()
+        prefs.edit().putInt(PREF_PIN_FAILS, fails).putLong(PREF_PIN_FAIL_AT, now)
+            .putLong(PREF_PIN_FAIL_MONO, mono).apply()
         if (fails >= PIN_MAX_FAILS) {
             clearBiometric()
             return true
@@ -134,7 +143,7 @@ class KeyManager(context: Context) {
     }
 
     fun resetPinFailures() {
-        prefs.edit().remove(PREF_PIN_FAILS).remove(PREF_PIN_FAIL_AT).apply()
+        prefs.edit().remove(PREF_PIN_FAILS).remove(PREF_PIN_FAIL_AT).remove(PREF_PIN_FAIL_MONO).apply()
     }
 
     /** PIN'in doğruluğunu sargıya dokunmadan sınar. */
@@ -305,7 +314,15 @@ class KeyManager(context: Context) {
      */
     fun quickKey(): SecretKey? = try {
         val ks = KeyStore.getInstance(ANDROID_KEYSTORE).apply { load(null) }
-        (ks.getKey(QUICK_KEYSTORE_ALIAS, null) as? SecretKey) ?: generateQuickKey()
+        val mevcut = ks.getKey(QUICK_KEYSTORE_ALIAS, null) as? SecretKey
+        if (mevcut != null && prefs.getInt(PREF_QUICK_KEY_VER, 1) < QUICK_KEY_VER) {
+            // Eski kuralla üretilmiş anahtar (cihaz kilidi şartı yok): yenilenir.
+            // Eski kopyalar bir sonraki kilit açılışında kaynağından yeniden
+            // yazılır (VaultRepository.repairQuickCopies); o ana kadar hızlı
+            // erişim kayıtları korumalı gibi davranır — başarısızlık güvenli yöne.
+            ks.deleteEntry(QUICK_KEYSTORE_ALIAS)
+            generateQuickKey()
+        } else mevcut ?: generateQuickKey()
     } catch (e: Exception) {
         null
     }
@@ -321,9 +338,16 @@ class KeyManager(context: Context) {
                     .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
                     .setKeySize(256)
                     .setUserAuthenticationRequired(false)
+                    .apply {
+                        // Bu anahtarın güvenliği telefonun ekran kilidine dayanır;
+                        // o dayanak Keystore'a da yazdırılır: cihaz
+                        // kilitliyken anahtar kullanılamaz, kilitli ekrandaki bir
+                        // süreç hızlı erişim kopyalarını ve tamponu çözemez.
+                        if (Build.VERSION.SDK_INT >= 28) setUnlockedDeviceRequired(true)
+                    }
                     .build()
             )
-        }.generateKey()
+        }.generateKey().also { prefs.edit().putInt(PREF_QUICK_KEY_VER, QUICK_KEY_VER).apply() }
     } catch (e: Exception) {
         null
     }
