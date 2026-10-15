@@ -77,4 +77,18 @@ public enum PinBackoff {
         guard bekleme > 0 else { return 0 }
         return max(lastFailAt + bekleme - now, 0)
     }
+
+    /// Monoton damga geçerliyse yalnız o sayılır; değilse duvar saati.
+    ///
+    /// Yalnız duvar saati, cihaz ayarlarından saati ileri almakla atlatılıyordu.
+    /// Monoton saat saat ayarından etkilenmez; yeniden başlatmada sıfırlanır:
+    /// `nowMono < failMono` ise o damga sayılmaz, duvar saati tek başına kalır.
+    /// `failMono == 0` eski kayıttır (damga yok). Android'deki `PinBackoff` ile
+    /// aynı kural.
+    public static func remainingMs(fails: Int, failWall: Int64, failMono: Int64, nowWall: Int64, nowMono: Int64) -> Int64 {
+        if failMono > 0, nowMono >= failMono {
+            return remainingMs(fails: fails, lastFailAt: failMono, now: nowMono)
+        }
+        return remainingMs(fails: fails, lastFailAt: failWall, now: nowWall)
+    }
 }

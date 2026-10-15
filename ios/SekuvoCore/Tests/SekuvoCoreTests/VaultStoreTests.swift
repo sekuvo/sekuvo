@@ -209,3 +209,27 @@ struct QrCollectorTests {
         #expect(t.frames.isEmpty)
     }
 }
+
+extension VaultStoreTests {
+    @Test func yalnizCipaTasiyanZarfTumunuDegistirIleKasayiBosaltmaz() throws {
+        let k = try kasa()
+        try k.apply(Backup.ImportResult(entries: [kayit("Kalsın")], tagDefs: [:]), replace: false)
+        var d = EntryData(); d.notes = "sha"
+        let capa = DecryptedEntry(type: .note, title: "aktar.html", data: d, createdAt: 1, updatedAt: 1,
+                                  noteKind: .parmakIzi, anchor: true)
+        #expect(try k.apply(Backup.ImportResult(entries: [capa], tagDefs: [:]), replace: true) == 0)
+        #expect(try k.items().map(\.title) == ["Kalsın"])
+    }
+
+    @Test func geriYuklemeSayisiYazilanSatirlardir() throws {
+        let k = try kasa()
+        func capa(_ zaman: Int64) -> DecryptedEntry {
+            var d = EntryData(); d.notes = "x"
+            return DecryptedEntry(type: .note, title: "aktar.html", data: d, createdAt: zaman, updatedAt: zaman,
+                                  noteKind: .parmakIzi, anchor: true)
+        }
+        try k.apply(Backup.ImportResult(entries: [capa(20)], tagDefs: [:]), replace: false)
+        // Eski çıpa atlanır, sayıya girmez; kayıt sayılır.
+        #expect(try k.apply(Backup.ImportResult(entries: [kayit("A"), capa(5)], tagDefs: [:]), replace: false) == 1)
+    }
+}

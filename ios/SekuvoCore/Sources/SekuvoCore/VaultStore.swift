@@ -166,9 +166,13 @@ public final class VaultStore {
         // Çıpalar: gelenlerden yalnız en yenisi kalır.
         var gelen = sonuc.entries.filter { !$0.anchor }
         let yeniCapa = sonuc.entries.filter(\.anchor).max { $0.updatedAt < $1.updatedAt }
+        // Yalnız çıpa taşıyan zarf, "tümünü değiştir" ile kasayı boşaltamaz:
+        // kullanıcı için o zarf boştur ve boş zarf da hiçbir şey yapmaz.
+        if replace && gelen.isEmpty { return 0 }
 
         // 1. Kasaya dokunmadan önce: boyut denetimi ve şifreleme.
         var hazir: [(DecryptedEntry, Data)] = []
+        var yazilan = 0
         if let yeniCapa { gelen.append(yeniCapa) }
         for e in gelen { hazir.append((e, try muhurle(title: e.title, data: e.data))) }
 
@@ -186,6 +190,7 @@ public final class VaultStore {
             if replace { try store.deleteAllEntries() }
             var mevcutCapa: EntryStore.Row?
             if !replace { mevcutCapa = try store.all().first(where: \.anchor) }
+            yazilan = 0
             for (e, blob) in hazir {
                 var satir = EntryStore.Row(type: e.type.rawValue, title: e.title, blob: blob,
                                            createdAt: e.createdAt, updatedAt: e.updatedAt, quick: e.quick,
@@ -198,9 +203,11 @@ public final class VaultStore {
                 } else {
                     try store.insert(satir)
                 }
+                yazilan += 1
             }
         }
-        return sonuc.entries.count
+        // Kasaya gerçekten yazılan satır sayısı: atlanan eski çıpa sayılmaz.
+        return yazilan
     }
 
     // MARK: Yardımcılar

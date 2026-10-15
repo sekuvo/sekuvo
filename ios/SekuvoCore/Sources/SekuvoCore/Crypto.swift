@@ -36,8 +36,11 @@ public enum Crypto {
     /// `PBEKeySpec`'iyle ASCII'de aynı; ASCII dışı karakterler Android
     /// çalışma zamanında henüz ölçülmedi (bicim/README.md §1).
     public static func deriveKey(password: String, salt: Data, iterations: Int = kdfIterations) -> SymmetricKey {
-        let parola = Array(password.utf8)
+        var parola = Array(password.utf8)
         var cikti = [UInt8](repeating: 0, count: keyBytes)
+        // Parolanın bayt kopyası işi bitince silinir (`String`'in kendi
+        // belleği Swift'e ait; o silinemez, kopya çoğaltılmaz).
+        defer { _ = parola.withUnsafeMutableBytes { memset_s($0.baseAddress, $0.count, 0, $0.count) } }
         let durum = parola.withUnsafeBufferPointer { p in
             salt.withUnsafeBytes { t in
                 p.baseAddress!.withMemoryRebound(to: CChar.self, capacity: max(parola.count, 1)) { pc in

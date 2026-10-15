@@ -43,3 +43,30 @@ struct PinLockTests {
         #expect(PinBackoff.maxFails == 10)
     }
 }
+
+struct PinBackoffSaatTests {
+
+    @Test func saatiIleriAlmakBeklemeyiAtlatmaz() {
+        // 5. yanlış: 30 sn. Duvar saati 15 dk ileri, monoton saat 3 sn ilerledi.
+        let kalan = PinBackoff.remainingMs(fails: 5, failWall: 1_000_000, failMono: 50_000,
+                                           nowWall: 1_000_000 + 15 * 60_000, nowMono: 53_000)
+        #expect(kalan == 27_000)
+    }
+
+    @Test func saatiGeriAlmakBeklemeyiUzatmaz() {
+        let kalan = PinBackoff.remainingMs(fails: 5, failWall: 1_000_000, failMono: 50_000,
+                                           nowWall: 1_000_000 - 60_000, nowMono: 80_001)
+        #expect(kalan == 0)
+    }
+
+    @Test func yenidenBaslatmadaMonotonDamgaDuserDuvarSaatiKalir() {
+        let kalan = PinBackoff.remainingMs(fails: 5, failWall: 1_000_000, failMono: 500_000,
+                                           nowWall: 1_010_000, nowMono: 4_000)
+        #expect(kalan == 20_000)
+    }
+
+    @Test func eskiKayittaDamgaYoksaYalnizDuvarSaati() {
+        #expect(PinBackoff.remainingMs(fails: 5, failWall: 100_000, failMono: 0, nowWall: 120_000, nowMono: 999_999) == 10_000)
+        #expect(PinBackoff.remainingMs(fails: 5, failWall: 100_000, failMono: 0, nowWall: 130_000, nowMono: 999_999) == 0)
+    }
+}
