@@ -38,6 +38,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.afgover.vault.R
 import com.afgover.vault.ui.VaultViewModel
@@ -227,6 +229,7 @@ fun AnchorScreen(viewModel: VaultViewModel, onBack: () -> Unit) {
                         onValueChange = { zarfParolasi = it },
                         label = { Text(stringResource(R.string.paste_label_backup_password)) },
                         visualTransformation = PasswordVisualTransformation(),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, autoCorrectEnabled = false),
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth()
                     )

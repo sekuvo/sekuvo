@@ -21,6 +21,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Casino
 import androidx.compose.material.icons.filled.QrCodeScanner
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
@@ -309,11 +311,27 @@ fun EditScreen(
                         modifier = Modifier.fillMaxWidth()
                     )
                     Spacer(Modifier.height(8.dp))
+                    // Parola alanı maskeli ve parola klavyesiyle: düz metin alanı
+                    // sistem klavyesinin parolayı öğrenmesine açıktı; FLAG_SECURE
+                    // klavyeyi kapsamaz. Göz, SecretField'daki
+                    // gibi yalnız ekrandaki maskeyi açar.
+                    var sifreGorunur by remember { mutableStateOf(false) }
                     OutlinedTextField(
                         value = password, onValueChange = { password = it },
                         label = { Text(stringResource(R.string.field_password)) }, singleLine = true,
+                        visualTransformation =
+                            if (sifreGorunur) VisualTransformation.None else PasswordVisualTransformation(),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, autoCorrectEnabled = false),
                         trailingIcon = {
                             Row {
+                                IconButton(onClick = { sifreGorunur = !sifreGorunur }) {
+                                    Icon(
+                                        if (sifreGorunur) Icons.Filled.VisibilityOff else Icons.Filled.Visibility,
+                                        contentDescription = stringResource(
+                                            if (sifreGorunur) R.string.main_hide else R.string.main_show
+                                        )
+                                    )
+                                }
                                 IconButton(onClick = { sifreQrTarama = true }) {
                                     Icon(
                                         Icons.Filled.QrCodeScanner,
@@ -708,6 +726,7 @@ fun EditScreen(
                         onValueChange = { sifreZarfParolasi = it },
                         label = { Text(stringResource(R.string.paste_label_backup_password)) },
                         visualTransformation = PasswordVisualTransformation(),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, autoCorrectEnabled = false),
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth()
                     )

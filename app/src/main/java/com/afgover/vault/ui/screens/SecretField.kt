@@ -42,12 +42,13 @@ fun SecretField(
         singleLine = true,
         visualTransformation =
             if (visible) VisualTransformation.None else PasswordVisualTransformation(),
+        // Klavye türü göz açıkken de parola kalır: `KeyboardType.Text` sistem
+        // klavyesine (Gboard, Samsung) alanı sıradan metin diye bildirir ve
+        // klavye yazılanı öğrenme sözlüğüne, oradan buluta taşıyabilir.
+        // Maske ekranı korur, klavye türü klavyeyi.
         keyboardOptions = KeyboardOptions(
-            keyboardType = if (numeric) {
-                if (visible) KeyboardType.Number else KeyboardType.NumberPassword
-            } else {
-                if (visible) KeyboardType.Text else KeyboardType.Password
-            }
+            keyboardType = if (numeric) KeyboardType.NumberPassword else KeyboardType.Password,
+            autoCorrectEnabled = false
         ),
         trailingIcon = {
             IconButton(onClick = { visible = !visible }) {
