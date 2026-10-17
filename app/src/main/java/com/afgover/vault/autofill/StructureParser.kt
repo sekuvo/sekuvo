@@ -82,8 +82,40 @@ object StructureParser {
         for (i in 0 until structure.windowNodeCount) {
             visit(structure.getWindowNodeAt(i).rootViewNode)
         }
-        return ParsedStructure(structure.activityComponent.packageName, webDomain, fields)
+        val packageName = structure.activityComponent.packageName
+        return ParsedStructure(packageName, trustedWebDomain(packageName, webDomain), fields)
     }
+
+    /**
+     * `webDomain`, yalnız bilinen bir tarayıcıdan geliyorsa eşleşmede ve
+     * kaydetmede kullanılır. Alanı her uygulama kendi görünümüne yazabilir
+     * (`ViewStructure.setWebDomain`): tarayıcı olmayan bir uygulama
+     * "banka.com" deyip o kaydı listenin başına çıkarabilir ya da
+     * kaydettirdiği girdiye yabancı bir URL yazdırabilirdi. Tarayıcı
+     * olmayan uygulamalarda eşleşme paket adıyla sürer; gömülü WebView'li
+     * uygulamalar bu yüzden alan adıyla değil paketle eşleşir — Bitwarden
+     * ve KeePassDX ile aynı sınır.
+     */
+    internal fun trustedWebDomain(packageName: String, webDomain: String?): String? =
+        webDomain?.takeIf { it.isNotBlank() && packageName in BROWSER_PACKAGES }
+
+    /** `webDomain` beyanına güvenilen tarayıcı paketleri. */
+    internal val BROWSER_PACKAGES: Set<String> = setOf(
+        "com.android.chrome", "com.chrome.beta", "com.chrome.dev", "com.chrome.canary",
+        "org.chromium.chrome", "com.google.android.apps.chrome", "com.android.browser",
+        "org.mozilla.firefox", "org.mozilla.firefox_beta", "org.mozilla.fenix", "org.mozilla.fennec_fdroid",
+        "org.mozilla.focus", "org.mozilla.klar", "org.mozilla.rocket", "us.spotco.fennec_dos",
+        "com.brave.browser", "com.brave.browser_beta", "com.brave.browser_nightly",
+        "com.microsoft.emmx", "com.microsoft.emmx.beta", "com.microsoft.emmx.dev", "com.microsoft.emmx.canary",
+        "com.opera.browser", "com.opera.browser.beta", "com.opera.mini.native", "com.opera.gx",
+        "com.sec.android.app.sbrowser", "com.sec.android.app.sbrowser.beta",
+        "com.duckduckgo.mobile.android", "com.vivaldi.browser", "com.vivaldi.browser.snapshot",
+        "com.kiwibrowser.browser", "org.torproject.torbrowser", "org.torproject.torbrowser_alpha",
+        "com.yandex.browser", "com.ecosia.android", "org.bromite.bromite", "app.vanadium.browser",
+        "org.cromite.cromite", "com.mi.globalbrowser", "com.huawei.browser", "com.UCMobile.intl",
+        "org.lineageos.jelly", "com.stoutner.privacybrowser.standard", "acr.browser.lightning",
+        "com.naver.whale", "com.qwant.liberty", "com.cloudmosa.puffinFree", "mark.via.gp"
+    )
 
     private fun classify(node: AssistStructure.ViewNode): FieldKind? =
         fromHints(node.autofillHints) ?: fromHeuristics(node)

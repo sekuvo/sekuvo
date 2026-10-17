@@ -1,0 +1,179 @@
+import SwiftUI
+
+/// Karşılama (ilk kurulum) ve kilit ekranı — Android'deki `UnlockScreen.kt`.
+struct UnlockScreen: View {
+    let setup: Bool
+    @Environment(VaultModel.self) private var kasa
+    @State private var parola = ""
+    @State private var tekrar = ""
+    @State private var yedegimVar = false
+    @Environment(\.scenePhase) private var sahne
+    @FocusState private var odak: Bool
+
+    var body: some View {
+        @Bindable var kasa = kasa
+        ScrollView {
+            VStack(alignment: .leading, spacing: 18) {
+                Spacer(minLength: 56)
+                Image(systemName: "lock.shield.fill")
+                    .font(.system(size: 52))
+                    .foregroundStyle(Theme.primary)
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(L(setup ? "unlock_welcome_title" : "unlock_locked_title"))
+                        .font(.largeTitle.weight(.semibold))
+                        .foregroundStyle(Theme.onSurface)
+                    if setup {
+                        Text(L("unlock_slogan")).font(.title3).foregroundStyle(Theme.primary)
+                    }
+                }
+                Text(L(setup ? "unlock_setup_desc" : "unlock_enter_desc"))
+                    .font(.body)
+                    .foregroundStyle(Theme.onSurfaceVariant)
+                    .fixedSize(horizontal: false, vertical: true)
+
+                if !setup && kasa.biometricUsable {
+                    Button { Task { await kasa.unlockWithBiometric() } } label: {
+                        Label(L("ios_unlock_biometric", kasa.biometryName),
+                              systemImage: kasa.biometry == .touchID ? "touchid" : (kasa.biometry == .opticID ? "opticid" : "faceid"))
+                    }
+                    .buttonStyle(FilledButton())
+                    .disabled(kasa.busy || kasa.biometricBusy)
+                } else if !setup && kasa.biometricEnabled && kasa.masterPasswordDue {
+                    // Hatırlatıcı: bu sefer biyometri yerine ana parola (unutmayı önlemek için).
+                    Label(L("ios_master_reminder", kasa.biometryName), systemImage: "exclamationmark.circle")
+                        .font(.callout).foregroundStyle(Theme.primary)
+                }
+
+                SecretInput(label: L(setup ? "unlock_master_password_label" : "unlock_password_label"), text: $parola)
+                    .focused($odak)
+                    .submitLabel(setup ? .next : .go)
+                    .onSubmit { if !setup { gonder() } }
+                if setup {
+                    SecretInput(label: L("unlock_password_again_label"), text: $tekrar)
+                        .submitLabel(.go)
+                        .onSubmit(gonder)
+                }
+
+                if let hata = kasa.error {
+                    Text(hata).font(.callout).foregroundStyle(Theme.error)
+                }
+
+                if setup {
+                    // Android: "Yedeğim var — geri yükle". Önce bu cihazın ana
+                    // parolası belirlenir, hemen ardından yedek dosyası seçilir.
+                    Toggle(isOn: $yedegimVar) {
+                        Text(L(yedegimVar ? "unlock_restore_selected" : "unlock_have_backup")).font(.callout)
+                    }
+                    .tint(Theme.primary)
+                    if yedegimVar {
+                        Text(L("unlock_restore_hint")).font(.footnote).foregroundStyle(Theme.onSurfaceVariant)
+                    }
+                }
+
+                Button(action: gonder) {
+                    HStack {
+                        if kasa.busy { ProgressView().tint(Theme.onPrimaryContainer) }
+                        Text(L(setup ? (yedegimVar ? "unlock_create_and_restore" : "unlock_create_vault") : "unlock_open_button"))
+                    }
+                    .frame(maxWidth: .infinity, minHeight: 50)
+                }
+                .buttonStyle(FilledButton())
+                // Biyometri istemi açıkken parola düğmesi bekler ama gösterge dönmez.
+                .disabled(kasa.busy || kasa.biometricBusy || parola.isEmpty)
+
+                if !setup {
+                    Label(L("ios_locked_hint"), systemImage: "eye.slash")
+                        .font(.footnote)
+                        .foregroundStyle(Theme.onSurfaceVariant)
+                }
+            }
+            .padding(.horizontal, 24)
+        }
+        .scrollDismissesKeyboard(.interactively)
+        .background(Theme.background.ignoresSafeArea())
+        .onAppear { if setup || !kasa.biometricUsable { odak = true } }
+        // Biyometri kendiliğinden bir kez sorulur: soğuk açılışta ve arka plandan
+        // dönüşte (bkz. `autoBiometricArmed`); yalnız uygulama ekrandayken —
+        // arka planda istem açılamaz.
+        .task(id: sahne) {
+            guard !setup, sahne == .active, kasa.autoBiometricArmed, kasa.biometricUsable else { return }
+            kasa.autoBiometricArmed = false
+            await kasa.unlockWithBiometric()
+            if kasa.state == .locked { odak = true }
+        }
+    }
+
+    private func gonder() {
+        let p = parola, t = tekrar
+        Task {
+            if setup { await kasa.setup(password: p, again: t, restoreAfter: yedegimVar) } else { await kasa.unlock(password: p) }
+            if kasa.state == .unlocked { parola = ""; tekrar = "" }
+        }
+    }
+}
+
+/// Göster/gizle düğmeli parola alanı (Android: `SecretField`). Varsayılan gizli.
+struct SecretInput: View {
+    let label: String
+    @Binding var text: String
+    /// Ana parola için boş içerik türü: alana "parola" ipucu verilmez, iOS onu
+    /// iCloud'a kaydedilecek bir giriş parolası saymasın — ağsız bir kasanın
+    /// anahtarı buluta gitmemeli. Sınır (iOS 26.4'te ölçüldü): klavyenin
+    /// üstündeki "Passwords" düğmesi güvenli alanda her durumda görünüyor;
+    /// kaydetme önerisinin çıkmadığı ise ancak cihazda yazarak ölçülebilir.
+    var contentType: UITextContentType? = .sekuvoNone
+    @State private var gorunur = false
+    @Environment(\.scenePhase) private var faz
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(label).font(.footnote.weight(.medium)).foregroundStyle(Theme.onSurfaceVariant)
+            HStack {
+                Group {
+                    if gorunur {
+                        TextField("", text: $text)
+                    } else {
+                        SecureField("", text: $text)
+                    }
+                }
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled()
+                .textContentType(contentType)
+                .font(.body.monospaced())
+                Button { gorunur.toggle() } label: {
+                    Image(systemName: gorunur ? "eye.slash" : "eye")
+                }
+                .accessibilityLabel(L(gorunur ? "main_hide" : "main_show"))
+                .foregroundStyle(Theme.onSurfaceVariant)
+            }
+            .padding(.horizontal, 14)
+            .frame(minHeight: 52)
+            .overlay(RoundedRectangle(cornerRadius: 10).stroke(Theme.outline, lineWidth: 1))
+        }
+        // Uygulama değiştiriciye görünür parola girmesin: sahne pasifleşince
+        // maske geri gelir; arka planda yazılan parola da bellekte tutulmaz.
+        .onChange(of: faz) { _, yeni in
+            if yeni != .active { gorunur = false }
+            if yeni == .background { text = "" }
+        }
+    }
+}
+
+/// Dolu düğme: altın yüzey + koyu yazı (Android: `vaultButtonColors`).
+struct FilledButton: ButtonStyle {
+    @Environment(\.isEnabled) private var etkin
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(.headline)
+            .frame(maxWidth: .infinity, minHeight: 48)
+            .foregroundStyle(Theme.onPrimaryContainer)
+            .background(Theme.primaryContainer.opacity(etkin ? (configuration.isPressed ? 0.8 : 1) : 0.45))
+            .clipShape(RoundedRectangle(cornerRadius: 25))
+    }
+}
+
+extension UITextContentType {
+    /// Otomatik doldurma önerisini kapatan boş içerik türü.
+    static let sekuvoNone = UITextContentType(rawValue: "")
+}

@@ -681,4 +681,12 @@
     <string name="tour_backup_body">Speichere ein verschlüsseltes .vaultbak-Backup, wo immer du willst. Die Datei und ihr Passwort stellen alles wieder her, auch auf einem neuen Telefon.</string>
     <string name="tour_bt_title">Am Computer eingeben wie eine Tastatur</string>
     <string name="tour_bt_body">Das Telefon verbindet sich als Bluetooth-Tastatur mit dem Computer und gibt das Passwort Taste für Taste dort ein, wo der Cursor steht. Auf dem Computer wird nichts installiert. Richten wir es gemeinsam live ein.</string>
+    <string name="edit_brand_title">Logo</string>
+    <string name="edit_brand_auto">Automatisch</string>
+    <string name="edit_brand_auto_found">Automatisch · %1$s</string>
+    <string name="edit_brand_auto_none">Automatisch · noch kein Treffer</string>
+    <string name="edit_brand_none">Kein Logo</string>
+    <string name="edit_brand_search">Suchen</string>
+    <string name="edit_brand_choose">Logo wählen</string>
+    <string name="edit_brand_note">Logos sind Marken ihrer Inhaber und werden nur angezeigt, damit du deine eigenen Konten erkennst.</string>
 </resources>

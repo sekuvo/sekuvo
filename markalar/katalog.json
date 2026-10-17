@@ -1,0 +1,1946 @@
+{
+ "_aciklama": "Kurum logoları kataloğu. Elle düzenlenir; uret.py iki platformun dosyalarını bundan üretir. si: Simple Icons kısa adı (logo), yoksa rozet (marka renginde kısa metin; renkler yaklaşık). anahtarlar: başlıkta aranan sözcükler (Türkçe harfler katlanır); boşsa yalnız alan adıyla eşleşir. Yazı tabanlı (wordmark) logolar liste boyutunda okunmadığı için rozettir: Pegasus, Zoom, AliExpress, American Express, Coinbase, Samsung, Wells Fargo.",
+ "markalar": [
+  {
+   "id": "ziraat",
+   "ad": "Ziraat Bankası",
+   "si": null,
+   "renk": "#E30613",
+   "rozet": "Z",
+   "alanlar": [
+    "ziraatbank.com.tr"
+   ],
+   "anahtarlar": [
+    "ziraat",
+    "ziraat bankasi"
+   ]
+  },
+  {
+   "id": "isbank",
+   "ad": "Türkiye İş Bankası",
+   "si": null,
+   "renk": "#0A3A87",
+   "rozet": "İş",
+   "alanlar": [
+    "isbank.com.tr"
+   ],
+   "anahtarlar": [
+    "is bankasi",
+    "isbank",
+    "is bank",
+    "isbankasi"
+   ]
+  },
+  {
+   "id": "garanti",
+   "ad": "Garanti BBVA",
+   "si": null,
+   "renk": "#00854A",
+   "rozet": "G",
+   "alanlar": [
+    "garantibbva.com.tr",
+    "garanti.com.tr"
+   ],
+   "anahtarlar": [
+    "garanti",
+    "garanti bbva",
+    "bonus card"
+   ]
+  },
+  {
+   "id": "akbank",
+   "ad": "Akbank",
+   "si": null,
+   "renk": "#DC0005",
+   "rozet": "A",
+   "alanlar": [
+    "akbank.com"
+   ],
+   "anahtarlar": [
+    "akbank",
+    "axess"
+   ]
+  },
+  {
+   "id": "yapikredi",
+   "ad": "Yapı Kredi",
+   "si": null,
+   "renk": "#004B93",
+   "rozet": "YK",
+   "alanlar": [
+    "yapikredi.com.tr"
+   ],
+   "anahtarlar": [
+    "yapi kredi",
+    "yapikredi",
+    "world card"
+   ]
+  },
+  {
+   "id": "halkbank",
+   "ad": "Halkbank",
+   "si": null,
+   "renk": "#0067B1",
+   "rozet": "H",
+   "alanlar": [
+    "halkbank.com.tr"
+   ],
+   "anahtarlar": [
+    "halkbank",
+    "halk bankasi",
+    "paraf"
+   ]
+  },
+  {
+   "id": "vakifbank",
+   "ad": "VakıfBank",
+   "si": null,
+   "renk": "#FBB900",
+   "rozet": "V",
+   "alanlar": [
+    "vakifbank.com.tr"
+   ],
+   "anahtarlar": [
+    "vakifbank",
+    "vakif bank",
+    "vakiflar bankasi"
+   ]
+  },
+  {
+   "id": "qnb",
+   "ad": "QNB",
+   "si": null,
+   "renk": "#6C2C78",
+   "rozet": "QNB",
+   "alanlar": [
+    "qnb.com.tr",
+    "qnbfinansbank.com"
+   ],
+   "anahtarlar": [
+    "qnb",
+    "finansbank",
+    "cardfinans"
+   ]
+  },
+  {
+   "id": "denizbank",
+   "ad": "DenizBank",
+   "si": null,
+   "renk": "#00447C",
+   "rozet": "D",
+   "alanlar": [
+    "denizbank.com"
+   ],
+   "anahtarlar": [
+    "denizbank",
+    "deniz bank"
+   ]
+  },
+  {
+   "id": "teb",
+   "ad": "TEB",
+   "si": null,
+   "renk": "#00A651",
+   "rozet": "TEB",
+   "alanlar": [
+    "teb.com.tr"
+   ],
+   "anahtarlar": [
+    "teb",
+    "turk ekonomi bankasi",
+    "cepteteb"
+   ]
+  },
+  {
+   "id": "ing",
+   "ad": "ING",
+   "si": null,
+   "renk": "#FF6200",
+   "rozet": "ING",
+   "alanlar": [
+    "ing.com.tr",
+    "ing.com",
+    "ing.de",
+    "ing.nl"
+   ],
+   "anahtarlar": [
+    "ing",
+    "ing bank"
+   ]
+  },
+  {
+   "id": "enpara",
+   "ad": "Enpara",
+   "si": null,
+   "renk": "#5A2D82",
+   "rozet": "E",
+   "alanlar": [
+    "enpara.com"
+   ],
+   "anahtarlar": [
+    "enpara"
+   ]
+  },
+  {
+   "id": "kuveytturk",
+   "ad": "Kuveyt Türk",
+   "si": null,
+   "renk": "#00843D",
+   "rozet": "KT",
+   "alanlar": [
+    "kuveytturk.com.tr"
+   ],
+   "anahtarlar": [
+    "kuveyt turk",
+    "kuveytturk"
+   ]
+  },
+  {
+   "id": "sekerbank",
+   "ad": "Şekerbank",
+   "si": null,
+   "renk": "#0091D5",
+   "rozet": "Ş",
+   "alanlar": [
+    "sekerbank.com.tr"
+   ],
+   "anahtarlar": [
+    "sekerbank"
+   ]
+  },
+  {
+   "id": "fibabanka",
+   "ad": "Fibabanka",
+   "si": null,
+   "renk": "#E2001A",
+   "rozet": "F",
+   "alanlar": [
+    "fibabanka.com.tr"
+   ],
+   "anahtarlar": [
+    "fibabanka"
+   ]
+  },
+  {
+   "id": "odeabank",
+   "ad": "Odeabank",
+   "si": null,
+   "renk": "#5B2C83",
+   "rozet": "O",
+   "alanlar": [
+    "odeabank.com.tr"
+   ],
+   "anahtarlar": [
+    "odeabank"
+   ]
+  },
+  {
+   "id": "albaraka",
+   "ad": "Albaraka Türk",
+   "si": null,
+   "renk": "#C8102E",
+   "rozet": "A",
+   "alanlar": [
+    "albaraka.com.tr"
+   ],
+   "anahtarlar": [
+    "albaraka"
+   ]
+  },
+  {
+   "id": "papara",
+   "ad": "Papara",
+   "si": null,
+   "renk": "#000000",
+   "rozet": "P",
+   "alanlar": [
+    "papara.com"
+   ],
+   "anahtarlar": [
+    "papara"
+   ]
+  },
+  {
+   "id": "midas",
+   "ad": "Midas",
+   "si": null,
+   "renk": "#1E1E2D",
+   "rozet": "M",
+   "alanlar": [
+    "getmidas.com"
+   ],
+   "anahtarlar": [
+    "midas"
+   ]
+  },
+  {
+   "id": "btcturk",
+   "ad": "BtcTurk",
+   "si": null,
+   "renk": "#1A6AE6",
+   "rozet": "B",
+   "alanlar": [
+    "btcturk.com"
+   ],
+   "anahtarlar": [
+    "btcturk"
+   ]
+  },
+  {
+   "id": "paribu",
+   "ad": "Paribu",
+   "si": null,
+   "renk": "#00C38C",
+   "rozet": "P",
+   "alanlar": [
+    "paribu.com"
+   ],
+   "anahtarlar": [
+    "paribu"
+   ]
+  },
+  {
+   "id": "edevlet",
+   "ad": "e-Devlet",
+   "si": null,
+   "renk": "#E30A17",
+   "rozet": "e",
+   "alanlar": [
+    "turkiye.gov.tr"
+   ],
+   "anahtarlar": [
+    "e devlet",
+    "edevlet",
+    "turkiye gov"
+   ]
+  },
+  {
+   "id": "gib",
+   "ad": "Gelir İdaresi",
+   "si": null,
+   "renk": "#1C3F94",
+   "rozet": "GİB",
+   "alanlar": [
+    "gib.gov.tr",
+    "ivd.gib.gov.tr",
+    "dijital.gib.gov.tr"
+   ],
+   "anahtarlar": [
+    "gib",
+    "gelir idaresi",
+    "interaktif vergi dairesi"
+   ]
+  },
+  {
+   "id": "sgk",
+   "ad": "SGK",
+   "si": null,
+   "renk": "#004A99",
+   "rozet": "SGK",
+   "alanlar": [
+    "sgk.gov.tr"
+   ],
+   "anahtarlar": [
+    "sgk",
+    "sosyal guvenlik"
+   ]
+  },
+  {
+   "id": "mhrs",
+   "ad": "MHRS",
+   "si": null,
+   "renk": "#C8102E",
+   "rozet": "M",
+   "alanlar": [
+    "mhrs.gov.tr"
+   ],
+   "anahtarlar": [
+    "mhrs"
+   ]
+  },
+  {
+   "id": "enabiz",
+   "ad": "e-Nabız",
+   "si": null,
+   "renk": "#00A3DA",
+   "rozet": "e",
+   "alanlar": [
+    "enabiz.gov.tr"
+   ],
+   "anahtarlar": [
+    "e nabiz",
+    "enabiz"
+   ]
+  },
+  {
+   "id": "uyap",
+   "ad": "UYAP",
+   "si": null,
+   "renk": "#8E1B2F",
+   "rozet": "U",
+   "alanlar": [
+    "uyap.gov.tr"
+   ],
+   "anahtarlar": [
+    "uyap"
+   ]
+  },
+  {
+   "id": "ptt",
+   "ad": "PTT",
+   "si": null,
+   "renk": "#FFCB05",
+   "rozet": "PTT",
+   "alanlar": [
+    "ptt.gov.tr"
+   ],
+   "anahtarlar": [
+    "ptt"
+   ]
+  },
+  {
+   "id": "osym",
+   "ad": "ÖSYM",
+   "si": null,
+   "renk": "#003A70",
+   "rozet": "Ö",
+   "alanlar": [
+    "osym.gov.tr",
+    "ais.osym.gov.tr"
+   ],
+   "anahtarlar": [
+    "osym"
+   ]
+  },
+  {
+   "id": "turkcell",
+   "ad": "Turkcell",
+   "si": null,
+   "renk": "#FFC72C",
+   "rozet": "T",
+   "alanlar": [
+    "turkcell.com.tr"
+   ],
+   "anahtarlar": [
+    "turkcell"
+   ]
+  },
+  {
+   "id": "turktelekom",
+   "ad": "Türk Telekom",
+   "si": null,
+   "renk": "#00A0E1",
+   "rozet": "TT",
+   "alanlar": [
+    "turktelekom.com.tr"
+   ],
+   "anahtarlar": [
+    "turk telekom",
+    "turktelekom"
+   ]
+  },
+  {
+   "id": "vodafone",
+   "ad": "Vodafone",
+   "si": "vodafone",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "vodafone.com.tr",
+    "vodafone.com"
+   ],
+   "anahtarlar": [
+    "Vodafone"
+   ]
+  },
+  {
+   "id": "trendyol",
+   "ad": "Trendyol",
+   "si": null,
+   "renk": "#F27A1A",
+   "rozet": "t",
+   "alanlar": [
+    "trendyol.com"
+   ],
+   "anahtarlar": [
+    "trendyol"
+   ]
+  },
+  {
+   "id": "hepsiburada",
+   "ad": "Hepsiburada",
+   "si": null,
+   "renk": "#FF6000",
+   "rozet": "h",
+   "alanlar": [
+    "hepsiburada.com"
+   ],
+   "anahtarlar": [
+    "hepsiburada"
+   ]
+  },
+  {
+   "id": "getir",
+   "ad": "Getir",
+   "si": null,
+   "renk": "#5D3EBC",
+   "rozet": "g",
+   "alanlar": [
+    "getir.com"
+   ],
+   "anahtarlar": [
+    "getir"
+   ]
+  },
+  {
+   "id": "yemeksepeti",
+   "ad": "Yemeksepeti",
+   "si": null,
+   "renk": "#EA004B",
+   "rozet": "y",
+   "alanlar": [
+    "yemeksepeti.com"
+   ],
+   "anahtarlar": [
+    "yemeksepeti",
+    "yemek sepeti"
+   ]
+  },
+  {
+   "id": "sahibinden",
+   "ad": "Sahibinden",
+   "si": "sahibinden",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "sahibinden.com"
+   ],
+   "anahtarlar": [
+    "Sahibinden"
+   ]
+  },
+  {
+   "id": "turkishairlines",
+   "ad": "Turkish Airlines",
+   "si": "turkishairlines",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "turkishairlines.com",
+    "thy.com"
+   ],
+   "anahtarlar": [
+    "turkish airlines",
+    "thy",
+    "miles smiles",
+    "miles and smiles"
+   ]
+  },
+  {
+   "id": "pegasus",
+   "ad": "Pegasus",
+   "si": null,
+   "renk": "#FDC43E",
+   "rozet": "P",
+   "alanlar": [
+    "flypgs.com"
+   ],
+   "anahtarlar": [
+    "pegasus",
+    "flypgs"
+   ]
+  },
+  {
+   "id": "google",
+   "ad": "Google",
+   "si": "google",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "google.com",
+    "accounts.google.com",
+    "myaccount.google.com"
+   ],
+   "anahtarlar": [
+    "google",
+    "google hesabi",
+    "google account"
+   ]
+  },
+  {
+   "id": "gmail",
+   "ad": "Gmail",
+   "si": "gmail",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "mail.google.com",
+    "gmail.com"
+   ],
+   "anahtarlar": [
+    "Gmail"
+   ]
+  },
+  {
+   "id": "googledrive",
+   "ad": "Google Drive",
+   "si": "googledrive",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "drive.google.com"
+   ],
+   "anahtarlar": [
+    "Google Drive"
+   ]
+  },
+  {
+   "id": "googlecloud",
+   "ad": "Google Cloud",
+   "si": "googlecloud",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "cloud.google.com",
+    "console.cloud.google.com"
+   ],
+   "anahtarlar": [
+    "google cloud",
+    "gcp"
+   ]
+  },
+  {
+   "id": "googleplay",
+   "ad": "Google Play",
+   "si": "googleplay",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "play.google.com"
+   ],
+   "anahtarlar": [
+    "google play",
+    "play console"
+   ]
+  },
+  {
+   "id": "googlepay",
+   "ad": "Google Pay",
+   "si": "googlepay",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "pay.google.com"
+   ],
+   "anahtarlar": [
+    "Google Pay"
+   ]
+  },
+  {
+   "id": "apple",
+   "ad": "Apple",
+   "si": "apple",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "apple.com",
+    "appleid.apple.com",
+    "account.apple.com"
+   ],
+   "anahtarlar": [
+    "apple",
+    "apple id",
+    "appleid",
+    "apple hesabi"
+   ]
+  },
+  {
+   "id": "icloud",
+   "ad": "iCloud",
+   "si": "icloud",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "icloud.com"
+   ],
+   "anahtarlar": [
+    "iCloud"
+   ]
+  },
+  {
+   "id": "appstore",
+   "ad": "App Store",
+   "si": "appstore",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "appstoreconnect.apple.com",
+    "developer.apple.com"
+   ],
+   "anahtarlar": [
+    "app store",
+    "app store connect",
+    "apple developer"
+   ]
+  },
+  {
+   "id": "microsoft",
+   "ad": "Microsoft",
+   "si": null,
+   "renk": "#737373",
+   "rozet": "M",
+   "alanlar": [
+    "microsoft.com",
+    "account.microsoft.com",
+    "login.microsoftonline.com",
+    "office.com",
+    "microsoft365.com"
+   ],
+   "anahtarlar": [
+    "microsoft",
+    "microsoft hesabi",
+    "office 365",
+    "microsoft 365"
+   ]
+  },
+  {
+   "id": "outlook",
+   "ad": "Outlook",
+   "si": null,
+   "renk": "#0078D4",
+   "rozet": "O",
+   "alanlar": [
+    "outlook.com",
+    "outlook.live.com",
+    "hotmail.com",
+    "live.com"
+   ],
+   "anahtarlar": [
+    "outlook",
+    "hotmail"
+   ]
+  },
+  {
+   "id": "protonmail",
+   "ad": "Proton Mail",
+   "si": "protonmail",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "proton.me",
+    "mail.proton.me",
+    "protonmail.com"
+   ],
+   "anahtarlar": [
+    "proton mail",
+    "protonmail",
+    "proton"
+   ]
+  },
+  {
+   "id": "yahoo",
+   "ad": "Yahoo",
+   "si": null,
+   "renk": "#6001D2",
+   "rozet": "Y!",
+   "alanlar": [
+    "yahoo.com",
+    "mail.yahoo.com"
+   ],
+   "anahtarlar": [
+    "yahoo"
+   ]
+  },
+  {
+   "id": "yandex",
+   "ad": "Yandex",
+   "si": null,
+   "renk": "#FC3F1D",
+   "rozet": "Y",
+   "alanlar": [
+    "yandex.com",
+    "yandex.com.tr",
+    "yandex.ru"
+   ],
+   "anahtarlar": [
+    "yandex"
+   ]
+  },
+  {
+   "id": "dropbox",
+   "ad": "Dropbox",
+   "si": "dropbox",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "dropbox.com"
+   ],
+   "anahtarlar": [
+    "Dropbox"
+   ]
+  },
+  {
+   "id": "facebook",
+   "ad": "Facebook",
+   "si": "facebook",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "facebook.com",
+    "fb.com"
+   ],
+   "anahtarlar": [
+    "Facebook"
+   ]
+  },
+  {
+   "id": "instagram",
+   "ad": "Instagram",
+   "si": "instagram",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "instagram.com"
+   ],
+   "anahtarlar": [
+    "Instagram"
+   ]
+  },
+  {
+   "id": "x",
+   "ad": "X (Twitter)",
+   "si": "x",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "x.com",
+    "twitter.com"
+   ],
+   "anahtarlar": [
+    "twitter"
+   ]
+  },
+  {
+   "id": "linkedin",
+   "ad": "LinkedIn",
+   "si": null,
+   "renk": "#0A66C2",
+   "rozet": "in",
+   "alanlar": [
+    "linkedin.com"
+   ],
+   "anahtarlar": [
+    "linkedin"
+   ]
+  },
+  {
+   "id": "tiktok",
+   "ad": "TikTok",
+   "si": "tiktok",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "tiktok.com"
+   ],
+   "anahtarlar": [
+    "TikTok"
+   ]
+  },
+  {
+   "id": "youtube",
+   "ad": "YouTube",
+   "si": "youtube",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "youtube.com",
+    "studio.youtube.com"
+   ],
+   "anahtarlar": [
+    "YouTube"
+   ]
+  },
+  {
+   "id": "reddit",
+   "ad": "Reddit",
+   "si": "reddit",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "reddit.com"
+   ],
+   "anahtarlar": [
+    "Reddit"
+   ]
+  },
+  {
+   "id": "pinterest",
+   "ad": "Pinterest",
+   "si": "pinterest",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "pinterest.com"
+   ],
+   "anahtarlar": [
+    "Pinterest"
+   ]
+  },
+  {
+   "id": "snapchat",
+   "ad": "Snapchat",
+   "si": "snapchat",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "snapchat.com"
+   ],
+   "anahtarlar": [
+    "Snapchat"
+   ]
+  },
+  {
+   "id": "threads",
+   "ad": "Threads",
+   "si": "threads",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "threads.net",
+    "threads.com"
+   ],
+   "anahtarlar": []
+  },
+  {
+   "id": "bluesky",
+   "ad": "Bluesky",
+   "si": "bluesky",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "bsky.app"
+   ],
+   "anahtarlar": [
+    "Bluesky"
+   ]
+  },
+  {
+   "id": "mastodon",
+   "ad": "Mastodon",
+   "si": "mastodon",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "mastodon.social"
+   ],
+   "anahtarlar": [
+    "Mastodon"
+   ]
+  },
+  {
+   "id": "telegram",
+   "ad": "Telegram",
+   "si": "telegram",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "telegram.org",
+    "web.telegram.org"
+   ],
+   "anahtarlar": [
+    "Telegram"
+   ]
+  },
+  {
+   "id": "whatsapp",
+   "ad": "WhatsApp",
+   "si": "whatsapp",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "whatsapp.com",
+    "web.whatsapp.com"
+   ],
+   "anahtarlar": [
+    "WhatsApp"
+   ]
+  },
+  {
+   "id": "signal",
+   "ad": "Signal",
+   "si": "signal",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "signal.org"
+   ],
+   "anahtarlar": []
+  },
+  {
+   "id": "discord",
+   "ad": "Discord",
+   "si": "discord",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "discord.com"
+   ],
+   "anahtarlar": [
+    "Discord"
+   ]
+  },
+  {
+   "id": "twitch",
+   "ad": "Twitch",
+   "si": "twitch",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "twitch.tv"
+   ],
+   "anahtarlar": [
+    "Twitch"
+   ]
+  },
+  {
+   "id": "slack",
+   "ad": "Slack",
+   "si": null,
+   "renk": "#4A154B",
+   "rozet": "S",
+   "alanlar": [
+    "slack.com"
+   ],
+   "anahtarlar": [
+    "slack"
+   ]
+  },
+  {
+   "id": "zoom",
+   "ad": "Zoom",
+   "si": null,
+   "renk": "#0B5CFF",
+   "rozet": "Z",
+   "alanlar": [
+    "zoom.us"
+   ],
+   "anahtarlar": []
+  },
+  {
+   "id": "github",
+   "ad": "GitHub",
+   "si": "github",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "github.com"
+   ],
+   "anahtarlar": [
+    "GitHub"
+   ]
+  },
+  {
+   "id": "gitlab",
+   "ad": "GitLab",
+   "si": "gitlab",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "gitlab.com"
+   ],
+   "anahtarlar": [
+    "GitLab"
+   ]
+  },
+  {
+   "id": "bitbucket",
+   "ad": "Bitbucket",
+   "si": "bitbucket",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "bitbucket.org"
+   ],
+   "anahtarlar": [
+    "Bitbucket"
+   ]
+  },
+  {
+   "id": "aws",
+   "ad": "AWS",
+   "si": null,
+   "renk": "#232F3E",
+   "rozet": "AWS",
+   "alanlar": [
+    "aws.amazon.com",
+    "console.aws.amazon.com",
+    "signin.aws.amazon.com"
+   ],
+   "anahtarlar": [
+    "aws",
+    "amazon web services"
+   ]
+  },
+  {
+   "id": "cloudflare",
+   "ad": "Cloudflare",
+   "si": "cloudflare",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "cloudflare.com",
+    "dash.cloudflare.com"
+   ],
+   "anahtarlar": [
+    "Cloudflare"
+   ]
+  },
+  {
+   "id": "digitalocean",
+   "ad": "DigitalOcean",
+   "si": "digitalocean",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "digitalocean.com"
+   ],
+   "anahtarlar": [
+    "DigitalOcean"
+   ]
+  },
+  {
+   "id": "hetzner",
+   "ad": "Hetzner",
+   "si": "hetzner",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "hetzner.com",
+    "console.hetzner.cloud",
+    "hetzner.cloud"
+   ],
+   "anahtarlar": [
+    "Hetzner"
+   ]
+  },
+  {
+   "id": "vercel",
+   "ad": "Vercel",
+   "si": "vercel",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "vercel.com"
+   ],
+   "anahtarlar": [
+    "Vercel"
+   ]
+  },
+  {
+   "id": "netlify",
+   "ad": "Netlify",
+   "si": "netlify",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "netlify.com",
+    "app.netlify.com"
+   ],
+   "anahtarlar": [
+    "Netlify"
+   ]
+  },
+  {
+   "id": "docker",
+   "ad": "Docker",
+   "si": "docker",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "docker.com",
+    "hub.docker.com"
+   ],
+   "anahtarlar": [
+    "docker",
+    "docker hub"
+   ]
+  },
+  {
+   "id": "npm",
+   "ad": "npm",
+   "si": "npm",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "npmjs.com"
+   ],
+   "anahtarlar": [
+    "npm",
+    "npmjs"
+   ]
+  },
+  {
+   "id": "pypi",
+   "ad": "PyPI",
+   "si": "pypi",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "pypi.org"
+   ],
+   "anahtarlar": [
+    "PyPI"
+   ]
+  },
+  {
+   "id": "firebase",
+   "ad": "Firebase",
+   "si": "firebase",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "firebase.google.com",
+    "console.firebase.google.com"
+   ],
+   "anahtarlar": [
+    "Firebase"
+   ]
+  },
+  {
+   "id": "supabase",
+   "ad": "Supabase",
+   "si": "supabase",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "supabase.com"
+   ],
+   "anahtarlar": [
+    "Supabase"
+   ]
+  },
+  {
+   "id": "jetbrains",
+   "ad": "JetBrains",
+   "si": "jetbrains",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "jetbrains.com",
+    "account.jetbrains.com"
+   ],
+   "anahtarlar": [
+    "JetBrains"
+   ]
+  },
+  {
+   "id": "atlassian",
+   "ad": "Atlassian",
+   "si": "atlassian",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "atlassian.com",
+    "id.atlassian.com",
+    "atlassian.net"
+   ],
+   "anahtarlar": [
+    "Atlassian"
+   ]
+  },
+  {
+   "id": "jira",
+   "ad": "Jira",
+   "si": "jira",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [],
+   "anahtarlar": [
+    "jira"
+   ]
+  },
+  {
+   "id": "notion",
+   "ad": "Notion",
+   "si": "notion",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "notion.so",
+    "notion.com"
+   ],
+   "anahtarlar": [
+    "Notion"
+   ]
+  },
+  {
+   "id": "figma",
+   "ad": "Figma",
+   "si": "figma",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "figma.com"
+   ],
+   "anahtarlar": [
+    "Figma"
+   ]
+  },
+  {
+   "id": "chatgpt",
+   "ad": "ChatGPT",
+   "si": null,
+   "renk": "#10A37F",
+   "rozet": "AI",
+   "alanlar": [
+    "chatgpt.com",
+    "openai.com",
+    "platform.openai.com"
+   ],
+   "anahtarlar": [
+    "chatgpt",
+    "openai"
+   ]
+  },
+  {
+   "id": "claude",
+   "ad": "Claude",
+   "si": "claude",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "claude.ai"
+   ],
+   "anahtarlar": [
+    "Claude"
+   ]
+  },
+  {
+   "id": "anthropic",
+   "ad": "Anthropic",
+   "si": "anthropic",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "anthropic.com",
+    "console.anthropic.com",
+    "platform.claude.com"
+   ],
+   "anahtarlar": [
+    "Anthropic"
+   ]
+  },
+  {
+   "id": "tailscale",
+   "ad": "Tailscale",
+   "si": "tailscale",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "tailscale.com",
+    "login.tailscale.com"
+   ],
+   "anahtarlar": [
+    "Tailscale"
+   ]
+  },
+  {
+   "id": "namecheap",
+   "ad": "Namecheap",
+   "si": "namecheap",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "namecheap.com"
+   ],
+   "anahtarlar": [
+    "Namecheap"
+   ]
+  },
+  {
+   "id": "godaddy",
+   "ad": "GoDaddy",
+   "si": "godaddy",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "godaddy.com"
+   ],
+   "anahtarlar": [
+    "GoDaddy"
+   ]
+  },
+  {
+   "id": "amazon",
+   "ad": "Amazon",
+   "si": null,
+   "renk": "#FF9900",
+   "rozet": "a",
+   "alanlar": [
+    "amazon.com",
+    "amazon.com.tr",
+    "amazon.de",
+    "amazon.co.uk"
+   ],
+   "anahtarlar": [
+    "amazon"
+   ]
+  },
+  {
+   "id": "ebay",
+   "ad": "eBay",
+   "si": "ebay",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "ebay.com"
+   ],
+   "anahtarlar": [
+    "eBay"
+   ]
+  },
+  {
+   "id": "aliexpress",
+   "ad": "AliExpress",
+   "si": null,
+   "renk": "#FF4747",
+   "rozet": "A",
+   "alanlar": [
+    "aliexpress.com"
+   ],
+   "anahtarlar": [
+    "AliExpress"
+   ]
+  },
+  {
+   "id": "etsy",
+   "ad": "Etsy",
+   "si": "etsy",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "etsy.com"
+   ],
+   "anahtarlar": [
+    "Etsy"
+   ]
+  },
+  {
+   "id": "netflix",
+   "ad": "Netflix",
+   "si": "netflix",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "netflix.com"
+   ],
+   "anahtarlar": [
+    "Netflix"
+   ]
+  },
+  {
+   "id": "spotify",
+   "ad": "Spotify",
+   "si": "spotify",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "spotify.com",
+    "accounts.spotify.com"
+   ],
+   "anahtarlar": [
+    "Spotify"
+   ]
+  },
+  {
+   "id": "applemusic",
+   "ad": "Apple Music",
+   "si": "applemusic",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "music.apple.com"
+   ],
+   "anahtarlar": [
+    "Apple Music"
+   ]
+  },
+  {
+   "id": "youtubemusic",
+   "ad": "YouTube Music",
+   "si": "youtubemusic",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "music.youtube.com"
+   ],
+   "anahtarlar": [
+    "YouTube Music"
+   ]
+  },
+  {
+   "id": "primevideo",
+   "ad": "Prime Video",
+   "si": null,
+   "renk": "#00A8E1",
+   "rozet": "P",
+   "alanlar": [
+    "primevideo.com"
+   ],
+   "anahtarlar": [
+    "prime video",
+    "amazon prime"
+   ]
+  },
+  {
+   "id": "disneyplus",
+   "ad": "Disney+",
+   "si": null,
+   "renk": "#113CCF",
+   "rozet": "D+",
+   "alanlar": [
+    "disneyplus.com"
+   ],
+   "anahtarlar": [
+    "disney+",
+    "disney plus",
+    "disneyplus"
+   ]
+  },
+  {
+   "id": "steam",
+   "ad": "Steam",
+   "si": "steam",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "steampowered.com",
+    "store.steampowered.com",
+    "steamcommunity.com"
+   ],
+   "anahtarlar": [
+    "Steam"
+   ]
+  },
+  {
+   "id": "playstation",
+   "ad": "PlayStation",
+   "si": "playstation",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "playstation.com",
+    "sony.com"
+   ],
+   "anahtarlar": [
+    "playstation",
+    "psn"
+   ]
+  },
+  {
+   "id": "xbox",
+   "ad": "Xbox",
+   "si": null,
+   "renk": "#107C10",
+   "rozet": "X",
+   "alanlar": [
+    "xbox.com"
+   ],
+   "anahtarlar": [
+    "xbox"
+   ]
+  },
+  {
+   "id": "epicgames",
+   "ad": "Epic Games",
+   "si": "epicgames",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "epicgames.com"
+   ],
+   "anahtarlar": [
+    "Epic Games"
+   ]
+  },
+  {
+   "id": "airbnb",
+   "ad": "Airbnb",
+   "si": "airbnb",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "airbnb.com",
+    "airbnb.com.tr"
+   ],
+   "anahtarlar": [
+    "Airbnb"
+   ]
+  },
+  {
+   "id": "booking",
+   "ad": "Booking.com",
+   "si": null,
+   "renk": "#003580",
+   "rozet": "B",
+   "alanlar": [
+    "booking.com"
+   ],
+   "anahtarlar": [
+    "booking",
+    "booking com"
+   ]
+  },
+  {
+   "id": "uber",
+   "ad": "Uber",
+   "si": "uber",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "uber.com"
+   ],
+   "anahtarlar": [
+    "Uber"
+   ]
+  },
+  {
+   "id": "duolingo",
+   "ad": "Duolingo",
+   "si": "duolingo",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "duolingo.com"
+   ],
+   "anahtarlar": [
+    "Duolingo"
+   ]
+  },
+  {
+   "id": "paypal",
+   "ad": "PayPal",
+   "si": "paypal",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "paypal.com"
+   ],
+   "anahtarlar": [
+    "PayPal"
+   ]
+  },
+  {
+   "id": "wise",
+   "ad": "Wise",
+   "si": "wise",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "wise.com",
+    "transferwise.com"
+   ],
+   "anahtarlar": [
+    "wise",
+    "transferwise"
+   ]
+  },
+  {
+   "id": "revolut",
+   "ad": "Revolut",
+   "si": "revolut",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "revolut.com"
+   ],
+   "anahtarlar": [
+    "Revolut"
+   ]
+  },
+  {
+   "id": "n26",
+   "ad": "N26",
+   "si": "n26",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "n26.com"
+   ],
+   "anahtarlar": [
+    "N26"
+   ]
+  },
+  {
+   "id": "monzo",
+   "ad": "Monzo",
+   "si": "monzo",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "monzo.com"
+   ],
+   "anahtarlar": [
+    "Monzo"
+   ]
+  },
+  {
+   "id": "stripe",
+   "ad": "Stripe",
+   "si": "stripe",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "stripe.com",
+    "dashboard.stripe.com"
+   ],
+   "anahtarlar": [
+    "Stripe"
+   ]
+  },
+  {
+   "id": "visa",
+   "ad": "Visa",
+   "si": "visa",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "visa.com"
+   ],
+   "anahtarlar": []
+  },
+  {
+   "id": "mastercard",
+   "ad": "Mastercard",
+   "si": "mastercard",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "mastercard.com"
+   ],
+   "anahtarlar": []
+  },
+  {
+   "id": "amex",
+   "ad": "American Express",
+   "si": null,
+   "renk": "#2E77BC",
+   "rozet": "AX",
+   "alanlar": [
+    "americanexpress.com"
+   ],
+   "anahtarlar": [
+    "american express",
+    "amex"
+   ]
+  },
+  {
+   "id": "hsbc",
+   "ad": "HSBC",
+   "si": "hsbc",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "hsbc.com",
+    "hsbc.com.tr",
+    "hsbc.co.uk"
+   ],
+   "anahtarlar": [
+    "HSBC"
+   ]
+  },
+  {
+   "id": "barclays",
+   "ad": "Barclays",
+   "si": "barclays",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "barclays.co.uk",
+    "barclays.com"
+   ],
+   "anahtarlar": [
+    "Barclays"
+   ]
+  },
+  {
+   "id": "deutschebank",
+   "ad": "Deutsche Bank",
+   "si": "deutschebank",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "deutsche-bank.de",
+    "db.com"
+   ],
+   "anahtarlar": [
+    "Deutsche Bank"
+   ]
+  },
+  {
+   "id": "chase",
+   "ad": "Chase",
+   "si": "chase",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "chase.com"
+   ],
+   "anahtarlar": [
+    "Chase"
+   ]
+  },
+  {
+   "id": "bankofamerica",
+   "ad": "Bank of America",
+   "si": "bankofamerica",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "bankofamerica.com"
+   ],
+   "anahtarlar": [
+    "Bank of America"
+   ]
+  },
+  {
+   "id": "wellsfargo",
+   "ad": "Wells Fargo",
+   "si": null,
+   "renk": "#D71E28",
+   "rozet": "WF",
+   "alanlar": [
+    "wellsfargo.com"
+   ],
+   "anahtarlar": [
+    "Wells Fargo"
+   ]
+  },
+  {
+   "id": "binance",
+   "ad": "Binance",
+   "si": "binance",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "binance.com",
+    "binance.tr"
+   ],
+   "anahtarlar": [
+    "binance",
+    "binance tr"
+   ]
+  },
+  {
+   "id": "coinbase",
+   "ad": "Coinbase",
+   "si": null,
+   "renk": "#0052FF",
+   "rozet": "C",
+   "alanlar": [
+    "coinbase.com"
+   ],
+   "anahtarlar": [
+    "Coinbase"
+   ]
+  },
+  {
+   "id": "kraken",
+   "ad": "Kraken",
+   "si": null,
+   "renk": "#5741D9",
+   "rozet": "K",
+   "alanlar": [
+    "kraken.com"
+   ],
+   "anahtarlar": [
+    "kraken"
+   ]
+  },
+  {
+   "id": "okx",
+   "ad": "OKX",
+   "si": "okx",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "okx.com"
+   ],
+   "anahtarlar": [
+    "OKX"
+   ]
+  },
+  {
+   "id": "tradingview",
+   "ad": "TradingView",
+   "si": "tradingview",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "tradingview.com"
+   ],
+   "anahtarlar": [
+    "TradingView"
+   ]
+  },
+  {
+   "id": "bitwarden",
+   "ad": "Bitwarden",
+   "si": "bitwarden",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "bitwarden.com",
+    "vault.bitwarden.com"
+   ],
+   "anahtarlar": [
+    "Bitwarden"
+   ]
+  },
+  {
+   "id": "1password",
+   "ad": "1Password",
+   "si": "1password",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "1password.com"
+   ],
+   "anahtarlar": [
+    "1Password"
+   ]
+  },
+  {
+   "id": "samsung",
+   "ad": "Samsung",
+   "si": null,
+   "renk": "#1428A0",
+   "rozet": "S",
+   "alanlar": [
+    "samsung.com",
+    "account.samsung.com"
+   ],
+   "anahtarlar": [
+    "samsung",
+    "samsung hesabi",
+    "samsung account"
+   ]
+  },
+  {
+   "id": "xiaomi",
+   "ad": "Xiaomi",
+   "si": "xiaomi",
+   "renk": null,
+   "rozet": null,
+   "alanlar": [
+    "mi.com",
+    "account.xiaomi.com"
+   ],
+   "anahtarlar": [
+    "xiaomi",
+    "mi hesabi",
+    "mi account"
+   ]
+  }
+ ]
+}

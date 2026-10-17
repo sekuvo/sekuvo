@@ -1,0 +1,239 @@
+{
+ "_aciklama": "Kurum logosu eşleşme kuralı (markalar/README.md). Android Brands ve iOS Brands aynı değerlerle sınanır.",
+ "durumlar": [
+  {
+   "ad": "alan adı tam",
+   "baslik": "Banka",
+   "adres": "https://www.garantibbva.com.tr/giris",
+   "secim": "",
+   "kart": false,
+   "kartNo": "",
+   "beklenen": "garanti"
+  },
+  {
+   "ad": "alt alan adı en uzun kazanır",
+   "baslik": "Mail",
+   "adres": "mail.google.com",
+   "secim": "",
+   "kart": false,
+   "kartNo": "",
+   "beklenen": "gmail"
+  },
+  {
+   "ad": "üst alan adı",
+   "baslik": "Hesap",
+   "adres": "https://accounts.google.com",
+   "secim": "",
+   "kart": false,
+   "kartNo": "",
+   "beklenen": "google"
+  },
+  {
+   "ad": "kapı ve kullanıcı atılır",
+   "baslik": "",
+   "adres": "https://ali@github.com:443/x",
+   "secim": "",
+   "kart": false,
+   "kartNo": "",
+   "beklenen": "github"
+  },
+  {
+   "ad": "alan adı başlıktan önce",
+   "baslik": "Netflix",
+   "adres": "https://www.akbank.com",
+   "secim": "",
+   "kart": false,
+   "kartNo": "",
+   "beklenen": "akbank"
+  },
+  {
+   "ad": "eşleşmeyen alan adı başlığa düşer",
+   "baslik": "Akbank kart",
+   "adres": "https://example.com",
+   "secim": "",
+   "kart": false,
+   "kartNo": "",
+   "beklenen": "akbank"
+  },
+  {
+   "ad": "Türkçe büyük İ ve Ş",
+   "baslik": "TÜRKİYE İŞ BANKASI",
+   "adres": "",
+   "secim": "",
+   "kart": false,
+   "kartNo": "",
+   "beklenen": "isbank"
+  },
+  {
+   "ad": "Türkçe ı",
+   "baslik": "Yapı Kredi World",
+   "adres": "",
+   "secim": "",
+   "kart": false,
+   "kartNo": "",
+   "beklenen": "yapikredi"
+  },
+  {
+   "ad": "noktalı büyük İ katlanır",
+   "baslik": "VAKIFBANK",
+   "adres": "",
+   "secim": "",
+   "kart": false,
+   "kartNo": "",
+   "beklenen": "vakifbank"
+  },
+  {
+   "ad": "en uzun anahtar kazanır",
+   "baslik": "Amazon Web Services root",
+   "adres": "",
+   "secim": "",
+   "kart": false,
+   "kartNo": "",
+   "beklenen": "aws"
+  },
+  {
+   "ad": "kısa anahtar tam sözcük",
+   "baslik": "ING Bank",
+   "adres": "",
+   "secim": "",
+   "kart": false,
+   "kartNo": "",
+   "beklenen": "ing"
+  },
+  {
+   "ad": "kısa anahtar sözcük içinde eşleşmez",
+   "baslik": "Swing dersi",
+   "adres": "",
+   "secim": "",
+   "kart": false,
+   "kartNo": "",
+   "beklenen": null
+  },
+  {
+   "ad": "kısa anahtar Türkçe sözcük içinde eşleşmez",
+   "baslik": "İngilizce kurs",
+   "adres": "",
+   "secim": "",
+   "kart": false,
+   "kartNo": "",
+   "beklenen": null
+  },
+  {
+   "ad": "anahtarsız marka başlıkla eşleşmez",
+   "baslik": "Threads",
+   "adres": "",
+   "secim": "",
+   "kart": false,
+   "kartNo": "",
+   "beklenen": null
+  },
+  {
+   "ad": "X başlıkla değil Twitter ile",
+   "baslik": "Twitter",
+   "adres": "",
+   "secim": "",
+   "kart": false,
+   "kartNo": "",
+   "beklenen": "x"
+  },
+  {
+   "ad": "tek harf X eşleşmez",
+   "baslik": "X",
+   "adres": "",
+   "secim": "",
+   "kart": false,
+   "kartNo": "",
+   "beklenen": null
+  },
+  {
+   "ad": "seçim: yok",
+   "baslik": "GitHub",
+   "adres": "github.com",
+   "secim": "none",
+   "kart": false,
+   "kartNo": "",
+   "beklenen": null
+  },
+  {
+   "ad": "seçim: açık marka",
+   "baslik": "Sunucu",
+   "adres": "",
+   "secim": "hetzner",
+   "kart": false,
+   "kartNo": "",
+   "beklenen": "hetzner"
+  },
+  {
+   "ad": "bilinmeyen seçim otomatiğe düşer",
+   "baslik": "GitHub",
+   "adres": "",
+   "secim": "eski-marka",
+   "kart": false,
+   "kartNo": "",
+   "beklenen": "github"
+  },
+  {
+   "ad": "kart: başlık ağdan önce",
+   "baslik": "Garanti Bonus",
+   "adres": "",
+   "secim": "",
+   "kart": true,
+   "kartNo": "4242424242424242",
+   "beklenen": "garanti"
+  },
+  {
+   "ad": "kart: Visa",
+   "baslik": "Kartım",
+   "adres": "",
+   "secim": "",
+   "kart": true,
+   "kartNo": "4242 4242 4242 4242",
+   "beklenen": "visa"
+  },
+  {
+   "ad": "kart: Mastercard 5",
+   "baslik": "Kart",
+   "adres": "",
+   "secim": "",
+   "kart": true,
+   "kartNo": "5555555555554444",
+   "beklenen": "mastercard"
+  },
+  {
+   "ad": "kart: Mastercard 2",
+   "baslik": "Kart",
+   "adres": "",
+   "secim": "",
+   "kart": true,
+   "kartNo": "2223000048400011",
+   "beklenen": "mastercard"
+  },
+  {
+   "ad": "kart: Amex",
+   "baslik": "Kart",
+   "adres": "",
+   "secim": "",
+   "kart": true,
+   "kartNo": "378282246310005",
+   "beklenen": "amex"
+  },
+  {
+   "ad": "kart olmayan kayıtta ağ aranmaz",
+   "baslik": "Not",
+   "adres": "",
+   "secim": "",
+   "kart": false,
+   "kartNo": "4242424242424242",
+   "beklenen": null
+  },
+  {
+   "ad": "adres yalnız sözcükse alan adı değildir",
+   "baslik": "",
+   "adres": "garanti",
+   "secim": "",
+   "kart": false,
+   "kartNo": "",
+   "beklenen": null
+  }
+ ]
+}

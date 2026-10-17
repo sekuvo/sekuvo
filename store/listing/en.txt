@@ -31,8 +31,10 @@ to their destination in three ways:
 • Sekuvo Keyboard — type a stored secret into any field, in any app
 • Bluetooth — your phone becomes a keyboard and types into your computer, with
   nothing installed on the computer (Windows, macOS, Linux)
-Copying still works, and the clipboard is cleared automatically after 45
-seconds.
+Copying still works. The clipboard clears after 45 seconds while Sekuvo is
+on screen, or the moment you return to it: Android does not let an app clear
+the clipboard from the background, so a copied value stays there until you
+come back.
 
 LOCKING
 The vault locks the moment the screen it is on goes dark — including folding a

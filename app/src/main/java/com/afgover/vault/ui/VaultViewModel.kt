@@ -36,6 +36,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import com.afgover.vault.core.Brands
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -172,6 +176,25 @@ class VaultViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+
+    /**
+     * Kayıt kimliği → kurum logosu kimliği. Adres ve elle seçim şifreli veride
+     * durduğu için eşleşme kilit açıkken bellekte hesaplanır; veritabanına açık
+     * yazılmaz (başlık zaten açıkta, adres değil; o sınır genişlemez).
+     * Kilitliyken boş.
+     */
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val brands: StateFlow<Map<Long, String>> = combine(repo.observeAll(), VaultSession.unlocked) { _, acik -> acik }
+        .mapLatest { acik ->
+            val key = if (acik) VaultSession.key() else null
+            if (key == null) emptyMap() else withContext(Dispatchers.IO) {
+                repo.getAllDecrypted(key).mapNotNull { e ->
+                    Brands.match(e.title, e.data.url, e.data.brand, e.type == EntryType.CARD, e.data.cardNumber)
+                        ?.let { e.id to it.id }
+                }.toMap()
+            }
+        }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyMap())
 
     val tags: StateFlow<List<TagEntity>> = repo.observeTags()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())

@@ -681,4 +681,12 @@
     <string name="tour_backup_body">مرمز \u2068.vaultbak\u2069 بیک اپ جہاں چاہیں محفوظ کریں۔ فائل اور اس کا پاس ورڈ نئے فون پر بھی سب کچھ واپس لے آتے ہیں۔</string>
     <string name="tour_bt_title">کمپیوٹر پر کی بورڈ کی طرح ٹائپ کریں</string>
     <string name="tour_bt_body">فون بلوٹوتھ کی بورڈ کے طور پر کمپیوٹر سے جڑتا ہے اور جہاں کرسر ہو وہاں پاس ورڈ حرف بہ حرف ٹائپ کرتا ہے۔ کمپیوٹر پر کچھ بھی انسٹال نہیں ہوتا۔ آئیے مل کر، براہِ راست، اسے سیٹ اپ کریں۔</string>
+    <string name="edit_brand_title">لوگو</string>
+    <string name="edit_brand_auto">خودکار</string>
+    <string name="edit_brand_auto_found">خودکار · ⁨%1$s⁩</string>
+    <string name="edit_brand_auto_none">خودکار · ابھی کوئی مطابقت نہیں</string>
+    <string name="edit_brand_none">کوئی لوگو نہیں</string>
+    <string name="edit_brand_search">تلاش</string>
+    <string name="edit_brand_choose">لوگو منتخب کریں</string>
+    <string name="edit_brand_note">لوگو اپنے مالکان کے ٹریڈ مارک ہیں اور صرف آپ کے اپنے اکاؤنٹس پہچاننے کے لیے دکھائے جاتے ہیں۔</string>
 </resources>

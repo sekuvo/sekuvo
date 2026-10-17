@@ -674,4 +674,12 @@
     <string name="tour_backup_body">Lưu bản sao lưu .vaultbak đã mã hóa ở bất cứ đâu bạn muốn. Tệp và mật khẩu của nó sẽ khôi phục mọi thứ, kể cả trên điện thoại mới.</string>
     <string name="tour_bt_title">Nhập trên máy tính như một bàn phím</string>
     <string name="tour_bt_body">Điện thoại kết nối với máy tính như một bàn phím Bluetooth và nhập mật khẩu từng phím một tại vị trí con trỏ. Không cần cài gì lên máy tính. Hãy cùng thiết lập ngay, trực tiếp từng bước.</string>
+    <string name="edit_brand_title">Logo</string>
+    <string name="edit_brand_auto">Tự động</string>
+    <string name="edit_brand_auto_found">Tự động · %1$s</string>
+    <string name="edit_brand_auto_none">Tự động · chưa khớp</string>
+    <string name="edit_brand_none">Không có logo</string>
+    <string name="edit_brand_search">Tìm kiếm</string>
+    <string name="edit_brand_choose">Chọn logo</string>
+    <string name="edit_brand_note">Logo là nhãn hiệu của chủ sở hữu, chỉ được hiển thị để bạn nhận ra tài khoản của mình.</string>
 </resources>

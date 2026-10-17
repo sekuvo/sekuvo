@@ -1,0 +1,28 @@
+{
+  "aciklama": "AES-256-GCM; blob = iv(12) || şifreli metin || etiket(16), base64. AAD yok.",
+  "vektorler": [
+    {
+      "aciklama": "kısa ASCII",
+      "anahtar_hex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+      "acik": "Sekuvo",
+      "blob": "ZGVmZ2hpamtsbW5vG361Ew+GxNUU+EEEedTwptmUFNOGWA=="
+    },
+    {
+      "aciklama": "boş içerik — yalnız etiket",
+      "anahtar_hex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+      "acik": "",
+      "blob": "cHFyc3R1dnd4eXp7ZulCDAMZa0u1NlvmxuKG+Q=="
+    },
+    {
+      "aciklama": "UTF-8 ve emoji",
+      "anahtar_hex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+      "acik": "Şifre: çok-gizli 🔐 · ğüşıöç",
+      "blob": "fH1+f4CBgoOEhYaHmfaWuCx9UGZXZ2szZEmo7SwW91+nYjSXo2NoQNTD7GiOQLZJV6gWD1de5IlTKPAFrlX/XPrJ2w=="
+    }
+  ],
+  "bozuk": {
+    "aciklama": "etiketin son biti çevrildi — çözme başarısız olmalı",
+    "anahtar_hex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "blob": "ZGVmZ2hpamtsbW5vG361Ew+GxNUU+EEEedTwptmUFNOGWQ=="
+  }
+}

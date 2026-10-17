@@ -718,4 +718,12 @@
     <string name="tour_backup_body">احفظ نسخة احتياطية مشفَّرة بصيغة \u2068.vaultbak\u2069 أينما شئت. يعيد الملف مع كلمة مروره كل شيء، حتى على هاتف جديد.</string>
     <string name="tour_bt_title">اكتب في حاسوبك كلوحة مفاتيح</string>
     <string name="tour_bt_body">يتصل الهاتف بالحاسوب كلوحة مفاتيح بلوتوث ويكتب كلمة المرور مفتاحًا مفتاحًا حيث يوجد المؤشر. لا يُثبَّت أي شيء على الحاسوب. هيا نُعِدّه معًا، مباشرةً.</string>
+    <string name="edit_brand_title">الشعار</string>
+    <string name="edit_brand_auto">تلقائي</string>
+    <string name="edit_brand_auto_found">تلقائي · ⁨%1$s⁩</string>
+    <string name="edit_brand_auto_none">تلقائي · لا تطابق بعد</string>
+    <string name="edit_brand_none">بلا شعار</string>
+    <string name="edit_brand_search">بحث</string>
+    <string name="edit_brand_choose">اختر شعارًا</string>
+    <string name="edit_brand_note">الشعارات علامات تجارية لأصحابها، وتُعرض فقط لتساعدك على تمييز حساباتك.</string>
 </resources>

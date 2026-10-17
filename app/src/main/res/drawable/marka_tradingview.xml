@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Bu dosya markalar/uret.py tarafından üretildi; elle düzenleme. Kaynak: markalar/katalog.json -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp" android:height="24dp"
+    android:viewportWidth="24" android:viewportHeight="24">
+    <path android:fillColor="#FFFFFFFF" android:pathData="M 15.8654 8.2789 c 0 1.3541 -1.0978 2.4519 -2.452 2.4519 c -1.354 0 -2.4519 -1.0978 -2.4519 -2.452 c 0 -1.354 1.0978 -2.4518 2.452 -2.4518 c 1.3541 0 2.4519 1.0977 2.4519 2.4519 z M 9.75 6 H 0 v 4.9038 h 4.8462 v 7.2692 H 9.75 Z m 8.5962 0 H 24 l -5.1058 12.173 h -5.6538 z" />
+</vector>

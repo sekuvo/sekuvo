@@ -1,0 +1,23 @@
+{
+  "aciklama": "PBKDF2-HMAC-SHA256, 32 bayt anahtar; parola UTF-8 baytları.",
+  "vektorler": [
+    {
+      "parola": "correct horse battery staple",
+      "tuz": "AAECAwQFBgcICQoLDA0ODw==",
+      "tur": 310000,
+      "anahtar_hex": "7b8ad24392905caa0cc9ebb5b45a445371cca3ab69958986ede276f3458f73fa"
+    },
+    {
+      "parola": "yedek-parolasi-123",
+      "tuz": "EBESExQVFhcYGRobHB0eHw==",
+      "tur": 310000,
+      "anahtar_hex": "d93600aea145bdb0cfbd82251cc5aae6f8ea432cfde6b27a6e275e1cda5925c3"
+    },
+    {
+      "parola": "Kasa!2026",
+      "tuz": "ICEiIyQlJicoKSorLC0uLw==",
+      "tur": 10000,
+      "anahtar_hex": "5959202ceb2eaa632a5b5e60c405396890d581dce3aa1372c4b58fb7a5fc86a0"
+    }
+  ]
+}

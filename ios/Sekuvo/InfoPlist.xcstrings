@@ -1,0 +1,57 @@
+{
+  "sourceLanguage": "en",
+  "strings": {
+    "NSCameraUsageDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sekuvo uses the camera only to read transfer QR codes. The image is decoded on this iPhone and is not saved."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sekuvo kamerayı yalnız aktarım QR kodlarını okumak için kullanır. Görüntü bu iPhone'da çözülür ve kaydedilmez."
+          }
+        }
+      }
+    },
+    "NSFaceIDUsageDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Face ID opens your vault without typing the master password. The master password always works on its own."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Face ID kasanı ana parolayı yazmadan açar. Ana parola her zaman tek başına da açar."
+          }
+        }
+      }
+    },
+    "Sekuvo backup": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sekuvo backup"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sekuvo yedeği"
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}

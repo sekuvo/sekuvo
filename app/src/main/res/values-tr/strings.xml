@@ -682,4 +682,12 @@
     <string name="tour_backup_body">Şifreli .vaultbak yedeğini istediğin yere kaydet. Dosya ve parolası, telefon değişse bile her şeyi geri getirir.</string>
     <string name="tour_bt_title">Bilgisayara klavye gibi yaz</string>
     <string name="tour_bt_body">Telefon bilgisayara Bluetooth klavye olarak bağlanır ve şifreyi imlecin olduğu yere tuş tuş yazar. Bilgisayara hiçbir şey kurulmaz. Hadi birlikte, canlı olarak kuralım.</string>
+    <string name="edit_brand_title">Logo</string>
+    <string name="edit_brand_auto">Otomatik</string>
+    <string name="edit_brand_auto_found">Otomatik · %1$s</string>
+    <string name="edit_brand_auto_none">Otomatik · henüz eşleşme yok</string>
+    <string name="edit_brand_none">Logo yok</string>
+    <string name="edit_brand_search">Ara</string>
+    <string name="edit_brand_choose">Logo seç</string>
+    <string name="edit_brand_note">Logolar sahiplerinin ticari markalarıdır; yalnız kendi hesaplarını tanıman için gösterilir.</string>
 </resources>

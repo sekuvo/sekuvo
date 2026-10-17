@@ -1,0 +1,594 @@
+{
+ "simple-icons": "16.33.0",
+ "lisans": "CC0-1.0 (paket); ikon başına aşağıda",
+ "ikonlar": {
+  "vodafone": {
+   "slug": "vodafone",
+   "baslik": "Vodafone",
+   "renk": "E60000",
+   "kaynak": "https://web.vodafone.com.eg",
+   "lisans": "belirtilmemiş"
+  },
+  "sahibinden": {
+   "slug": "sahibinden",
+   "baslik": "Sahibinden",
+   "renk": "FFE800",
+   "kaynak": "https://www.sahibinden.com/favicon.ico",
+   "lisans": "belirtilmemiş"
+  },
+  "turkishairlines": {
+   "slug": "turkishairlines",
+   "baslik": "Turkish Airlines",
+   "renk": "C70A0C",
+   "kaynak": "https://www.turkishairlines.com/en-int/press-room/logo-archive/index.html",
+   "lisans": "belirtilmemiş"
+  },
+  "google": {
+   "slug": "google",
+   "baslik": "Google",
+   "renk": "4285F4",
+   "kaynak": "https://partnermarketinghub.withgoogle.com",
+   "lisans": "belirtilmemiş"
+  },
+  "gmail": {
+   "slug": "gmail",
+   "baslik": "Gmail",
+   "renk": "EA4335",
+   "kaynak": "https://fonts.gstatic.com/s/i/productlogos/gmail_2020q4/v8/192px.svg",
+   "lisans": "belirtilmemiş"
+  },
+  "googledrive": {
+   "slug": "googledrive",
+   "baslik": "Google Drive",
+   "renk": "4285F4",
+   "kaynak": "https://developers.google.com/drive/web/branding",
+   "lisans": "belirtilmemiş"
+  },
+  "googlecloud": {
+   "slug": "googlecloud",
+   "baslik": "Google Cloud",
+   "renk": "4285F4",
+   "kaynak": "https://cloud.google.com",
+   "lisans": "belirtilmemiş"
+  },
+  "googleplay": {
+   "slug": "googleplay",
+   "baslik": "Google Play",
+   "renk": "414141",
+   "kaynak": "https://partnermarketinghub.withgoogle.com/brands/google-play/visual-identity/primary-logos/",
+   "lisans": "belirtilmemiş"
+  },
+  "googlepay": {
+   "slug": "googlepay",
+   "baslik": "Google Pay",
+   "renk": "4285F4",
+   "kaynak": "https://pay.google.com/intl/en_us/about/",
+   "lisans": "belirtilmemiş"
+  },
+  "apple": {
+   "slug": "apple",
+   "baslik": "Apple",
+   "renk": "000000",
+   "kaynak": "https://www.apple.com",
+   "lisans": "belirtilmemiş"
+  },
+  "icloud": {
+   "slug": "icloud",
+   "baslik": "iCloud",
+   "renk": "3693F3",
+   "kaynak": "https://commons.wikimedia.org/wiki/File:ICloud_logo.svg",
+   "lisans": "belirtilmemiş"
+  },
+  "appstore": {
+   "slug": "appstore",
+   "baslik": "App Store",
+   "renk": "0D96F6",
+   "kaynak": "https://developer.apple.com/app-store",
+   "lisans": "belirtilmemiş"
+  },
+  "protonmail": {
+   "slug": "protonmail",
+   "baslik": "Proton Mail",
+   "renk": "6D4AFF",
+   "kaynak": "https://proton.me/media/kit",
+   "lisans": "belirtilmemiş"
+  },
+  "dropbox": {
+   "slug": "dropbox",
+   "baslik": "Dropbox",
+   "renk": "0061FF",
+   "kaynak": "https://www.dropbox.com/branding",
+   "lisans": "belirtilmemiş"
+  },
+  "facebook": {
+   "slug": "facebook",
+   "baslik": "Facebook",
+   "renk": "0866FF",
+   "kaynak": "https://about.meta.com/brand/resources/facebook/logo",
+   "lisans": "belirtilmemiş"
+  },
+  "instagram": {
+   "slug": "instagram",
+   "baslik": "Instagram",
+   "renk": "FF0069",
+   "kaynak": "https://about.meta.com/brand/resources/instagram",
+   "lisans": "belirtilmemiş"
+  },
+  "x": {
+   "slug": "x",
+   "baslik": "X",
+   "renk": "000000",
+   "kaynak": "https://x.com",
+   "lisans": "belirtilmemiş"
+  },
+  "tiktok": {
+   "slug": "tiktok",
+   "baslik": "TikTok",
+   "renk": "000000",
+   "kaynak": "https://tiktok.com",
+   "lisans": "belirtilmemiş"
+  },
+  "youtube": {
+   "slug": "youtube",
+   "baslik": "YouTube",
+   "renk": "FF0000",
+   "kaynak": "https://www.youtube.com/howyoutubeworks/resources/brand-resources/#logos-icons-and-colors",
+   "lisans": "belirtilmemiş"
+  },
+  "reddit": {
+   "slug": "reddit",
+   "baslik": "Reddit",
+   "renk": "FF4500",
+   "kaynak": "https://www.redditinc.com/brand",
+   "lisans": "belirtilmemiş"
+  },
+  "pinterest": {
+   "slug": "pinterest",
+   "baslik": "Pinterest",
+   "renk": "BD081C",
+   "kaynak": "https://business.pinterest.com/en/brand-guidelines",
+   "lisans": "belirtilmemiş"
+  },
+  "snapchat": {
+   "slug": "snapchat",
+   "baslik": "Snapchat",
+   "renk": "FFFC00",
+   "kaynak": "https://www.snapchat.com/brand-guidelines",
+   "lisans": "belirtilmemiş"
+  },
+  "threads": {
+   "slug": "threads",
+   "baslik": "Threads",
+   "renk": "000000",
+   "kaynak": "https://www.meta.com/brand/resources/instagram/threads",
+   "lisans": "belirtilmemiş"
+  },
+  "bluesky": {
+   "slug": "bluesky",
+   "baslik": "Bluesky",
+   "renk": "1185FE",
+   "kaynak": "https://bsky.social/about/blog/press-faq",
+   "lisans": "belirtilmemiş"
+  },
+  "mastodon": {
+   "slug": "mastodon",
+   "baslik": "Mastodon",
+   "renk": "6364FF",
+   "kaynak": "https://github.com/mastodon/mastodon/blob/7ccf7a73f1c47a8c03712c39f7c591e837cf6d08/app/javascript/images/logo-symbol-icon.svg",
+   "lisans": "belirtilmemiş"
+  },
+  "telegram": {
+   "slug": "telegram",
+   "baslik": "Telegram",
+   "renk": "26A5E4",
+   "kaynak": "https://telegram.org/tour/screenshots",
+   "lisans": "belirtilmemiş"
+  },
+  "whatsapp": {
+   "slug": "whatsapp",
+   "baslik": "WhatsApp",
+   "renk": "25D366",
+   "kaynak": "https://about.meta.com/brand/resources/whatsapp/whatsapp-brand",
+   "lisans": "belirtilmemiş"
+  },
+  "signal": {
+   "slug": "signal",
+   "baslik": "Signal",
+   "renk": "3B45FD",
+   "kaynak": "https://signal.org/brand",
+   "lisans": "belirtilmemiş"
+  },
+  "discord": {
+   "slug": "discord",
+   "baslik": "Discord",
+   "renk": "5865F2",
+   "kaynak": "https://discord.com/branding",
+   "lisans": "belirtilmemiş"
+  },
+  "twitch": {
+   "slug": "twitch",
+   "baslik": "Twitch",
+   "renk": "9146FF",
+   "kaynak": "https://brand.twitch.tv",
+   "lisans": "belirtilmemiş"
+  },
+  "github": {
+   "slug": "github",
+   "baslik": "GitHub",
+   "renk": "181717",
+   "kaynak": "https://github.com/logos",
+   "lisans": "belirtilmemiş"
+  },
+  "gitlab": {
+   "slug": "gitlab",
+   "baslik": "GitLab",
+   "renk": "FC6D26",
+   "kaynak": "https://about.gitlab.com/press/press-kit/",
+   "lisans": "belirtilmemiş"
+  },
+  "bitbucket": {
+   "slug": "bitbucket",
+   "baslik": "Bitbucket",
+   "renk": "0052CC",
+   "kaynak": "https://atlassian.design/resources/logo-library",
+   "lisans": "belirtilmemiş"
+  },
+  "cloudflare": {
+   "slug": "cloudflare",
+   "baslik": "Cloudflare",
+   "renk": "F38020",
+   "kaynak": "https://www.cloudflare.com/logo/",
+   "lisans": "belirtilmemiş"
+  },
+  "digitalocean": {
+   "slug": "digitalocean",
+   "baslik": "DigitalOcean",
+   "renk": "0080FF",
+   "kaynak": "https://www.digitalocean.com/press/",
+   "lisans": "belirtilmemiş"
+  },
+  "hetzner": {
+   "slug": "hetzner",
+   "baslik": "Hetzner",
+   "renk": "D50C2D",
+   "kaynak": "https://www.hetzner.com",
+   "lisans": "belirtilmemiş"
+  },
+  "vercel": {
+   "slug": "vercel",
+   "baslik": "Vercel",
+   "renk": "000000",
+   "kaynak": "https://vercel.com/geist/brands",
+   "lisans": "belirtilmemiş"
+  },
+  "netlify": {
+   "slug": "netlify",
+   "baslik": "Netlify",
+   "renk": "00C7B7",
+   "kaynak": "https://www.netlify.com/press/",
+   "lisans": "belirtilmemiş"
+  },
+  "docker": {
+   "slug": "docker",
+   "baslik": "Docker",
+   "renk": "2496ED",
+   "kaynak": "https://www.docker.com/company/newsroom/media-resources",
+   "lisans": "belirtilmemiş"
+  },
+  "npm": {
+   "slug": "npm",
+   "baslik": "npm",
+   "renk": "CB3837",
+   "kaynak": "https://www.npmjs.com",
+   "lisans": "belirtilmemiş"
+  },
+  "pypi": {
+   "slug": "pypi",
+   "baslik": "PyPI",
+   "renk": "3775A9",
+   "kaynak": "https://pypi.org",
+   "lisans": "belirtilmemiş"
+  },
+  "firebase": {
+   "slug": "firebase",
+   "baslik": "Firebase",
+   "renk": "DD2C00",
+   "kaynak": "https://firebase.google.com/brand-guidelines",
+   "lisans": "belirtilmemiş"
+  },
+  "supabase": {
+   "slug": "supabase",
+   "baslik": "Supabase",
+   "renk": "3FCF8E",
+   "kaynak": "https://github.com/supabase/supabase/blob/4031a7549f5d46da7bc79c01d56be4177dc7c114/packages/common/assets/images/supabase-logo-wordmark--light.svg",
+   "lisans": "belirtilmemiş"
+  },
+  "jetbrains": {
+   "slug": "jetbrains",
+   "baslik": "JetBrains",
+   "renk": "000000",
+   "kaynak": "https://www.jetbrains.com/company/brand/logos/",
+   "lisans": "belirtilmemiş"
+  },
+  "atlassian": {
+   "slug": "atlassian",
+   "baslik": "Atlassian",
+   "renk": "0052CC",
+   "kaynak": "https://atlassian.design/resources/logo-library",
+   "lisans": "belirtilmemiş"
+  },
+  "jira": {
+   "slug": "jira",
+   "baslik": "Jira",
+   "renk": "0052CC",
+   "kaynak": "https://atlassian.design/resources/logo-library",
+   "lisans": "belirtilmemiş"
+  },
+  "notion": {
+   "slug": "notion",
+   "baslik": "Notion",
+   "renk": "000000",
+   "kaynak": "https://www.notion.so",
+   "lisans": "belirtilmemiş"
+  },
+  "figma": {
+   "slug": "figma",
+   "baslik": "Figma",
+   "renk": "F24E1E",
+   "kaynak": "https://www.figma.com/using-the-figma-brand/",
+   "lisans": "belirtilmemiş"
+  },
+  "claude": {
+   "slug": "claude",
+   "baslik": "Claude",
+   "renk": "D97757",
+   "kaynak": "https://claude.ai",
+   "lisans": "belirtilmemiş"
+  },
+  "anthropic": {
+   "slug": "anthropic",
+   "baslik": "Anthropic",
+   "renk": "191919",
+   "kaynak": "https://www.anthropic.com",
+   "lisans": "belirtilmemiş"
+  },
+  "tailscale": {
+   "slug": "tailscale",
+   "baslik": "Tailscale",
+   "renk": "242424",
+   "kaynak": "https://tailscale.com/press",
+   "lisans": "belirtilmemiş"
+  },
+  "namecheap": {
+   "slug": "namecheap",
+   "baslik": "Namecheap",
+   "renk": "DE3723",
+   "kaynak": "https://www.namecheap.com",
+   "lisans": "belirtilmemiş"
+  },
+  "godaddy": {
+   "slug": "godaddy",
+   "baslik": "GoDaddy",
+   "renk": "1BDBDB",
+   "kaynak": "https://aboutus.godaddy.net/newsroom/media-resources/",
+   "lisans": "belirtilmemiş"
+  },
+  "ebay": {
+   "slug": "ebay",
+   "baslik": "eBay",
+   "renk": "E53238",
+   "kaynak": "https://go.developer.ebay.com/logos",
+   "lisans": "belirtilmemiş"
+  },
+  "etsy": {
+   "slug": "etsy",
+   "baslik": "Etsy",
+   "renk": "F16521",
+   "kaynak": "https://www.etsy.com/uk/press",
+   "lisans": "belirtilmemiş"
+  },
+  "netflix": {
+   "slug": "netflix",
+   "baslik": "Netflix",
+   "renk": "E50914",
+   "kaynak": "https://brand.netflix.com/en/assets/logos",
+   "lisans": "belirtilmemiş"
+  },
+  "spotify": {
+   "slug": "spotify",
+   "baslik": "Spotify",
+   "renk": "1ED760",
+   "kaynak": "https://developer.spotify.com/documentation/general/design-and-branding/#using-our-logo",
+   "lisans": "belirtilmemiş"
+  },
+  "applemusic": {
+   "slug": "applemusic",
+   "baslik": "Apple Music",
+   "renk": "FA243C",
+   "kaynak": "https://www.apple.com/itunes/marketing-on-music/identity-guidelines.html#apple-music-icon",
+   "lisans": "belirtilmemiş"
+  },
+  "youtubemusic": {
+   "slug": "youtubemusic",
+   "baslik": "YouTube Music",
+   "renk": "FF0000",
+   "kaynak": "https://partnermarketinghub.withgoogle.com/#/brands",
+   "lisans": "belirtilmemiş"
+  },
+  "steam": {
+   "slug": "steam",
+   "baslik": "Steam",
+   "renk": "000000",
+   "kaynak": "https://partner.steamgames.com/doc/marketing/branding",
+   "lisans": "belirtilmemiş"
+  },
+  "playstation": {
+   "slug": "playstation",
+   "baslik": "PlayStation",
+   "renk": "0070D1",
+   "kaynak": "https://www.playstation.com/en-us/",
+   "lisans": "belirtilmemiş"
+  },
+  "epicgames": {
+   "slug": "epicgames",
+   "baslik": "Epic Games",
+   "renk": "313131",
+   "kaynak": "https://dev.epicgames.com/docs/services/en-US/EpicAccountServices/DesignGuidelines/index.html#epicgamesbrandguidelines",
+   "lisans": "belirtilmemiş"
+  },
+  "airbnb": {
+   "slug": "airbnb",
+   "baslik": "Airbnb",
+   "renk": "FF5A5F",
+   "kaynak": "https://www.airbnb.com",
+   "lisans": "belirtilmemiş"
+  },
+  "uber": {
+   "slug": "uber",
+   "baslik": "Uber",
+   "renk": "000000",
+   "kaynak": "https://assets.uber.com/d/k4nuxdZ8MC7E/logos/collection/151",
+   "lisans": "belirtilmemiş"
+  },
+  "duolingo": {
+   "slug": "duolingo",
+   "baslik": "Duolingo",
+   "renk": "58CC02",
+   "kaynak": "https://design.duolingo.com",
+   "lisans": "belirtilmemiş"
+  },
+  "paypal": {
+   "slug": "paypal",
+   "baslik": "PayPal",
+   "renk": "002991",
+   "kaynak": "https://www.paypal.com/us",
+   "lisans": "belirtilmemiş"
+  },
+  "wise": {
+   "slug": "wise",
+   "baslik": "Wise",
+   "renk": "9FE870",
+   "kaynak": "https://wise.design/foundations/logo",
+   "lisans": "belirtilmemiş"
+  },
+  "revolut": {
+   "slug": "revolut",
+   "baslik": "Revolut",
+   "renk": "191C1F",
+   "kaynak": "https://developer.revolut.com/docs/resources/marketing-assets-guidelines/marketing-guidelines",
+   "lisans": "belirtilmemiş"
+  },
+  "n26": {
+   "slug": "n26",
+   "baslik": "N26",
+   "renk": "48AC98",
+   "kaynak": "https://n26.com",
+   "lisans": "belirtilmemiş"
+  },
+  "monzo": {
+   "slug": "monzo",
+   "baslik": "Monzo",
+   "renk": "14233C",
+   "kaynak": "https://monzo.com/press/",
+   "lisans": "belirtilmemiş"
+  },
+  "stripe": {
+   "slug": "stripe",
+   "baslik": "Stripe",
+   "renk": "635BFF",
+   "kaynak": "https://stripe.com/newsroom/information",
+   "lisans": "belirtilmemiş"
+  },
+  "visa": {
+   "slug": "visa",
+   "baslik": "Visa",
+   "renk": "1A1F71",
+   "kaynak": "https://merchantsignageeu.visa.com/product.asp?dptID=696",
+   "lisans": "belirtilmemiş"
+  },
+  "mastercard": {
+   "slug": "mastercard",
+   "baslik": "MasterCard",
+   "renk": "EB001B",
+   "kaynak": "https://www.mastercard.com/brandcenter/us/en/download-artwork.html",
+   "lisans": "belirtilmemiş"
+  },
+  "hsbc": {
+   "slug": "hsbc",
+   "baslik": "HSBC",
+   "renk": "DB0011",
+   "kaynak": "https://www.hsbc.com",
+   "lisans": "belirtilmemiş"
+  },
+  "barclays": {
+   "slug": "barclays",
+   "baslik": "Barclays",
+   "renk": "00AEEF",
+   "kaynak": "https://home.barclays",
+   "lisans": "belirtilmemiş"
+  },
+  "deutschebank": {
+   "slug": "deutschebank",
+   "baslik": "Deutsche Bank",
+   "renk": "0018A8",
+   "kaynak": "https://www.db.com",
+   "lisans": "belirtilmemiş"
+  },
+  "chase": {
+   "slug": "chase",
+   "baslik": "Chase",
+   "renk": "117ACA",
+   "kaynak": "https://commons.wikimedia.org/wiki/File:Chase_logo_2007.svg",
+   "lisans": "belirtilmemiş"
+  },
+  "bankofamerica": {
+   "slug": "bankofamerica",
+   "baslik": "Bank of America",
+   "renk": "012169",
+   "kaynak": "https://www.bankofamerica.com",
+   "lisans": "belirtilmemiş"
+  },
+  "binance": {
+   "slug": "binance",
+   "baslik": "Binance",
+   "renk": "F0B90B",
+   "kaynak": "https://binance.com",
+   "lisans": "belirtilmemiş"
+  },
+  "okx": {
+   "slug": "okx",
+   "baslik": "OKX",
+   "renk": "000000",
+   "kaynak": "https://commons.wikimedia.org/wiki/File:OKX_logo.svg",
+   "lisans": "belirtilmemiş"
+  },
+  "tradingview": {
+   "slug": "tradingview",
+   "baslik": "TradingView",
+   "renk": "131622",
+   "kaynak": "https://www.tradingview.com/media-kit",
+   "lisans": "belirtilmemiş"
+  },
+  "bitwarden": {
+   "slug": "bitwarden",
+   "baslik": "Bitwarden",
+   "renk": "175DDC",
+   "kaynak": "https://bitwarden.com/brand",
+   "lisans": "belirtilmemiş"
+  },
+  "1password": {
+   "slug": "1password",
+   "baslik": "1Password",
+   "renk": "145FE4",
+   "kaynak": "https://1password.com/press",
+   "lisans": "belirtilmemiş"
+  },
+  "xiaomi": {
+   "slug": "xiaomi",
+   "baslik": "Xiaomi",
+   "renk": "FF6900",
+   "kaynak": "https://www.mi.com/global",
+   "lisans": "belirtilmemiş"
+  }
+ }
+}
