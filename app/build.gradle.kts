@@ -29,8 +29,8 @@ android {
         applicationId = "com.sekuvo.app"
         minSdk = 26
         targetSdk = 36
-        versionCode = 2
-        versionName = "1.1"
+        versionCode = 3
+        versionName = "1.2"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -183,4 +183,7 @@ tasks.matching { it.name == "assembleRelease" }.configureEach {
 // girdi olarak bildir ki metin değişince test yeniden koşsun.
 tasks.withType<Test>().configureEach {
     inputs.dir("src/main/res").withPathSensitivity(PathSensitivity.RELATIVE)
+    // OrtakBicimTest iOS ile paylaşılan biçim değerlerini okur (bicim/):
+    // değerler değişince test yeniden koşmalı.
+    inputs.dir("../bicim/vektorler").withPathSensitivity(PathSensitivity.RELATIVE)
 }

@@ -681,4 +681,12 @@
     <string name="tour_backup_body">Guarda una copia cifrada .vaultbak donde quieras. El archivo y su contraseña lo restauran todo, incluso en un teléfono nuevo.</string>
     <string name="tour_bt_title">Escribe en tu ordenador como un teclado</string>
     <string name="tour_bt_body">El teléfono se conecta al ordenador como un teclado Bluetooth y escribe la contraseña tecla a tecla donde esté el cursor. No se instala nada en el ordenador. Configurémoslo juntos, en directo.</string>
+    <string name="edit_brand_title">Logo</string>
+    <string name="edit_brand_auto">Automático</string>
+    <string name="edit_brand_auto_found">Automático · %1$s</string>
+    <string name="edit_brand_auto_none">Automático · aún sin coincidencia</string>
+    <string name="edit_brand_none">Sin logo</string>
+    <string name="edit_brand_search">Buscar</string>
+    <string name="edit_brand_choose">Elegir un logo</string>
+    <string name="edit_brand_note">Los logotipos son marcas de sus propietarios y solo se muestran para que reconozcas tus propias cuentas.</string>
 </resources>

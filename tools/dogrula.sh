@@ -59,11 +59,16 @@ fi
 
 echo "2) Masaüstü kopyası → depo kopyası"
 if [ -L "$MASA" ]; then
-  hedef=$(readlink "$MASA")
-  case "$hedef" in
-    *tools/aktar.html) echo "   ✓ masaüstündeki bir BAĞ (kopya yok, sürüklenme imkânsız)" ;;
-    *) echo "   ✗ masaüstündeki bağ beklenmedik yeri gösteriyor: $hedef"; hata=1 ;;
-  esac
+  # Bağın SONEKİNE değil gerçek hedefine bakılır: /tmp/x/tools/aktar.html gibi
+  # sahte bir hedef de "tools/aktar.html" ile biter. Hedef depodaki dosyanın
+  # kendisi olmalı; yine de özeti karşılaştırılır (bağ bozulmuş olabilir).
+  hedef=$(python3 -c 'import os,sys; print(os.path.realpath(sys.argv[1]))' "$MASA")
+  depo=$(python3 -c 'import os,sys; print(os.path.realpath(sys.argv[1]))' tools/aktar.html)
+  if [ "$hedef" = "$depo" ] && [ "$(shasum -a 256 "$MASA" | cut -d' ' -f1)" = "$(shasum -a 256 tools/aktar.html | cut -d' ' -f1)" ]; then
+    echo "   ✓ masaüstündeki bir BAĞ ve depodaki dosyayı gösteriyor (kopya yok, sürüklenme imkânsız)"
+  else
+    echo "   ✗ masaüstündeki bağ depodaki dosyayı göstermiyor: $hedef"; hata=1
+  fi
 elif [ -f "$MASA" ]; then
   a=$(shasum -a 256 "$MASA" | cut -d' ' -f1)
   b=$(shasum -a 256 tools/aktar.html | cut -d' ' -f1)

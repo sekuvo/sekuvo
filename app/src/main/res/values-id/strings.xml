@@ -675,4 +675,12 @@
     <string name="tour_backup_body">Simpan cadangan .vaultbak terenkripsi di mana pun kamu mau. File dan kata sandinya memulihkan semuanya, bahkan di ponsel baru.</string>
     <string name="tour_bt_title">Ketik di komputer seperti keyboard</string>
     <string name="tour_bt_body">Ponsel terhubung ke komputer sebagai keyboard Bluetooth dan mengetik kata sandi tombol demi tombol di posisi kursor. Tidak ada yang perlu diinstal di komputer. Ayo kita siapkan bersama, langsung sekarang.</string>
+    <string name="edit_brand_title">Logo</string>
+    <string name="edit_brand_auto">Otomatis</string>
+    <string name="edit_brand_auto_found">Otomatis · %1$s</string>
+    <string name="edit_brand_auto_none">Otomatis · belum ada yang cocok</string>
+    <string name="edit_brand_none">Tanpa logo</string>
+    <string name="edit_brand_search">Cari</string>
+    <string name="edit_brand_choose">Pilih logo</string>
+    <string name="edit_brand_note">Logo adalah merek dagang pemiliknya dan hanya ditampilkan agar Anda mengenali akun Anda sendiri.</string>
 </resources>

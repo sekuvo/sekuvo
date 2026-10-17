@@ -132,7 +132,13 @@ data class EntryData(
      * Bilerek [fields] dışında: klavye ve otomatik doldurma yalnız güncel
      * parolayı yazmalı, eski bir parola oraya asla düşmemeli.
      */
-    val passwordHistory: List<OldPassword> = emptyList()
+    val passwordHistory: List<OldPassword> = emptyList(),
+    /**
+     * Kurum logosu seçimi: "" = otomatik (adres ve başlıktan), `"none"` = logo
+     * yok, ya da katalogdaki bir kimlik ([com.afgover.vault.core.Brands]).
+     * Şifreli veride durur: adrese bağlı bir bilgi, veritabanına açık yazılmaz.
+     */
+    val brand: String = ""
 ) {
     fun toJson(): JSONObject = JSONObject().apply {
         if (username.isNotEmpty()) put("username", username)
@@ -159,6 +165,7 @@ data class EntryData(
             })
         }
         if (passwordChangedAt > 0) put("passwordChangedAt", passwordChangedAt)
+        if (brand.isNotEmpty()) put("brand", brand)
         if (passwordHistory.isNotEmpty()) {
             put("passwordHistory", JSONArray().apply {
                 passwordHistory.forEach { eski ->
@@ -208,7 +215,8 @@ data class EntryData(
             address = json.optString("address"),
             custom = json.optJSONArray("custom").toCustomFields(),
             passwordChangedAt = json.optLong("passwordChangedAt"),
-            passwordHistory = json.optJSONArray("passwordHistory").toOldPasswords()
+            passwordHistory = json.optJSONArray("passwordHistory").toOldPasswords(),
+            brand = json.optString("brand")
         )
 
         private fun JSONArray?.toOldPasswords(): List<OldPassword> {

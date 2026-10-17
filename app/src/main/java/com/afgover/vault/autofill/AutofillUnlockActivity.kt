@@ -79,7 +79,7 @@ class AutofillUnlockActivity : FragmentActivity() {
                         onBiometricUnlock = {
                             BiometricAuth.unlock(
                                 this, viewModel.keyManager,
-                                onError = { viewModel.error = it }
+                                onError = { viewModel.error = it; viewModel.refreshLockOptions() }
                             ) {
                                 viewModel.onStage1Payload(it)
                             }

@@ -14,3 +14,10 @@ __pycache__/
 # miniflare KV/cache veritabanları. Depoya girmemeli (public depoda
 # kişisel veri olurdu; 2026-08-28 geçmişten temizlendi).
 relay/.wrangler/
+
+# iOS (Xcode / SwiftPM) üretim çıktıları ve kişisel Xcode durumu
+ios/**/.build/
+ios/**/.swiftpm/
+ios/**/xcuserdata/
+ios/**/*.xcuserstate
+ios/**/DerivedData/

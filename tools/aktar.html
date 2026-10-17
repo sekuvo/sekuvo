@@ -450,6 +450,9 @@ function turUygula() {
   document.querySelectorAll(".grup").forEach((g) => {
     g.classList.toggle("aktif", g.dataset.tur === tur);
   });
+  // Tür değişince önceki türün ikili dosyası geride kalır; notlara artık
+  // "base64 -d" yönergesi eklenmesin.
+  ikiliDosyaAdi = null;
   $("notEtiketMetin").textContent = tur === "not" ? t("lblNot") : t("lblNotOpsiyonel");
 }
 $("tur").addEventListener("change", turUygula);
@@ -496,7 +499,14 @@ $("dosya").addEventListener("change", async () => {
   if (metin !== null && !metin.includes("\u0000")) {
     hedefeYaz(metin);
   } else {
-    hedefeYaz(b64(buf));
+    // İkili dosya base64 ile ~%33 şişer; sınır ham boyuta değil taşınacak
+    // metne göre, seçildiği anda denetlenir (gönderimde değil).
+    const kodlu = b64(buf);
+    if (kodlu.length > MAX_PLAIN) {
+      $("hata").textContent = t("eDosyaBuyuk")((kodlu.length/1024).toFixed(0));
+      $("dosya").value = ""; return;
+    }
+    hedefeYaz(kodlu);
     ikiliDosyaAdi = f.name;
   }
   if (!$("baslik").value) $("baslik").value = f.name;

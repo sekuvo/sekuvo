@@ -674,4 +674,12 @@
     <string name="tour_backup_body">将加密的 .vaultbak 备份保存到你想要的任何位置。有了文件和它的密码，即使换了新手机也能恢复一切。</string>
     <string name="tour_bt_title">像键盘一样在电脑上输入</string>
     <string name="tour_bt_body">手机会作为蓝牙键盘连接到电脑，在光标所在位置逐键输入密码。电脑上无需安装任何东西。让我们一起实时完成设置。</string>
+    <string name="edit_brand_title">标志</string>
+    <string name="edit_brand_auto">自动</string>
+    <string name="edit_brand_auto_found">自动 · %1$s</string>
+    <string name="edit_brand_auto_none">自动 · 暂无匹配</string>
+    <string name="edit_brand_none">无标志</string>
+    <string name="edit_brand_search">搜索</string>
+    <string name="edit_brand_choose">选择标志</string>
+    <string name="edit_brand_note">标志是其所有者的商标，仅用于帮助你识别自己的账户。</string>
 </resources>

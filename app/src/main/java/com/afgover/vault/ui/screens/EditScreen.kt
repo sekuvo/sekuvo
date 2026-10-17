@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import com.afgover.vault.core.Brands
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.rememberScrollState
@@ -21,6 +22,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Casino
 import androidx.compose.material.icons.filled.QrCodeScanner
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
@@ -122,6 +125,7 @@ fun EditScreen(
     var initialSnap by remember { mutableStateOf<String?>(null) }
     var kaydedildi by remember { mutableStateOf(false) }
     var ibanOnayi by remember { mutableStateOf(false) }
+    var marka by remember { mutableStateOf("") }
 
     // Kaydedilmemiş değişiklikte geri çıkış tüm girilenleri kaybettiriyordu
     // (denetim). Alanların anlık özetini yükleme anındaki özetle karşılaştırıp
@@ -129,7 +133,7 @@ fun EditScreen(
     fun snapshot(): String = listOf(
         title, username, password, url, cardholder, cardNumber, expiry, cvv, iban,
         notes, fullName, phone, email, address, quick.toString(), noteKind.name, oncelik,
-        selectedTagIds.sorted().joinToString(","),
+        selectedTagIds.sorted().joinToString(","), marka,
         customFields.joinToString("|") { it.label + "=" + it.value + ":" + it.type.stable }
     ).joinToString(String(charArrayOf('\u0001')))
 
@@ -188,7 +192,8 @@ fun EditScreen(
                                 ?: System.currentTimeMillis()
                         )
                     ) + originalHistory
-                }
+                },
+                brand = marka
             ),
             quick = quick,
             tagIds = selectedTagIds.toList(),
@@ -226,6 +231,7 @@ fun EditScreen(
                 originalPasswordChangedAt = e.data.passwordChangedAt
                 originalHistory.clear()
                 originalHistory.addAll(e.data.passwordHistory)
+                marka = e.data.brand
             }
             loaded = true
         }
@@ -309,11 +315,27 @@ fun EditScreen(
                         modifier = Modifier.fillMaxWidth()
                     )
                     Spacer(Modifier.height(8.dp))
+                    // Parola alanı maskeli ve parola klavyesiyle: düz metin alanı
+                    // sistem klavyesinin parolayı öğrenmesine açıktı; FLAG_SECURE
+                    // klavyeyi kapsamaz. Göz, SecretField'daki
+                    // gibi yalnız ekrandaki maskeyi açar.
+                    var sifreGorunur by remember { mutableStateOf(false) }
                     OutlinedTextField(
                         value = password, onValueChange = { password = it },
                         label = { Text(stringResource(R.string.field_password)) }, singleLine = true,
+                        visualTransformation =
+                            if (sifreGorunur) VisualTransformation.None else PasswordVisualTransformation(),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, autoCorrectEnabled = false),
                         trailingIcon = {
                             Row {
+                                IconButton(onClick = { sifreGorunur = !sifreGorunur }) {
+                                    Icon(
+                                        if (sifreGorunur) Icons.Filled.VisibilityOff else Icons.Filled.Visibility,
+                                        contentDescription = stringResource(
+                                            if (sifreGorunur) R.string.main_hide else R.string.main_show
+                                        )
+                                    )
+                                }
                                 IconButton(onClick = { sifreQrTarama = true }) {
                                     Icon(
                                         Icons.Filled.QrCodeScanner,
@@ -517,6 +539,14 @@ fun EditScreen(
                 modifier = Modifier.fillMaxWidth()
             )
 
+            Spacer(Modifier.height(12.dp))
+            // Kurum logosu: otomatik (başlık ve adresten) ya da elle seçilen.
+            BrandRow(
+                choice = marka,
+                auto = Brands.match(title, url, "", type == EntryType.CARD, cardNumber),
+                onChoose = { marka = it }
+            )
+
             Spacer(Modifier.height(16.dp))
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -708,6 +738,7 @@ fun EditScreen(
                         onValueChange = { sifreZarfParolasi = it },
                         label = { Text(stringResource(R.string.paste_label_backup_password)) },
                         visualTransformation = PasswordVisualTransformation(),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, autoCorrectEnabled = false),
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth()
                     )
