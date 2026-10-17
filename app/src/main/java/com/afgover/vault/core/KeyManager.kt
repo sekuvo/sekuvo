@@ -1,5 +1,6 @@
 package com.afgover.vault.core
 
+import android.app.KeyguardManager
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Build
@@ -26,8 +27,9 @@ import javax.crypto.spec.SecretKeySpec
  */
 class KeyManager(context: Context) {
 
+    private val appContext: Context = context.applicationContext
     private val prefs: SharedPreferences =
-        context.applicationContext.getSharedPreferences("vault_keys", Context.MODE_PRIVATE)
+        appContext.getSharedPreferences("vault_keys", Context.MODE_PRIVATE)
 
     companion object {
         private const val PREF_SALT = "kdf_salt"
@@ -311,21 +313,57 @@ class KeyManager(context: Context) {
      *
      * Keystore erişilemiyorsa null döner; bu durumda hızlı erişim çalışmaz,
      * kayıtlar korumalı gibi davranır.
+     *
+     * Eşzamanlı çağrılar (klavye, otomatik doldurma, kilit açılışındaki
+     * onarım) aynı anda yenilemeye girip birbirinin anahtarını ezmesin diye
+     * senkronize.
      */
+    @Synchronized
     fun quickKey(): SecretKey? = try {
         val ks = KeyStore.getInstance(ANDROID_KEYSTORE).apply { load(null) }
         val mevcut = ks.getKey(QUICK_KEYSTORE_ALIAS, null) as? SecretKey
-        if (mevcut != null && prefs.getInt(PREF_QUICK_KEY_VER, 1) < QUICK_KEY_VER) {
+        if (mevcut != null && prefs.getInt(PREF_QUICK_KEY_VER, 1) < QUICK_KEY_VER && !deviceLocked()) {
             // Eski kuralla üretilmiş anahtar (cihaz kilidi şartı yok): yenilenir.
             // Eski kopyalar bir sonraki kilit açılışında kaynağından yeniden
             // yazılır (VaultRepository.repairQuickCopies); o ana kadar hızlı
             // erişim kayıtları korumalı gibi davranır — başarısızlık güvenli yöne.
-            ks.deleteEntry(QUICK_KEYSTORE_ALIAS)
-            generateQuickKey()
+            // Cihaz kilitliyken yenilenmez: yeni anahtar o an kullanılamaz ve
+            // PIN doğrulama blobu yeniden sarılamaz; eski anahtar bir sonraki
+            // açık anda yenilenir.
+            rotateQuickKey(ks, mevcut)
         } else mevcut ?: generateQuickKey()
     } catch (e: Exception) {
         null
     }
+
+    /**
+     * Hızlı erişim anahtarını yeni kuralla yeniden üretir. PIN doğrulama blobu
+     * ([PREF_PIN_CHECK_KS]) eski anahtarla sarılıdır: silmeden önce açılır ve
+     * yeni anahtarla yeniden sarılır. Aksi hâlde [verifyPin] kalıcı olarak
+     * düşer — bayat sargı ayrımı bozulur ve PIN açıkken parmak izi yeniden
+     * etkinleştirilemez ([wrapForBiometric]).
+     */
+    private fun rotateQuickKey(ks: KeyStore, eski: SecretKey): SecretKey? {
+        val pinCheck = if (prefs.getBoolean(PREF_PIN_CHECK_KS, false))
+            prefs.getString(PREF_PIN_CHECK, null)?.let(::unb64)?.let { Crypto.decrypt(eski, it) }
+        else null
+        ks.deleteEntry(QUICK_KEYSTORE_ALIAS)
+        val yeni = generateQuickKey()
+        if (pinCheck != null) {
+            val sarili = yeni?.let {
+                try { Crypto.encryptWithGeneratedIv(it, pinCheck) } catch (e: Exception) { null }
+            }
+            // Yeni anahtarla sarılamazsa enablePin'in Keystore'suz yoluna düşülür.
+            prefs.edit()
+                .putString(PREF_PIN_CHECK, b64(sarili ?: pinCheck))
+                .putBoolean(PREF_PIN_CHECK_KS, sarili != null)
+                .apply()
+        }
+        return yeni
+    }
+
+    private fun deviceLocked(): Boolean =
+        appContext.getSystemService(KeyguardManager::class.java)?.isDeviceLocked ?: false
 
     private fun generateQuickKey(): SecretKey? = try {
         KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, ANDROID_KEYSTORE).apply {
