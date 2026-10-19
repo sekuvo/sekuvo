@@ -186,9 +186,16 @@ final class VaultModel {
     func unlock(password: String) async {
         busy = true; defer { busy = false }
         let k = keys
-        // PBKDF2 (310.000 tur) arayüzü dondurmasın.
+        // PBKDF2 (600.000 tur) arayüzü dondurmasın.
         let nesil = unlockGeneration
-        let anahtar = await Task.detached { k.unlock(password: password) }.value
+        let anahtar = await Task.detached { () -> SymmetricKey? in
+            guard let a = k.unlock(password: password) else { return nil }
+            // Eski tur sayısıyla sarılmış kasa, parola elde varken bugünkü
+            // sayıyla yeniden sarılır (bir kez; ilk açılış biraz uzar).
+            // Yazılamazsa kasa yine açılır, yükseltme sonraki açılışa kalır.
+            _ = try? k.upgradeIfNeeded(password: password, dataKey: a)
+            return a
+        }.value
         await debugUnlockDelay()
         guard nesil == unlockGeneration else {
             #if DEBUG
