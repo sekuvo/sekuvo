@@ -509,9 +509,11 @@ final class VaultModel {
 
     private func reload() throws {
         guard let store else { return }
-        items = sort.sorted(try store.items())
+        // Liste ve logolar tek geçişte: kasa ana iş parçacığında bir kez çözülür.
+        let (liste, markalar) = try store.itemsAndBrands()
+        items = sort.sorted(liste)
         tags = try store.tags()
-        brandIds = (try? store.brandIds()) ?? [:]
+        brandIds = markalar
     }
 
     func selectSort(_ s: EntrySort) {
