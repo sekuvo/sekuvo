@@ -242,7 +242,9 @@ final class VaultModel {
         if state == .needsPin { pendingInner = nil; state = .locked; return }
         guard state == .unlocked else { return }
         // Düzenleme taslağı kaybolmasın: dataKey silinmeden önce onunla mühürlenir.
-        if let d = liveDraft, let key = dataKey,
+        // Geri verilen taslağın ekranı henüz açılmadıysa (kilit açılır açılmaz
+        // yeniden arka plan) canlı taslak yoktur; o zaman geri verilen mühürlenir.
+        if let d = liveDraft ?? restoredDraft, let key = dataKey,
            let acik = try? JSONSerialization.data(withJSONObject: d.json()) {
             sealedDraft = try? Crypto.encrypt(acik, key: key)
             #if DEBUG
@@ -250,6 +252,8 @@ final class VaultModel {
             #endif
         }
         liveDraft = nil
+        // Geri verilen taslak da düz metin: kilitliyken bellekte kalmaz.
+        restoredDraft = nil
         store = nil
         dataKey = nil
         items = []

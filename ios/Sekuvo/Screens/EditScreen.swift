@@ -280,6 +280,10 @@ struct EditScreen: View {
             baslik = draft.title; veri = draft.data; notTuru = draft.noteKind; hizli = draft.quick
             oncelik = draft.sortIndex > 0 ? String(draft.sortIndex) : ""
             etiketler = draft.tagIds
+            // Geri gelen taslak hemen canlı taslaktır: ekran açıkken yeniden
+            // kilitlenirse aynısı mühürlenir. `onChange` de bunu yapıyor (ölçüldü),
+            // ama `lock()` geri verilen taslağı boşalttığı için ona bağlı kalınmaz.
+            kasa.liveDraft = draft
         } else if let e = existing {
             baslik = e.title; veri = e.data; notTuru = e.noteKind; hizli = e.quick
             oncelik = e.sortIndex > 0 ? String(e.sortIndex) : ""
