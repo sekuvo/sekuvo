@@ -202,6 +202,7 @@
     <string name="home_search_hint">Поиск записей</string>
     <string name="home_manage_tags_cd">Управление метками</string>
     <string name="home_empty_vault">Ваше хранилище готово — добавьте первую запись кнопкой + внизу справа.</string>
+    <string name="home_entry_unreadable">Запись не открывается</string>
     <string name="home_empty_filter">Нет записей, соответствующих этим фильтрам.</string>
     <string name="home_tag_new">Новая метка</string>
     <string name="home_tag_edit">Изменить метку</string>

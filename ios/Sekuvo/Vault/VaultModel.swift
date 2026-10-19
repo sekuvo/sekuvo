@@ -215,7 +215,9 @@ final class VaultModel {
         #if DEBUG
         Log.kilit.notice("kasa açılıyor")
         #endif
-        store = try VaultStore(file: storeFile, key: key)
+        let acilan = try VaultStore(file: storeFile, key: key)
+        acilan.unreadableTitle = L("home_entry_unreadable")
+        store = acilan
         dataKey = key
         error = nil
         try reload()

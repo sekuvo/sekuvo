@@ -202,6 +202,7 @@
     <string name="home_search_hint">Buscar entradas</string>
     <string name="home_manage_tags_cd">Gestionar etiquetas</string>
     <string name="home_empty_vault">Tu bóveda está lista — añade tu primera entrada con el + de abajo a la derecha.</string>
+    <string name="home_entry_unreadable">Entrada que no se puede abrir</string>
     <string name="home_empty_filter">Ninguna entrada coincide con estos filtros.</string>
     <string name="home_tag_new">Nueva etiqueta</string>
     <string name="home_tag_edit">Editar etiqueta</string>

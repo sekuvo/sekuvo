@@ -63,6 +63,18 @@ class OrtakBicimTest {
         assertNull(Crypto.decrypt(anahtar, b64(bozuk.getString("blob"))))
     }
 
+    @Test
+    fun `aad li muhur yalniz ayni aad ile acilir`() {
+        oku("aesgcm.json").getJSONArray("aad").nesneler().forEach { v ->
+            val anahtar = SecretKeySpec(v.getString("anahtar_hex").chunked(2).map { it.toInt(16).toByte() }.toByteArray(), "AES")
+            val blob = b64(v.getString("blob"))
+            val aad = v.getString("aad").toByteArray(Charsets.UTF_8)
+            assertArrayEquals(v.getString("aciklama"), v.getString("acik").toByteArray(Charsets.UTF_8), Crypto.decrypt(anahtar, blob, aad))
+            assertNull(v.getString("aciklama"), Crypto.decrypt(anahtar, blob))
+            assertNull(v.getString("aciklama"), Crypto.decrypt(anahtar, blob, aad + 0x30.toByte()))
+        }
+    }
+
     private fun kayitEsit(beklenen: JSONObject, e: DecryptedEntry) {
         val t = beklenen.getString("title")
         assertEquals(t, beklenen.getString("type"), e.type.name)

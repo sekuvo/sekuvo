@@ -202,6 +202,7 @@
     <string name="home_search_hint">البحث في المدخلات</string>
     <string name="home_manage_tags_cd">إدارة الوسوم</string>
     <string name="home_empty_vault">خزنتك جاهزة — أضف أول مدخلاتك بالضغط على + أسفل اليمين.</string>
+    <string name="home_entry_unreadable">مدخل يتعذّر فتحه</string>
     <string name="home_empty_filter">لا مدخلات تطابق هذه المرشِّحات.</string>
     <string name="home_tag_new">وسم جديد</string>
     <string name="home_tag_edit">تعديل الوسم</string>

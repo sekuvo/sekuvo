@@ -202,6 +202,7 @@
     <string name="home_search_hint">এন্ট্রি খুঁজুন</string>
     <string name="home_manage_tags_cd">ট্যাগ পরিচালনা করুন</string>
     <string name="home_empty_vault">আপনার ভল্ট প্রস্তুত — নিচে ডানদিকের + দিয়ে প্রথম এন্ট্রিটি যোগ করুন।</string>
+    <string name="home_entry_unreadable">যে এন্ট্রি খোলা যায় না</string>
     <string name="home_empty_filter">এই ফিল্টারে কোনো এন্ট্রি মেলেনি।</string>
     <string name="home_tag_new">নতুন ট্যাগ</string>
     <string name="home_tag_edit">ট্যাগ এডিট করুন</string>

@@ -203,6 +203,7 @@
     <string name="home_search_hint">Kayıtlarda ara</string>
     <string name="home_manage_tags_cd">Etiketleri yönet</string>
     <string name="home_empty_vault">Kasa hazır — ilk kaydını sağ alttaki + ile ekle.</string>
+    <string name="home_entry_unreadable">Açılamayan kayıt</string>
     <string name="home_empty_filter">Bu filtrelerle eşleşen kayıt yok.</string>
     <string name="home_tag_new">Yeni etiket</string>
     <string name="home_tag_edit">Etiketi düzenle</string>

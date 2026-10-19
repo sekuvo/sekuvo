@@ -202,6 +202,7 @@
     <string name="home_search_hint">Einträge suchen</string>
     <string name="home_manage_tags_cd">Tags verwalten</string>
     <string name="home_empty_vault">Dein Tresor ist bereit — füge deinen ersten Eintrag mit + unten rechts hinzu.</string>
+    <string name="home_entry_unreadable">Eintrag lässt sich nicht öffnen</string>
     <string name="home_empty_filter">Keine Einträge entsprechen diesen Filtern.</string>
     <string name="home_tag_new">Neues Tag</string>
     <string name="home_tag_edit">Tag bearbeiten</string>

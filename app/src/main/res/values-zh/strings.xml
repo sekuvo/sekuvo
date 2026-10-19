@@ -202,6 +202,7 @@
     <string name="home_search_hint">搜索条目</string>
     <string name="home_manage_tags_cd">管理标签</string>
     <string name="home_empty_vault">你的密码库已就绪 — 点击右下角的 + 添加第一个条目。</string>
+    <string name="home_entry_unreadable">无法打开的条目</string>
     <string name="home_empty_filter">没有符合这些筛选条件的条目。</string>
     <string name="home_tag_new">新建标签</string>
     <string name="home_tag_edit">编辑标签</string>

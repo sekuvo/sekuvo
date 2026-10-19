@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.Box
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.layout.Arrangement
@@ -167,6 +168,7 @@ fun HomeScreen(
     onAnchor: () -> Unit
 ) {
     val entries by viewModel.entries.collectAsState()
+    val entriesLoaded by viewModel.entriesLoaded.collectAsState()
     val markalar by viewModel.brands.collectAsState()
     val tags by viewModel.tags.collectAsState()
     var query by remember { mutableStateOf("") }
@@ -412,7 +414,13 @@ fun HomeScreen(
             }
             Spacer(Modifier.height(4.dp))
 
-            if (filtered.isEmpty()) {
+            if (filtered.isEmpty() && !entriesLoaded) {
+                // Başlıklar şifreli: liste kilit açılınca çözülür. O ana kadar
+                // "kasan hazır, ilk kaydını ekle" denmesin.
+                Box(Modifier.fillMaxWidth().padding(top = 56.dp), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator()
+                }
+            } else if (filtered.isEmpty()) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()

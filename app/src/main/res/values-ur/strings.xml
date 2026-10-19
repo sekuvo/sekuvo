@@ -202,6 +202,7 @@
     <string name="home_search_hint">اندراجات تلاش کریں</string>
     <string name="home_manage_tags_cd">ٹیگز کا انتظام</string>
     <string name="home_empty_vault">آپ کا والٹ تیار ہے — نیچے دائیں طرف + دبا کر پہلا اندراج شامل کریں۔</string>
+    <string name="home_entry_unreadable">اندراج جو کھل نہیں سکتا</string>
     <string name="home_empty_filter">ان فلٹرز سے میل کھاتا کوئی اندراج نہیں۔</string>
     <string name="home_tag_new">نیا ٹیگ</string>
     <string name="home_tag_edit">ٹیگ میں ترمیم</string>

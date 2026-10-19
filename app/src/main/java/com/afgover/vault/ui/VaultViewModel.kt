@@ -23,6 +23,7 @@ import com.afgover.vault.core.ClipClearPolicy
 import com.afgover.vault.core.VaultSession
 import com.afgover.vault.data.DecryptedEntry
 import com.afgover.vault.data.EntryData
+import com.afgover.vault.data.EntryEntity
 import com.afgover.vault.data.EntrySort
 import com.afgover.vault.data.NoteKind
 import com.afgover.vault.data.EntryType
@@ -33,8 +34,10 @@ import com.afgover.vault.data.VaultRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.mapLatest
@@ -159,40 +162,64 @@ class VaultViewModel(application: Application) : AndroidViewModel(application) {
         EntrySort.write(getApplication(), value)
     }
 
-    val entries: StateFlow<List<EntryListItem>> = repo.observeAll()
-        .map { list ->
-            list.map {
+    /**
+     * Kasa açıkken bütün satırlar bir kez çözülür; liste, logo eşleşmesi ve
+     * günlük başlıkları buradan beslenir. Başlık şifreli olduğu için (biçim
+     * sürüm 2) liste kilit açılmadan kurulamaz: kilitliyken ve ilk çözme
+     * bitene kadar null.
+     */
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val cozulmus: SharedFlow<List<Pair<EntryEntity, DecryptedEntry?>>?> =
+        combine(repo.observeAll(), VaultSession.unlocked) { satirlar, acik -> satirlar to acik }
+            .mapLatest { (satirlar, acik) ->
+                val key = if (acik) VaultSession.key() else null
+                if (key == null) null else withContext(Dispatchers.Default) {
+                    satirlar.map { it to repo.decrypt(it, key) }
+                }
+            }
+            .shareIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), replay = 1)
+
+    /**
+     * Liste satırları. Çözülemeyen satır listeden düşmez: açık başlığı varsa
+     * (sürüm 1) onunla, yoksa "açılamayan kayıt" adıyla görünür ki kullanıcı
+     * fark edip silebilsin.
+     */
+    val entries: StateFlow<List<EntryListItem>> = cozulmus
+        .map { satirlar ->
+            satirlar.orEmpty().map { (e, d) ->
                 EntryListItem(
-                    id = it.id,
-                    type = runCatching { EntryType.valueOf(it.type) }.getOrDefault(EntryType.NOTE),
-                    title = it.title,
-                    quick = it.quick,
-                    tagIds = com.afgover.vault.data.TagIds.parse(it.tags),
-                    createdAt = it.createdAt,
-                    updatedAt = it.updatedAt,
-                    noteKind = NoteKind.of(it.noteKind),
-                    sortIndex = it.sortIndex
+                    id = e.id,
+                    type = runCatching { EntryType.valueOf(e.type) }.getOrDefault(EntryType.NOTE),
+                    title = d?.title ?: e.title.ifEmpty { str(R.string.home_entry_unreadable) },
+                    quick = e.quick,
+                    tagIds = com.afgover.vault.data.TagIds.parse(e.tags),
+                    createdAt = e.createdAt,
+                    updatedAt = e.updatedAt,
+                    noteKind = NoteKind.of(e.noteKind),
+                    sortIndex = e.sortIndex
                 )
             }
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
+    /** Liste çözüldü mü? Boş kasa metni çözme bitmeden görünmesin. */
+    val entriesLoaded: StateFlow<Boolean> = cozulmus
+        .map { it != null }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), false)
+
     /**
-     * Kayıt kimliği → kurum logosu kimliği. Adres ve elle seçim şifreli veride
-     * durduğu için eşleşme kilit açıkken bellekte hesaplanır; veritabanına açık
-     * yazılmaz (başlık zaten açıkta, adres değil; o sınır genişlemez).
-     * Kilitliyken boş.
+     * Kayıt kimliği → kurum logosu kimliği. Başlık, adres ve elle seçim şifreli
+     * veride durduğu için eşleşme kilit açıkken bellekte hesaplanır;
+     * veritabanına açık yazılmaz. Kilitliyken boş.
      */
-    @OptIn(ExperimentalCoroutinesApi::class)
-    val brands: StateFlow<Map<Long, String>> = combine(repo.observeAll(), VaultSession.unlocked) { _, acik -> acik }
-        .mapLatest { acik ->
-            val key = if (acik) VaultSession.key() else null
-            if (key == null) emptyMap() else withContext(Dispatchers.IO) {
-                repo.getAllDecrypted(key).mapNotNull { e ->
-                    Brands.match(e.title, e.data.url, e.data.brand, e.type == EntryType.CARD, e.data.cardNumber)
-                        ?.let { e.id to it.id }
-                }.toMap()
-            }
+    val brands: StateFlow<Map<Long, String>> = cozulmus
+        .map { satirlar ->
+            satirlar.orEmpty().mapNotNull { (_, e) ->
+                e?.let {
+                    Brands.match(it.title, it.data.url, it.data.brand, it.type == EntryType.CARD, it.data.cardNumber)
+                        ?.let { marka -> it.id to marka.id }
+                }
+            }.toMap()
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyMap())
 
@@ -201,15 +228,17 @@ class VaultViewModel(application: Application) : AndroidViewModel(application) {
 
     fun addTag(name: String, color: Int, icon: String = "", onDone: (Long) -> Unit = {}) {
         if (name.isBlank()) return
+        val key = VaultSession.key() ?: return
         viewModelScope.launch {
-            val id = withContext(Dispatchers.IO) { repo.addTag(name, color, icon) }
+            val id = withContext(Dispatchers.IO) { repo.addTag(name, color, icon, key) }
             onDone(id)
         }
     }
 
     fun updateTag(tag: TagEntity) {
         if (tag.name.isBlank()) return
-        viewModelScope.launch { withContext(Dispatchers.IO) { repo.updateTag(tag) } }
+        val key = VaultSession.key() ?: return
+        viewModelScope.launch { withContext(Dispatchers.IO) { repo.updateTag(tag, key) } }
     }
 
     fun deleteTag(id: Long) {
@@ -251,6 +280,9 @@ class VaultViewModel(application: Application) : AndroidViewModel(application) {
         VaultSession.unlock(key)
         lockState = LockState.UNLOCKED
         viewModelScope.launch(Dispatchers.IO) {
+            // Önce biçim geçişi (sürüm 1 → 2, bir kez), sonra onarım: onarım
+            // taşınmış satırların hızlı erişim kopyalarını da yazar.
+            runCatching { repo.upgradeStorage(key) }
             repo.repairQuickCopies(key)
             usageLog.foldBuffer(key)
         }
@@ -637,7 +669,7 @@ class VaultViewModel(application: Application) : AndroidViewModel(application) {
             try {
                 val eksik = withContext(Dispatchers.IO) {
                     val all = repo.getAllDecrypted(key)
-                    val allTags = repo.getAllTags()
+                    val allTags = repo.getAllTags(key)
                     // Çözülemeyen kayıt sessizce yedekten düşüyordu (denetim):
                     // toplam satırla karşılaştır, eksik varsa kullanıcıya söyle —
                     // eksik bir yedeği tam sanmak, kaybın en sinsi biçimi.

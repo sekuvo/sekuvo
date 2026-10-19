@@ -14,7 +14,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         UsageLogEntity::class,
         UsageBufferEntity::class
     ],
-    version = 7,
+    version = 8,
     exportSchema = false
 )
 abstract class VaultDatabase : RoomDatabase() {
@@ -111,6 +111,21 @@ abstract class VaultDatabase : RoomDatabase() {
             }
         }
 
+        /**
+         * Kayıt biçimi sürüm 2: satır kimliği ve şifreli etiket adı sütunları.
+         * Bu adımda hiçbir veri değişmez — anahtar yok. Var olan satırlar
+         * `uid = ''` ile gelir, yani sürüm 1 sayılır ve eskisi gibi okunur;
+         * kilit ilk açıldığında [VaultRepository.upgradeStorage] onları
+         * şifreleyerek taşır (yıkıcı geçiş yok).
+         */
+        internal val MIGRATION_7_8 = object : Migration(7, 8) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE entries ADD COLUMN uid TEXT NOT NULL DEFAULT ''")
+                db.execSQL("ALTER TABLE tags ADD COLUMN uid TEXT NOT NULL DEFAULT ''")
+                db.execSQL("ALTER TABLE tags ADD COLUMN nameBlob BLOB DEFAULT NULL")
+            }
+        }
+
         fun get(context: Context): VaultDatabase =
             instance ?: synchronized(this) {
                 instance ?: Room.databaseBuilder(
@@ -121,7 +136,7 @@ abstract class VaultDatabase : RoomDatabase() {
                     // Yıkıcı geçiş YOK: şema değişince veriler silinmemeli.
                     .addMigrations(
                         MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4,
-                        MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7
+                        MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8
                     )
                     .build()
                     .also { instance = it }

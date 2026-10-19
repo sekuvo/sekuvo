@@ -5,17 +5,24 @@ import androidx.room.withTransaction
 import com.afgover.vault.core.Crypto
 import com.afgover.vault.core.KeyManager
 import com.afgover.vault.core.VaultSession
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import org.json.JSONObject
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.mapLatest
 import javax.crypto.SecretKey
 
 /**
  * Kayıtların şifreli saklanması.
  *
- * Her kaydın aslı [EntryEntity.blob] içinde, ana paroladan türeyen dataKey ile
- * şifrelidir. "Hızlı erişim" işaretli kayıtların bir de [EntryEntity.quickBlob]
- * kopyası vardır; o kopya Keystore'daki kimlik doğrulama istemeyen anahtarla
- * şifrelenir ve klavyenin kasa kilitliyken okuyabildiği tek şeydir.
+ * Her kaydın aslı — başlığı dahil — [EntryEntity.blob] içinde, ana paroladan
+ * türeyen dataKey ile şifrelidir ve satırına bağlıdır (biçim sürüm 2,
+ * [KayitBicimi]). "Hızlı erişim" işaretli kayıtların bir de
+ * [EntryEntity.quickBlob] kopyası vardır; o kopya Keystore'daki kimlik
+ * doğrulama istemeyen anahtarla şifrelenir ve klavyenin kasa kilitliyken
+ * okuyabildiği tek şeydir. Etiket adları da dataKey ile şifrelidir.
  */
 class VaultRepository(
     context: Context,
@@ -61,13 +68,14 @@ class VaultRepository(
     private val tagDao = db.tagDao()
     private val usageLogDao = db.usageLogDao()
 
-    /** Liste: çıpa hariç. */
+    /** Liste: çıpa hariç. Başlıklar şifreli; satırı [decrypt] açar. */
     fun observeAll(): Flow<List<EntryEntity>> = dao.observeVisible()
 
     suspend fun getAll(): List<EntryEntity> = dao.getAll()
 
+    /** Satırı açar (iki biçim sürümü de); açılmazsa null. */
     fun decrypt(entity: EntryEntity, key: SecretKey): DecryptedEntry? =
-        entity.toDecrypted(Crypto.decrypt(key, entity.blob))
+        KayitBicimi.govdeyiAc(entity, key)?.let { (title, data) -> entity.toDecrypted(title, data) }
 
     suspend fun getDecrypted(id: Long, key: SecretKey): DecryptedEntry? =
         dao.getById(id)?.let { decrypt(it, key) }
@@ -88,8 +96,7 @@ class VaultRepository(
     suspend fun getQuickDecrypted(): List<DecryptedEntry> {
         val quickKey = keys.quickKey() ?: return emptyList()
         return dao.getQuick().mapNotNull { entity ->
-            val blob = entity.quickBlob ?: return@mapNotNull null
-            entity.toDecrypted(Crypto.decrypt(quickKey, blob))
+            KayitBicimi.hizliyiAc(entity, quickKey)?.let { (title, data) -> entity.toDecrypted(title, data) }
         }
     }
 
@@ -104,42 +111,45 @@ class VaultRepository(
         noteKind: NoteKind = NoteKind.GENEL,
         sortIndex: Int = 0
     ) {
-        val plain = data.bytes()
+        val plain = KayitBicimi.acikMetin(title, data)
         checkSize(title, plain)
-        val blob = Crypto.encrypt(key, plain)
-        val quickBlob = quickCopy(plain, quick)
         val now = System.currentTimeMillis()
         if (id == 0L) {
+            val uid = KayitBicimi.yeniUid()
             val newId = dao.insert(
                 EntryEntity(
                     type = type.name,
-                    title = title,
-                    blob = blob,
+                    title = "",
+                    blob = Crypto.encrypt(key, plain, KayitBicimi.govdeAad(uid, type.name, false)),
                     createdAt = now,
                     updatedAt = now,
                     quick = quick,
-                    quickBlob = quickBlob,
+                    quickBlob = quickCopy(plain, quick, uid, type.name),
                     tags = TagIds.serialize(tagIds),
                     noteKind = noteKind.name,
                     // Öncelik kullanıcının girdiği sayıdır; girmediyse 0 =
                     // numarasız ve kayıt sıranın sonunda kalır (priorityKey).
-                    sortIndex = sortIndex
+                    sortIndex = sortIndex,
+                    uid = uid
                 )
             )
             usage.record(UsageEvent(newId, UsageKind.OLUSTURULDU, now))
         } else {
             val existing = dao.getById(id) ?: return
+            // Sürüm 1 satırı düzenlenince sürüm 2'ye geçer (uid verilir).
+            val uid = existing.uid.ifEmpty { KayitBicimi.yeniUid() }
             dao.update(
                 existing.copy(
                     type = type.name,
-                    title = title,
-                    blob = blob,
+                    title = "",
+                    blob = Crypto.encrypt(key, plain, KayitBicimi.govdeAad(uid, type.name, existing.anchor)),
                     updatedAt = now,
                     quick = quick,
-                    quickBlob = quickBlob,
+                    quickBlob = quickCopy(plain, quick, uid, type.name),
                     tags = TagIds.serialize(tagIds),
                     noteKind = noteKind.name,
-                    sortIndex = sortIndex
+                    sortIndex = sortIndex,
+                    uid = uid
                 )
             )
             usage.record(UsageEvent(id, UsageKind.DEGISTIRILDI, now))
@@ -164,32 +174,35 @@ class VaultRepository(
      * ilk kurulumdan kalır, güncelleme tarihi her yazımda tazelenir.
      */
     suspend fun saveAnchor(value: String, key: SecretKey) {
-        val plain = EntryData(notes = value).bytes()
-        val blob = Crypto.encrypt(key, plain)
+        val plain = KayitBicimi.acikMetin(ANCHOR_TITLE, EntryData(notes = value))
         val now = System.currentTimeMillis()
         val existing = dao.getAnchor()
+        val uid = existing?.uid?.ifEmpty { null } ?: KayitBicimi.yeniUid()
+        val type = existing?.type ?: EntryType.NOTE.name
+        val blob = Crypto.encrypt(key, plain, KayitBicimi.govdeAad(uid, type, true))
         if (existing == null) {
             dao.insert(
                 EntryEntity(
-                    type = EntryType.NOTE.name,
-                    title = ANCHOR_TITLE,
+                    type = type,
+                    title = "",
                     blob = blob,
                     createdAt = now,
                     updatedAt = now,
                     noteKind = NoteKind.PARMAK_IZI.name,
-                    anchor = true
+                    anchor = true,
+                    uid = uid
                 )
             )
         } else {
-            dao.update(existing.copy(blob = blob, updatedAt = now))
+            dao.update(existing.copy(title = "", blob = blob, updatedAt = now, uid = uid))
         }
     }
 
     /** Detay ekranından hızlı erişimi açıp kapatmak için; içerik değişmez. */
     suspend fun setQuick(id: Long, quick: Boolean, key: SecretKey) {
         val existing = dao.getById(id) ?: return
-        val plain = Crypto.decrypt(key, existing.blob) ?: return
-        dao.update(existing.copy(quick = quick, quickBlob = quickCopy(plain, quick)))
+        val (title, data) = KayitBicimi.govdeyiAc(existing, key) ?: return
+        dao.update(muhurle(existing, title, data, key, quick))
         usage.record(
             UsageEvent(
                 id,
@@ -207,10 +220,63 @@ class VaultRepository(
     suspend fun repairQuickCopies(key: SecretKey) {
         val quickKey = keys.quickKey() ?: return
         dao.getQuick().forEach { entity ->
-            val usable = entity.quickBlob?.let { Crypto.decrypt(quickKey, it) } != null
-            if (usable) return@forEach
-            val plain = Crypto.decrypt(key, entity.blob) ?: return@forEach
-            dao.update(entity.copy(quickBlob = Crypto.encryptWithGeneratedIv(quickKey, plain)))
+            if (KayitBicimi.hizliyiAc(entity, quickKey) != null) return@forEach
+            val (title, data) = KayitBicimi.govdeyiAc(entity, key) ?: return@forEach
+            dao.update(muhurle(entity, title, data, key))
+        }
+    }
+
+    /**
+     * Biçim sürüm 1 → 2 (1.3); kilit açıldığında, onarımdan önce çağrılır.
+     * Eski satırlar (uid boş) tek işlemde taşınır: başlık ve etiket adı
+     * şifreli veriye girer, gövdeler satırlarına bağlanır, kullanım günlüğü
+     * AAD'li yeniden mühürlenir. Yarıda kesilirse hiçbir şey değişmemiş olur
+     * ve sonraki açılışta yeniden denenir; açılamayan satır olduğu gibi kalır.
+     *
+     * Açık metinler sütunlardan silindikten sonra veritabanı dosyası yeniden
+     * yazılır (VACUUM, WAL boşaltılır): yoksa eski başlıklar dosyanın boş
+     * sayfalarında okunabilir kalırdı. Taşınacak satır yoksa hiçbir şey
+     * yapılmaz.
+     *
+     * @return taşınan satır sayısı (kayıt + etiket + günlük)
+     */
+    suspend fun upgradeStorage(key: SecretKey): Int {
+        val quickKey = keys.quickKey()
+        val tasinan = db.withTransaction {
+            val kayitlar = dao.getAll().mapNotNull { KayitBicimi.tasi(it, key, quickKey) }
+            if (kayitlar.isNotEmpty()) dao.updateAll(kayitlar)
+            val etiketler = tagDao.getAll().mapNotNull { KayitBicimi.etiketiTasi(it, key) }
+            if (etiketler.isNotEmpty()) tagDao.updateAll(etiketler)
+            val gunluk = usageLogDao.getAll().mapNotNull { satir ->
+                KayitBicimi.gunluguTasi(satir.blob, key)?.let { satir.copy(blob = it) }
+            }
+            gunluk.forEach { usageLogDao.update(it) }
+            kayitlar.size + etiketler.size + gunluk.size
+        }
+        if (tasinan > 0) bosSayfalariSil()
+        return tasinan
+    }
+
+    /**
+     * Silinen açık metni dosyadan da çıkarır. VACUUM yeni dosyayı önce WAL'e
+     * yazar; ana dosyaya ancak checkpoint'le geçer, o zamana kadar eski
+     * sayfalar (eski başlıklar dahil) ana dosyada durur. Checkpoint okuyucu
+     * varken yarım kalabilir; birkaç kez denenir.
+     *
+     * PRAGMA bir sorgudur ve Android'in imleci ilerletilmeden koşmaz:
+     * `query(...).close()` hiçbir şey yapmaz (emülatörde ölçüldü).
+     */
+    private suspend fun bosSayfalariSil() {
+        runCatching {
+            val sql = db.openHelper.writableDatabase
+            sql.execSQL("VACUUM")
+            repeat(5) { deneme ->
+                val mesgul = sql.query("PRAGMA wal_checkpoint(TRUNCATE)").use { c ->
+                    c.moveToFirst() && c.getInt(0) != 0
+                }
+                if (!mesgul) return@runCatching
+                delay(200L * (deneme + 1))
+            }
         }
     }
 
@@ -221,13 +287,35 @@ class VaultRepository(
     }
 
     // ---- Etiketler ----
+    //
+    // Ad şifreli durur (biçim sürüm 2): depo, kilit açıkken adı çözüp
+    // TagEntity.name'e koyarak döndürür ve sırayı çözülmüş adla kurar.
+    // Kilitliyken liste boştur; etiket arayüzü zaten yalnız kasa açıkken var.
 
-    fun observeTags(): Flow<List<TagEntity>> = tagDao.observeAll()
+    @OptIn(ExperimentalCoroutinesApi::class)
+    fun observeTags(): Flow<List<TagEntity>> =
+        combine(tagDao.observeAll(), VaultSession.unlocked) { satirlar, acik -> satirlar to acik }
+            .mapLatest { (satirlar, acik) ->
+                val key = if (acik) VaultSession.key() else null
+                if (key == null) emptyList() else acikEtiketler(satirlar, key)
+            }
+            .flowOn(Dispatchers.Default)
 
-    suspend fun addTag(name: String, color: Int, icon: String = ""): Long =
-        tagDao.insert(TagEntity(name = name.trim(), color = color, icon = TagIcons.normalize(icon)))
+    suspend fun addTag(name: String, color: Int, icon: String = "", key: SecretKey): Long =
+        tagDao.insert(
+            KayitBicimi.etiketiMuhurle(
+                TagEntity(name = "", color = color, icon = TagIcons.normalize(icon)), name.trim(), key
+            )
+        )
 
-    suspend fun updateTag(tag: TagEntity) = tagDao.update(tag)
+    /** [tag].name çözülmüş (yeni) addır; yeniden mühürlenir. */
+    suspend fun updateTag(tag: TagEntity, key: SecretKey) =
+        tagDao.update(KayitBicimi.etiketiMuhurle(tag, tag.name.trim(), key))
+
+    /** Açılamayan etiket (bozuk mühür) listeden düşer. */
+    private fun acikEtiketler(satirlar: List<TagEntity>, key: SecretKey): List<TagEntity> =
+        satirlar.mapNotNull { t -> KayitBicimi.etiketAdi(t, key)?.let { t.copy(name = it) } }
+            .sortedBy { it.name.lowercase() }
 
     /** Etiketi siler ve taşıyan her kaydın listesinden düşürür. */
     suspend fun deleteTag(id: Long) {
@@ -249,7 +337,7 @@ class VaultRepository(
      * bırakamaz (denetim: kritik veri kaybı yolu).
      */
     suspend fun replaceAll(entries: List<DecryptedEntry>, key: SecretKey, tagDefs: Map<String, TagDef> = emptyMap()) {
-        val resolve = tagNameResolver(entries, tagDefs)
+        val resolve = tagNameResolver(entries, tagDefs, key)
         val hazir = entries.map { it.toEntity(key, resolve(it)) }
         db.withTransaction {
             dao.deleteAll()
@@ -264,7 +352,7 @@ class VaultRepository(
 
     /** İçe aktarma: yedektekileri mevcut kayıtların yanına ekler. */
     suspend fun addAll(entries: List<DecryptedEntry>, key: SecretKey, tagDefs: Map<String, TagDef> = emptyMap()) {
-        val resolve = tagNameResolver(entries, tagDefs)
+        val resolve = tagNameResolver(entries, tagDefs, key)
         dao.insertAll(entries.map { it.toEntity(key, resolve(it)) })
     }
 
@@ -275,44 +363,62 @@ class VaultRepository(
      */
     private suspend fun tagNameResolver(
         entries: List<DecryptedEntry>,
-        tagDefs: Map<String, TagDef>
+        tagDefs: Map<String, TagDef>,
+        key: SecretKey
     ): (DecryptedEntry) -> List<Long> {
         val wanted = entries.flatMap { it.tagNames }.distinct()
         if (wanted.isEmpty()) return { it.tagIds }
-        val byName = tagDao.getAll().associateBy { it.name.lowercase() }.toMutableMap()
+        val byName = getAllTags(key).associateBy { it.name.lowercase() }.toMutableMap()
         wanted.forEach { name ->
             if (name.lowercase() !in byName) {
                 val def = tagDefs[name]
                 val color = def?.color ?: TagPalette.colorFor(byName.size)
                 val icon = TagIcons.normalize(def?.icon)
-                val id = tagDao.insert(TagEntity(name = name, color = color, icon = icon))
+                val id = tagDao.insert(
+                    KayitBicimi.etiketiMuhurle(TagEntity(name = "", color = color, icon = icon), name, key)
+                )
                 byName[name.lowercase()] = TagEntity(id, name, color, icon)
             }
         }
         return { e -> e.tagNames.mapNotNull { byName[it.lowercase()]?.id } }
     }
 
-    suspend fun getAllTags(): List<TagEntity> = tagDao.getAll()
+    /** Etiketler, adları çözülmüş ve ada göre sıralı. */
+    suspend fun getAllTags(key: SecretKey): List<TagEntity> = acikEtiketler(tagDao.getAll(), key)
 
     // ---- Yardımcılar ----
 
-    private fun EntryData.bytes(): ByteArray =
-        toJson().toString().toByteArray(Charsets.UTF_8)
-
-    /** Keystore erişilemiyorsa null döner; kayıt o an kilitliyken görünmez olur. */
-    private fun quickCopy(plain: ByteArray, quick: Boolean): ByteArray? {
+    /**
+     * Hızlı erişim kopyası: kaydın aynı düz metni (başlık dahil), Keystore
+     * anahtarıyla ve satırına bağlı. Keystore erişilemiyorsa null döner;
+     * kayıt o an kilitliyken görünmez olur.
+     */
+    private fun quickCopy(plain: ByteArray, quick: Boolean, uid: String, type: String): ByteArray? {
         if (!quick) return null
         val quickKey = keys.quickKey() ?: return null
-        return Crypto.encryptWithGeneratedIv(quickKey, plain)
+        return Crypto.encryptWithGeneratedIv(quickKey, plain, KayitBicimi.hizliAad(uid, type))
     }
 
-    private fun EntryEntity.toDecrypted(plain: ByteArray?): DecryptedEntry? {
-        if (plain == null) return null
-        val data = try {
-            EntryData.fromJson(JSONObject(String(plain, Charsets.UTF_8)))
-        } catch (e: Exception) {
-            return null
-        }
+    /** Satırı verilen başlık ve veriyle sürüm 2 olarak yeniden mühürler. */
+    private fun muhurle(
+        e: EntryEntity,
+        title: String,
+        data: EntryData,
+        key: SecretKey,
+        quick: Boolean = e.quick
+    ): EntryEntity {
+        val uid = e.uid.ifEmpty { KayitBicimi.yeniUid() }
+        val plain = KayitBicimi.acikMetin(title, data)
+        return e.copy(
+            uid = uid,
+            title = "",
+            quick = quick,
+            blob = Crypto.encrypt(key, plain, KayitBicimi.govdeAad(uid, e.type, e.anchor)),
+            quickBlob = quickCopy(plain, quick, uid, e.type)
+        )
+    }
+
+    private fun EntryEntity.toDecrypted(title: String, data: EntryData): DecryptedEntry {
         return DecryptedEntry(
             id = id,
             type = runCatching { EntryType.valueOf(type) }.getOrDefault(EntryType.NOTE),
@@ -329,22 +435,24 @@ class VaultRepository(
     }
 
     private fun DecryptedEntry.toEntity(key: SecretKey, resolvedTagIds: List<Long>): EntryEntity {
-        val plain = data.bytes()
+        val plain = KayitBicimi.acikMetin(title, data)
         checkSize(title, plain)
+        val uid = KayitBicimi.yeniUid()
         return EntryEntity(
             type = type.name,
-            title = title,
-            blob = Crypto.encrypt(key, plain),
+            title = "",
+            blob = Crypto.encrypt(key, plain, KayitBicimi.govdeAad(uid, type.name, anchor)),
             createdAt = createdAt,
             updatedAt = updatedAt,
             quick = quick,
-            quickBlob = quickCopy(plain, quick),
+            quickBlob = quickCopy(plain, quick, uid, type.name),
             tags = TagIds.serialize(resolvedTagIds),
             noteKind = noteKind.name,
             sortIndex = sortIndex,
             // Çıpa bayrağı geri yüklemede de taşınmalı; yoksa yedekten dönen
             // çıpa normal bir kayda dönüşüp listede belirirdi.
-            anchor = anchor
+            anchor = anchor,
+            uid = uid
         )
     }
 }

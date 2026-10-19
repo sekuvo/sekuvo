@@ -110,6 +110,9 @@ interface UsageLogDao {
     @Insert
     suspend fun insert(row: UsageLogEntity)
 
+    @androidx.room.Update
+    suspend fun update(row: UsageLogEntity)
+
     @Query("SELECT * FROM usage_log ORDER BY id DESC")
     suspend fun getAll(): List<UsageLogEntity>
 

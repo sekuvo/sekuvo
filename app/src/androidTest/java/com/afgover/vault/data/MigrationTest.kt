@@ -265,9 +265,10 @@ class MigrationTest {
     fun goc6dan7ye_ikonKolonunuEklerVeRoomSemayiDogrular() {
         v6VeritabaniKur()
 
+        // Şema bugün 8: 6→7'nin ardından 7→8 de koşar (ikisi birlikte sınanır).
         val room = androidx.room.Room
             .databaseBuilder(context, VaultDatabase::class.java, dbName)
-            .addMigrations(VaultDatabase.MIGRATION_6_7)
+            .addMigrations(VaultDatabase.MIGRATION_6_7, VaultDatabase.MIGRATION_7_8)
             .build()
 
         try {
@@ -289,7 +290,57 @@ class MigrationTest {
                 room.tagDao().update(etiketler[0].copy(icon = "bank"))
                 assertEquals("bank", room.tagDao().getAll()[0].icon)
             }
-            assertEquals(7, room.openHelper.readableDatabase.version)
+            assertEquals(8, room.openHelper.readableDatabase.version)
+        } finally {
+            room.close()
+        }
+    }
+
+    /** Sürüm 7 — 6→7'nin bıraktığı hâl: etiketlere `icon` eklenmiş. */
+    private fun v7VeritabaniKur() {
+        v6VeritabaniKur()
+        val db = SQLiteDatabase.openDatabase(context.getDatabasePath(dbName).path, null, SQLiteDatabase.OPEN_READWRITE)
+        db.execSQL("ALTER TABLE tags ADD COLUMN icon TEXT NOT NULL DEFAULT ''")
+        db.execSQL("INSERT INTO usage_log (blob) VALUES (x'AABB')")
+        db.version = 7
+        db.close()
+    }
+
+    /**
+     * 7→8 (kayıt biçimi sürüm 2'nin sütunları) — Room üzerinden: göçten sonraki
+     * şema doğrulaması tutmazsa uygulama açılışta ölür. Göç veriye dokunmaz;
+     * satırlar `uid = ''` ile sürüm 1 sayılır, açık başlık ve ad kilit
+     * açılınca taşınana kadar okunur.
+     */
+    @Test
+    fun goc7den8e_uidVeSifreliAdKolonlariniEklerRoomSemayiDogrular() {
+        v7VeritabaniKur()
+
+        val room = androidx.room.Room
+            .databaseBuilder(context, VaultDatabase::class.java, dbName)
+            .addMigrations(VaultDatabase.MIGRATION_7_8)
+            .build()
+
+        try {
+            kotlinx.coroutines.runBlocking {
+                val kayit = room.entryDao().getAll().single()
+                assertEquals("v6 kaydı", kayit.title)
+                assertEquals("", kayit.uid)
+                assertArrayEquals(byteArrayOf(0x0A, 0x0B, 0x0C), kayit.blob)
+
+                val etiket = room.tagDao().getAll().single()
+                assertEquals("finans", etiket.name)
+                assertEquals("", etiket.uid)
+                assertEquals(null, etiket.nameBlob)
+
+                // Yeni sütunlar yazılabilir: sürüm 2 satırı saklanır ve okunur.
+                room.entryDao().update(kayit.copy(title = "", uid = "00112233445566778899aabbccddeeff"))
+                room.tagDao().update(etiket.copy(name = "", uid = "ff", nameBlob = byteArrayOf(1, 2, 3)))
+                assertEquals("00112233445566778899aabbccddeeff", room.entryDao().getAll().single().uid)
+                assertArrayEquals(byteArrayOf(1, 2, 3), room.tagDao().getAll().single().nameBlob)
+                assertEquals(1, room.usageLogDao().count())
+            }
+            assertEquals(8, room.openHelper.readableDatabase.version)
         } finally {
             room.close()
         }

@@ -55,11 +55,18 @@ object Crypto {
         }
     }
 
-    /** Çıktı: iv(12 bayt) || şifreli veri+tag */
-    fun encrypt(key: SecretKey, plaintext: ByteArray): ByteArray {
+    /**
+     * Çıktı: iv(12 bayt) || şifreli veri+tag.
+     *
+     * [aad] (ilişkili veri) verilirse mühür ona bağlanır: aynı baytlar
+     * verilmeden açılmaz. Cihazdaki kayıtlar bununla yerlerine bağlanır
+     * ([com.afgover.vault.data.KayitBicimi]); yedek zarfı AAD kullanmaz.
+     */
+    fun encrypt(key: SecretKey, plaintext: ByteArray, aad: ByteArray? = null): ByteArray {
         val iv = randomBytes(GCM_IV_BYTES)
         val cipher = Cipher.getInstance("AES/GCM/NoPadding")
         cipher.init(Cipher.ENCRYPT_MODE, key, GCMParameterSpec(GCM_TAG_BITS, iv))
+        if (aad != null) cipher.updateAAD(aad)
         val ct = cipher.doFinal(plaintext)
         return iv + ct
     }
@@ -69,14 +76,18 @@ object Crypto {
      * yasaktır. Çıktı biçimi [encrypt] ile aynıdır (iv || şifreli veri+tag),
      * bu yüzden çözme tarafı ortaktır: [decrypt].
      */
-    fun encryptWithGeneratedIv(key: SecretKey, plaintext: ByteArray): ByteArray {
+    fun encryptWithGeneratedIv(key: SecretKey, plaintext: ByteArray, aad: ByteArray? = null): ByteArray {
         val cipher = Cipher.getInstance("AES/GCM/NoPadding")
         cipher.init(Cipher.ENCRYPT_MODE, key)
+        if (aad != null) cipher.updateAAD(aad)
         return cipher.iv + cipher.doFinal(plaintext)
     }
 
-    /** Girdi: iv(12 bayt) || şifreli veri+tag. Yanlış anahtar/veri bozuksa null döner. */
-    fun decrypt(key: SecretKey, blob: ByteArray): ByteArray? {
+    /**
+     * Girdi: iv(12 bayt) || şifreli veri+tag. Yanlış anahtar, bozuk veri ya da
+     * mühürlenirkenkinden farklı [aad] null döner.
+     */
+    fun decrypt(key: SecretKey, blob: ByteArray, aad: ByteArray? = null): ByteArray? {
         if (blob.size <= GCM_IV_BYTES) return null
         return try {
             val cipher = Cipher.getInstance("AES/GCM/NoPadding")
@@ -85,6 +96,7 @@ object Crypto {
                 key,
                 GCMParameterSpec(GCM_TAG_BITS, blob.copyOfRange(0, GCM_IV_BYTES))
             )
+            if (aad != null) cipher.updateAAD(aad)
             cipher.doFinal(blob.copyOfRange(GCM_IV_BYTES, blob.size))
         } catch (e: AEADBadTagException) {
             null
