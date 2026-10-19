@@ -326,6 +326,8 @@
     <string name="settings_keyboard_open">کی بورڈ سیٹنگز کھولیں</string>
     <string name="settings_export_pw_title">بیک اپ پاس ورڈ سیٹ کریں</string>
     <string name="settings_export_pw_desc">اس پاس ورڈ کے بغیر بیک اپ فائل بالکل نہیں کھل سکتی۔ اسے اپنے ماسٹر پاس ورڈ سے مختلف رکھیں: بیک اپ پاس ورڈ وہ ہے جو آخرکار کمپیوٹرز پر ٹائپ ہوتا ہے، جبکہ ماسٹر پاس ورڈ کبھی کمپیوٹر کو نہیں چھوتا۔</string>
+    <string name="settings_export_pw_weak">یہ پاس ورڈ کمزور لگتا ہے: 16 حروف سے چھوٹا ہے یا صرف ایک قسم کے حروف پر مشتمل ہے۔ بیک اپ فائل فون سے باہر رکھی جاتی ہے؛ جس کے ہاتھ یہ لگے وہ آف لائن پاس ورڈ آزما سکتا ہے۔ کئی الفاظ پر مشتمل لمبا جملہ مضبوط بھی ہوتا ہے اور یاد رکھنا بھی آسان۔</string>
+    <string name="settings_export_save_anyway">پھر بھی محفوظ کریں</string>
     <string name="settings_biometric_pin_title">فنگر پرنٹ کو PIN سے جوڑیں</string>
     <string name="settings_biometric_pin_desc">فنگر پرنٹ ریکارڈ PIN سے مرمز ہو جائے گا: تالا کھولتے وقت پہلے فنگر پرنٹ مانگا جائے گا، پھر یہ PIN۔</string>
     <string name="settings_label_pin">PIN</string>

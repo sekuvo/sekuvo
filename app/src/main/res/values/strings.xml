@@ -333,6 +333,8 @@
     <string name="settings_keyboard_open">Open keyboard settings</string>
     <string name="settings_export_pw_title">Set backup password</string>
     <string name="settings_export_pw_desc">Without this password the backup file CANNOT be opened. Make it DIFFERENT from your master password: the backup password gets typed on computers, the master password never touches a computer.</string>
+    <string name="settings_export_pw_weak">This password looks weak: shorter than 16 characters, or only one kind of character. The backup file is kept off the phone, so anyone who gets hold of it can try passwords offline. A long sentence of several words is both strong and easy to remember.</string>
+    <string name="settings_export_save_anyway">Save anyway</string>
     <string name="settings_biometric_pin_title">Tie the fingerprint to a PIN</string>
     <string name="settings_biometric_pin_desc">The fingerprint record will be encrypted with the PIN: at unlock you are asked for the fingerprint first, then this PIN.</string>
     <string name="settings_label_pin">PIN</string>

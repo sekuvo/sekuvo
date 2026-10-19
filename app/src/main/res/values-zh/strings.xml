@@ -326,6 +326,8 @@
     <string name="settings_keyboard_open">打开键盘设置</string>
     <string name="settings_export_pw_title">设置备份密码</string>
     <string name="settings_export_pw_desc">没有此密码就无法打开备份文件。请让它与主密码不同：备份密码会输入到电脑上，主密码永远不会接触电脑。</string>
+    <string name="settings_export_pw_weak">此密码看起来较弱：少于 16 个字符，或只有一种字符。备份文件保存在手机之外，拿到它的人可以离线尝试密码。由几个词组成的长句既安全又好记。</string>
+    <string name="settings_export_save_anyway">仍然保存</string>
     <string name="settings_biometric_pin_title">将指纹与 PIN 绑定</string>
     <string name="settings_biometric_pin_desc">指纹记录将用此 PIN 加密：解锁时会先要求指纹，再要求此 PIN。</string>
     <string name="settings_label_pin">PIN</string>

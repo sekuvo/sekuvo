@@ -326,6 +326,8 @@
     <string name="settings_keyboard_open">कीबोर्ड सेटिंग्स खोलें</string>
     <string name="settings_export_pw_title">बैकअप पासवर्ड सेट करें</string>
     <string name="settings_export_pw_desc">इस पासवर्ड के बिना बैकअप फ़ाइल नहीं खुल सकती। इसे अपने मास्टर पासवर्ड से अलग रखें: बैकअप पासवर्ड कंप्यूटरों पर टाइप होता है, मास्टर पासवर्ड कभी कंप्यूटर को छूता नहीं।</string>
+    <string name="settings_export_pw_weak">यह पासवर्ड कमज़ोर लगता है: 16 अक्षरों से छोटा है, या इसमें एक ही तरह के अक्षर हैं। बैकअप फ़ाइल फ़ोन से बाहर रखी जाती है; जिसके हाथ यह लगे, वह ऑफ़लाइन पासवर्ड आज़मा सकता है। कई शब्दों वाला एक लंबा वाक्य मज़बूत भी होता है और याद रखने में आसान भी।</string>
+    <string name="settings_export_save_anyway">फिर भी सहेजें</string>
     <string name="settings_biometric_pin_title">फ़िंगरप्रिंट को PIN से जोड़ें</string>
     <string name="settings_biometric_pin_desc">फ़िंगरप्रिंट रिकॉर्ड PIN से एन्क्रिप्ट होगा: अनलॉक पर पहले फ़िंगरप्रिंट, फिर यह PIN माँगा जाएगा।</string>
     <string name="settings_label_pin">PIN</string>

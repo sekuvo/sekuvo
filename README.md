@@ -14,7 +14,7 @@ incapable of leaving the device.
   Card (number, expiry, CVV, IBAN), Secure Note — plus unlimited custom
   fields, all encrypted.
 - **Strong crypto:** every sensitive field is AES-256-GCM encrypted; the key
-  is derived from your master password with PBKDF2-HMAC-SHA256 (310,000
+  is derived from your master password with PBKDF2-HMAC-SHA256 (600,000
   rounds). No account, no cloud, no backdoor.
 - **Clipboard-free channels:** an Android autofill service, the Sekuvo
   Keyboard (types secrets straight into any app), and a Bluetooth HID mode
@@ -41,7 +41,7 @@ incapable of leaving the device.
 ## Security model
 
 ```
-Master password ──PBKDF2(310k)──▶ KEK ──AES-GCM wrap──▶ dataKey (random 256-bit)
+Master password ──PBKDF2(600k)──▶ KEK ──AES-GCM wrap──▶ dataKey (random 256-bit)
                                                             │
                                                             ▼
                                           All entries encrypted with AES-256-GCM

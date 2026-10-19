@@ -326,6 +326,8 @@
     <string name="settings_keyboard_open">Открыть настройки клавиатуры</string>
     <string name="settings_export_pw_title">Задать пароль резервной копии</string>
     <string name="settings_export_pw_desc">Без этого пароля файл резервной копии НЕЛЬЗЯ открыть. Сделайте его ОТЛИЧНЫМ от основного пароля: пароль резервной копии в итоге вводится на компьютерах, а основной пароль никогда не касается компьютера.</string>
+    <string name="settings_export_pw_weak">Этот пароль выглядит слабым: короче 16 символов или из символов одного вида. Файл резервной копии хранится вне телефона; тот, кто его получит, может подбирать пароли офлайн. Длинная фраза из нескольких слов и надёжна, и легко запоминается.</string>
+    <string name="settings_export_save_anyway">Всё равно сохранить</string>
     <string name="settings_biometric_pin_title">Привязать отпечаток к PIN-коду</string>
     <string name="settings_biometric_pin_desc">Запись отпечатка будет зашифрована PIN-кодом: при разблокировке сначала запрашивается отпечаток, затем этот PIN-код.</string>
     <string name="settings_label_pin">PIN-код</string>

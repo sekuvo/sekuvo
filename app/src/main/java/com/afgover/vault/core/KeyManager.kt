@@ -270,10 +270,26 @@ class KeyManager(context: Context) {
      */
     fun unlockStage1(password: CharArray): ByteArray? {
         val salt = prefs.getString(PREF_SALT, null)?.let(::unb64) ?: return null
-        val iterations = prefs.getInt(PREF_ITERATIONS, Crypto.KDF_ITERATIONS)
         val wrapped = prefs.getString(PREF_WRAPPED_KEY, null)?.let(::unb64) ?: return null
-        val kek = Crypto.deriveKey(password, salt, iterations)
+        val kek = Crypto.deriveKey(password, salt, storedIterations())
         return Crypto.decrypt(kek, wrapped)
+    }
+
+    /** Ana parola sargısının tur sayısı; yazılmamışsa ilk sürümlerin sayısı. */
+    private fun storedIterations(): Int =
+        prefs.getInt(PREF_ITERATIONS, Crypto.LEGACY_KDF_ITERATIONS)
+
+    /**
+     * Sargı bugünkü tur sayısından azıyla yazılmışsa (1.3'ten önceki
+     * kasalar) aynı içerik yeni tuz ve [Crypto.KDF_ITERATIONS] ile yeniden
+     * sarılır. Yalnız ana parola elde varken yapılabilir: parmak izi yolu
+     * parolayı görmez, o yüzden yükseltme ilk parolalı açılışa kalır.
+     * [payload], [unlockStage1]'in aynı parolayla az önce döndürdüğüdür.
+     */
+    fun upgradeKdf(password: CharArray, payload: ByteArray): Boolean {
+        if (!Crypto.needsKdfUpgrade(storedIterations())) return false
+        storePayload(password, payload)
+        return true
     }
 
     /** Parola doğruysa dataKey. PIN bu yolu etkilemez (bilinçli). */

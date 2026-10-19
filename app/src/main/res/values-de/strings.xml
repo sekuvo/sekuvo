@@ -326,6 +326,8 @@
     <string name="settings_keyboard_open">Tastatureinstellungen öffnen</string>
     <string name="settings_export_pw_title">Backup-Passwort festlegen</string>
     <string name="settings_export_pw_desc">Ohne dieses Passwort kann die Backup-Datei ÜBERHAUPT NICHT geöffnet werden. Wähle es ANDERS als dein Hauptpasswort: Das Backup-Passwort wird letztlich an Computern eingegeben, das Hauptpasswort berührt nie einen Computer.</string>
+    <string name="settings_export_pw_weak">Dieses Passwort wirkt schwach: kürzer als 16 Zeichen oder nur eine Art von Zeichen. Die Backup-Datei liegt außerhalb des Telefons; wer sie in die Hände bekommt, kann Passwörter offline durchprobieren. Ein langer Satz aus mehreren Wörtern ist stark und leicht zu merken.</string>
+    <string name="settings_export_save_anyway">Trotzdem speichern</string>
     <string name="settings_biometric_pin_title">Fingerabdruck mit PIN verknüpfen</string>
     <string name="settings_biometric_pin_desc">Der Fingerabdruck wird mit dem PIN verschlüsselt: Beim Entsperren wird zuerst der Fingerabdruck abgefragt, dann dieser PIN.</string>
     <string name="settings_label_pin">PIN</string>

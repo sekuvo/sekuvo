@@ -326,6 +326,8 @@
     <string name="settings_keyboard_open">Buka pengaturan keyboard</string>
     <string name="settings_export_pw_title">Atur kata sandi cadangan</string>
     <string name="settings_export_pw_desc">Tanpa kata sandi ini, file cadangan SAMA SEKALI tidak bisa dibuka. Buat berbeda dari kata sandi utamamu: kata sandi cadangan pada akhirnya diketik di komputer, sedangkan kata sandi utama tidak pernah menyentuh komputer.</string>
+    <string name="settings_export_pw_weak">Kata sandi ini tampak lemah: kurang dari 16 karakter, atau hanya satu jenis karakter. File cadangan disimpan di luar ponsel; siapa pun yang mendapatkannya bisa mencoba kata sandi secara offline. Kalimat panjang dari beberapa kata itu kuat sekaligus mudah diingat.</string>
+    <string name="settings_export_save_anyway">Tetap simpan</string>
     <string name="settings_biometric_pin_title">Kaitkan sidik jari dengan PIN</string>
     <string name="settings_biometric_pin_desc">Data sidik jari akan dienkripsi dengan PIN: saat membuka kunci, sidik jari diminta dulu, lalu PIN ini.</string>
     <string name="settings_label_pin">PIN</string>

@@ -15,7 +15,7 @@ Tamamen çevrimdışı çalışır; hiçbir veri internete gönderilmez.
   "alan adı + değer" çifti ekleyebilirsin; bu alanlar da şifrelenir, detay
   ekranında ve klavyede diğerleriyle birlikte listelenir
 - **Güçlü şifreleme**: Tüm hassas alanlar AES-256-GCM ile şifrelenir; anahtar ana
-  paroladan PBKDF2-HMAC-SHA256 (310.000 tur) ile türetilir
+  paroladan PBKDF2-HMAC-SHA256 (600.000 tur) ile türetilir
 - **Biyometrik kilit açma** (opsiyonel, parmak izi/yüz). Kasa, uygulamanın
   bulunduğu **ekran kapandığı anda** kilitlenir — ekranı kapatmak da,
   katlanabilir cihazı **katlamak** da kilitler (katlayınca cihaz "uyanık"
@@ -59,7 +59,7 @@ Tamamen çevrimdışı çalışır; hiçbir veri internete gönderilmez.
 ## Güvenlik modeli
 
 ```
-Ana parola ──PBKDF2(310k)──▶ KEK ──AES-GCM sarma──▶ dataKey (rastgele 256 bit)
+Ana parola ──PBKDF2(600k)──▶ KEK ──AES-GCM sarma──▶ dataKey (rastgele 256 bit)
                                                         │
                                                         ▼
                                           Tüm kayıtlar AES-256-GCM ile şifreli

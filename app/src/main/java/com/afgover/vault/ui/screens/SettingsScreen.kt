@@ -50,6 +50,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import com.afgover.vault.R
+import com.afgover.vault.backup.BackupManager
 import com.afgover.vault.ui.theme.vaultButtonColors
 import com.afgover.vault.data.EntrySort
 import com.afgover.vault.ui.VaultViewModel
@@ -502,6 +503,7 @@ fun SettingsScreen(
             title = stringResource(R.string.settings_export_pw_title),
             description = stringResource(R.string.settings_export_pw_desc),
             confirmField = true,
+            warnWeak = true,
             onConfirm = { pw ->
                 viewModel.exportBackup(uri, pw)
                 exportUri = null
@@ -589,15 +591,18 @@ private fun PasswordDialog(
     description: String,
     confirmField: Boolean,
     onConfirm: (String) -> Unit,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    /** Yedek parolası: zayıfsa uyarı gösterilir ve düğme "Yine de kaydet" olur. */
+    warnWeak: Boolean = false
 ) {
     var pw by remember { mutableStateOf("") }
     var pw2 by remember { mutableStateOf("") }
+    val zayif = warnWeak && pw.isNotEmpty() && BackupManager.isWeakPassword(pw)
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text(title) },
         text = {
-            Column {
+            Column(Modifier.verticalScroll(rememberScrollState())) {
                 Text(description, style = MaterialTheme.typography.bodySmall)
                 Spacer(Modifier.height(8.dp))
                 SecretField(
@@ -613,13 +618,27 @@ private fun PasswordDialog(
                         label = stringResource(R.string.settings_label_password_again)
                     )
                 }
+                if (zayif) {
+                    Spacer(Modifier.height(8.dp))
+                    Text(
+                        stringResource(R.string.settings_export_pw_weak),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
             }
         },
         confirmButton = {
             TextButton(
                 onClick = { onConfirm(pw) },
                 enabled = pw.isNotEmpty() && (!confirmField || pw == pw2)
-            ) { Text(stringResource(R.string.settings_ok)) }
+            ) {
+                Text(
+                    stringResource(
+                        if (zayif) R.string.settings_export_save_anyway else R.string.settings_ok
+                    )
+                )
+            }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) { Text(stringResource(R.string.settings_cancel)) }

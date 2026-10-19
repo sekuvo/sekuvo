@@ -326,6 +326,8 @@
     <string name="settings_keyboard_open">فتح إعدادات لوحة المفاتيح</string>
     <string name="settings_export_pw_title">تعيين كلمة مرور النسخة</string>
     <string name="settings_export_pw_desc">بدون هذه الكلمة لا يمكن فتح ملف النسخة الاحتياطية إطلاقًا. اجعلها مختلفة عن كلمة مرورك الرئيسية: كلمة مرور النسخة هي التي تُكتب على الحواسيب، أما الرئيسية فلا تلامس حاسوبًا أبدًا.</string>
+    <string name="settings_export_pw_weak">تبدو كلمة المرور هذه ضعيفة: أقصر من 16 محرفًا أو من نوع واحد من المحارف. يُحفظ ملف النسخة الاحتياطية خارج الهاتف، ويمكن لمن يحصل عليه تجربة كلمات المرور دون اتصال. الجملة الطويلة المؤلفة من عدة كلمات قوية وسهلة التذكر.</string>
+    <string name="settings_export_save_anyway">الحفظ رغم ذلك</string>
     <string name="settings_biometric_pin_title">ربط البصمة بـ PIN</string>
     <string name="settings_biometric_pin_desc">سيُشفَّر سجل البصمة بـ PIN: عند فتح القفل تُطلب البصمة أولًا، ثم هذا الرمز.</string>
     <string name="settings_label_pin">PIN</string>

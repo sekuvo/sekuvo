@@ -24,9 +24,27 @@ format changed.
 
 ## 1. Key derivation
 
-PBKDF2-HMAC-SHA256, 32-byte key, 16-byte random salt, **310,000**
-iterations. Readers accept 10,000–1,000,000 iterations and reject anything
-else (a hostile envelope must not lock the device in a long derivation).
+PBKDF2-HMAC-SHA256, 32-byte key, 16-byte random salt. The iteration count
+travels with what it protects (the envelope's `kdf.iterations`, the
+on-device wrap), so every file opens with the count it was written with:
+
+| Writer | Iterations |
+|---|---|
+| the apps: backups, the master-password wrap (since 1.3) | **600,000** |
+| the apps before 1.3; `aktar.html`; `tools/vault-clip.py` | 310,000 |
+| the PIN wrap (§6): fixed, its count is not stored | 310,000 |
+
+Readers accept 10,000–1,000,000 iterations and reject anything else (a
+hostile envelope must not lock the device in a long derivation). A missing
+`iterations` reads as 310,000, the count every writer used before 1.3.
+Raising the writers' count never breaks a reader: an old app opens a new
+backup, a new app opens an old one.
+
+The apps warn, and do not refuse, when a backup password is weak: shorter
+than 16 characters (Unicode code points) or made of a single kind of
+character (lowercase, uppercase, a letter without case, digit, other). For
+ASCII this is the rule `aktar.html` and `vault-clip.py` apply before
+uploading to the relay.
 
 The password enters as its **UTF-8 bytes**. Android's `PBEKeySpec` agrees for
 ASCII; non-ASCII passwords are not yet measured on the Android runtime, which
@@ -142,9 +160,15 @@ Inflation stops at 4 MiB (zip bomb). The assembled text is an envelope (§3).
 
 A random 32-byte `dataKey` seals each entry's `data` JSON (§2). A `KEK`
 derived from the master password (§1) seals the `dataKey`. Each platform
-stores the wrapped key its own way. Biometric unlock and the optional PIN
-wrap the same `dataKey` again; the master password always opens the vault on
-its own, so a backup needs nothing but the file and its password.
+stores the wrapped key its own way, together with its salt and iteration
+count. A wrap written with fewer iterations than today's (a vault created
+before 1.3) is rewritten with a new salt and 600,000 iterations the next
+time the vault is opened with the master password; biometric unlock never
+sees the password, so it cannot do this. Biometric unlock and the optional
+PIN wrap the same `dataKey` again; the PIN is always derived with 310,000
+iterations, because neither the PIN wrap nor its check blob records a count.
+The master password always opens the vault on its own, so a backup needs
+nothing but the file and its password.
 
 ## Changing the format
 

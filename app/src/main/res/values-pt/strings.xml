@@ -326,6 +326,8 @@
     <string name="settings_keyboard_open">Abrir configurações do teclado</string>
     <string name="settings_export_pw_title">Definir senha de backup</string>
     <string name="settings_export_pw_desc">Sem esta senha, o arquivo de backup NÃO pode ser aberto. Use uma DIFERENTE da sua senha principal: a senha de backup acaba sendo digitada em computadores, a senha principal nunca toca em um computador.</string>
+    <string name="settings_export_pw_weak">Esta senha parece fraca: tem menos de 16 caracteres ou um só tipo de caractere. O arquivo de backup fica fora do telefone; quem o obtiver pode testar senhas offline. Uma frase longa de várias palavras é forte e fácil de lembrar.</string>
+    <string name="settings_export_save_anyway">Salvar mesmo assim</string>
     <string name="settings_biometric_pin_title">Vincular a impressão digital a um PIN</string>
     <string name="settings_biometric_pin_desc">O registro de impressão digital será criptografado com o PIN: ao desbloquear, a impressão digital é solicitada primeiro, depois este PIN.</string>
     <string name="settings_label_pin">PIN</string>

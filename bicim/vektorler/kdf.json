@@ -18,6 +18,12 @@
       "tuz": "ICEiIyQlJicoKSorLC0uLw==",
       "tur": 10000,
       "anahtar_hex": "5959202ceb2eaa632a5b5e60c405396890d581dce3aa1372c4b58fb7a5fc86a0"
+    },
+    {
+      "parola": "Uzun bir yedek cumlesi 2026",
+      "tuz": "MDEyMzQ1Njc4OTo7PD0+Pw==",
+      "tur": 600000,
+      "anahtar_hex": "44caf66de62da371c8ce95dc13472df3a03fec602ada59a46e5fb5a145316b81"
     }
   ]
 }
