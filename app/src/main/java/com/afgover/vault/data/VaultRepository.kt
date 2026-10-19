@@ -46,6 +46,16 @@ class VaultRepository(
          * değil, doğruladığın dosyanın adı — her dilde aynı dosyadır.
          */
         const val ANCHOR_TITLE = "aktar.html"
+
+        /**
+         * İçe aktarılan kayıtlar → (çıpa dışındakiler, en yeni çıpa). Kasada en
+         * çok bir çıpa olur: yedekte birden çoğu varsa yalnız en yenisi alınır.
+         * iOS'taki `VaultStore.apply` ile aynı kural.
+         */
+        fun capayiAyir(entries: List<DecryptedEntry>): Pair<List<DecryptedEntry>, DecryptedEntry?> {
+            val (capalar, kayitlar) = entries.partition { it.anchor }
+            return kayitlar to capalar.maxByOrNull { it.updatedAt }
+        }
     }
 
     /**
@@ -335,10 +345,18 @@ class VaultRepository(
      * yedekteki bir kayıt hatalıysa mevcut kasa hiç silinmez. Silme ve yazma
      * da tek transaction'dadır; yarıda kesilen bir içe aktarma kasayı boş
      * bırakamaz (denetim: kritik veri kaybı yolu).
+     *
+     * Çıpadan başka kayıt taşımayan zarf boştur: hiçbir şey yapılmaz. Yoksa
+     * yalnız çıpa taşıyan bir yedek kasayı boşaltırdı (ikinci tur denetim;
+     * iOS'ta daha önce kapanmıştı).
+     *
+     * @return yazılan kayıt sayısı; çıpa sayılmaz (kullanıcı onu listede görmez)
      */
-    suspend fun replaceAll(entries: List<DecryptedEntry>, key: SecretKey, tagDefs: Map<String, TagDef> = emptyMap()) {
-        val resolve = tagNameResolver(entries, tagDefs, key)
-        val hazir = entries.map { it.toEntity(key, resolve(it)) }
+    suspend fun replaceAll(entries: List<DecryptedEntry>, key: SecretKey, tagDefs: Map<String, TagDef> = emptyMap()): Int {
+        val (kayitlar, capa) = capayiAyir(entries)
+        if (kayitlar.isEmpty()) return 0
+        val resolve = tagNameResolver(kayitlar, tagDefs, key)
+        val hazir = (kayitlar + listOfNotNull(capa)).map { it.toEntity(key, resolve(it)) }
         db.withTransaction {
             dao.deleteAll()
             // Eski kasanın kullanım günlüğü de gitmeli: kayıtlar silinince
@@ -348,12 +366,36 @@ class VaultRepository(
             usageLogDao.clearBuffer()
             dao.insertAll(hazir)
         }
+        return kayitlar.size
     }
 
-    /** İçe aktarma: yedektekileri mevcut kayıtların yanına ekler. */
-    suspend fun addAll(entries: List<DecryptedEntry>, key: SecretKey, tagDefs: Map<String, TagDef> = emptyMap()) {
-        val resolve = tagNameResolver(entries, tagDefs, key)
-        dao.insertAll(entries.map { it.toEntity(key, resolve(it)) })
+    /**
+     * İçe aktarma: yedektekileri mevcut kayıtların yanına ekler.
+     *
+     * Çıpa eklenmez, yerine yazılır: kasadakinden yeniyse onun yerine geçer,
+     * değilse alınmaz. Eskiden ikinci bir çıpa satırı açılıyor, çıpa ekranı
+     * eskisini göstermeye devam ediyordu. Çıpadan başka kayıt yoksa zarf
+     * boştur ([replaceAll] ile aynı kural).
+     *
+     * @return eklenen kayıt sayısı; çıpa sayılmaz
+     */
+    suspend fun addAll(entries: List<DecryptedEntry>, key: SecretKey, tagDefs: Map<String, TagDef> = emptyMap()): Int {
+        val (kayitlar, capa) = capayiAyir(entries)
+        if (kayitlar.isEmpty()) return 0
+        val resolve = tagNameResolver(kayitlar, tagDefs, key)
+        val hazir = kayitlar.map { it.toEntity(key, resolve(it)) }
+        val capaSatiri = capa?.toEntity(key, emptyList())
+        db.withTransaction {
+            dao.insertAll(hazir)
+            if (capaSatiri != null) {
+                val mevcut = dao.getAnchor()
+                when {
+                    mevcut == null -> dao.insert(capaSatiri)
+                    capaSatiri.updatedAt >= mevcut.updatedAt -> dao.update(capaSatiri.copy(id = mevcut.id))
+                }
+            }
+        }
+        return kayitlar.size
     }
 
     /**

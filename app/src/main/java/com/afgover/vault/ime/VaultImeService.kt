@@ -26,6 +26,7 @@ import com.afgover.vault.data.sortedBy
 import android.os.SystemClock
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
@@ -60,16 +61,28 @@ class VaultImeService : InputMethodService() {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     /** Son `refresh()` anı: `onStartInputView` ve `onWindowShown` art arda gelince kasa iki kez çözülmesin. */
     private var sonTazeleme = 0L
+    /** Süren liste yüklemesi; yenisi gelince ya da kilitte iptal edilir. */
+    private var tazelemeIsi: Job? = null
 
     override fun onCreate() {
         super.onCreate()
-        // Klavye görünürken kasa kilitlenirse (zaman aşımı) çözülmüş kayıtlar
-        // bellekte kalmasın: pencere açıksa yalnız hızlı erişim kopyalarıyla
-        // yeniden kurulur, kapalıysa liste boşaltılır.
+        // Klavye görünürken kasa kilitlenirse (katlanan ekran, çoklu pencere)
+        // çözülmüş kayıtlar bellekte kalmasın. Seçili kayıt da düşer: alan
+        // düğmeleri değeri taşıyor ve kilitten sonra korumalı kaydın
+        // değerleri yazılmaya devam ediyordu (ikinci tur denetim). Pencere
+        // açıksa liste hemen boşalır, sonra hızlı erişim kopyalarıyla kurulur.
         scope.launch {
             VaultSession.unlocked.collect { acik ->
                 if (!acik && !locked) {
-                    if (isInputViewShown) refresh() else { selected = null; entries = emptyList(); locked = true }
+                    selected = null
+                    entries = emptyList()
+                    locked = true
+                    if (isInputViewShown) {
+                        render()
+                        refresh()
+                    } else {
+                        tazelemeIsi?.cancel()
+                    }
                 }
             }
         }
@@ -247,6 +260,8 @@ class VaultImeService : InputMethodService() {
     /** Pencere gizlenince çözülmüş kayıtları bellekte tutma. */
     override fun onWindowHidden() {
         super.onWindowHidden()
+        // Süren yükleme de durur: bitince listeyi belleğe geri koyardı.
+        tazelemeIsi?.cancel()
         selected = null
         entries = emptyList()
     }
@@ -264,9 +279,13 @@ class VaultImeService : InputMethodService() {
         sonTazeleme = SystemClock.uptimeMillis()
         val key = VaultSession.key()
         locked = key == null
-        scope.launch {
+        // Önceki yükleme biter bitmez bunun üstüne yazardı: kilitten önce
+        // başlayıp sonra biten bir yükleme korumalı kayıtları kilitli
+        // klavyeye getirebilirdi.
+        tazelemeIsi?.cancel()
+        tazelemeIsi = scope.launch {
             val repo = (application as VaultApp).repository
-            entries = withContext(Dispatchers.IO) {
+            val yuklenen = withContext(Dispatchers.IO) {
                 (if (key == null) repo.getQuickDecrypted() else repo.getVisibleDecrypted(key))
                     // Klavye HER ZAMAN öncelik numarasına göre dizer, uygulama
                     // listesinin sırasına bakmaksızın (kullanıcı kararı):
@@ -275,6 +294,9 @@ class VaultImeService : InputMethodService() {
                     // açıkken de kapalıyken de aynı kural işler.
                     .sortedBy(EntrySort.MANUAL)
             }
+            // Yükleme sürerken kilitlendiyse açık kasanın listesi gösterilmez.
+            if (key != null && !VaultSession.isUnlocked) return@launch
+            entries = yuklenen
             render()
         }
     }

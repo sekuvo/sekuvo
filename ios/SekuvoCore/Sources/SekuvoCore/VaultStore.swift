@@ -60,11 +60,31 @@ public final class VaultStore {
 
     /// Liste: araç çıpası hariç (o, kendi düğmesinden açılır).
     public func items() throws -> [Item] {
-        try store.all().filter { !$0.anchor }.map { r in
-            let baslik = KayitBicimi.govdeyiAc(r, key: key)?.title ?? (r.title.isEmpty ? unreadableTitle : r.title)
-            return Item(id: r.id, type: .of(r.type), title: baslik, noteKind: .of(r.noteKind), quick: r.quick,
-                        sortIndex: r.sortIndex, tagIds: TagIds.parse(r.tags), createdAt: r.createdAt, updatedAt: r.updatedAt)
+        try store.all().filter { !$0.anchor }.map { item($0, KayitBicimi.govdeyiAc($0, key: key)) }
+    }
+
+    /// Liste ve logo eşleşmesi tek geçişte: her satır bir kez çözülür. Kasa
+    /// açıkken her değişiklikte ana iş parçacığında çağrılıyor; `items()` ve
+    /// `brandIds()` ayrı ayrı bütün kasayı iki kez çözüyordu (ikinci tur
+    /// denetim; Android `VaultViewModel.cozulmus` tek geçişte yapıyor).
+    public func itemsAndBrands() throws -> (items: [Item], brands: [Int64: String]) {
+        var liste: [Item] = []
+        var markalar: [Int64: String] = [:]
+        for r in try store.all() where !r.anchor {
+            let c = KayitBicimi.govdeyiAc(r, key: key)
+            liste.append(item(r, c))
+            if let c, let b = Brands.match(title: c.title, url: c.data.url, choice: c.data.brand,
+                                           isCard: EntryType.of(r.type) == .card, cardNumber: c.data.cardNumber) {
+                markalar[r.id] = b.id
+            }
         }
+        return (liste, markalar)
+    }
+
+    private func item(_ r: EntryStore.Row, _ c: (title: String, data: EntryData)?) -> Item {
+        let baslik = c?.title ?? (r.title.isEmpty ? unreadableTitle : r.title)
+        return Item(id: r.id, type: .of(r.type), title: baslik, noteKind: .of(r.noteKind), quick: r.quick,
+                    sortIndex: r.sortIndex, tagIds: TagIds.parse(r.tags), createdAt: r.createdAt, updatedAt: r.updatedAt)
     }
 
     public func load(id: Int64) -> DecryptedEntry? {
@@ -190,6 +210,8 @@ public final class VaultStore {
     ///   yedekteki renk ve ikonla, renk yoksa paletten oluşturulur.
     /// - Kasada en çok bir araç çıpası olur: gelen çıpa mevcut olandan
     ///   yeniyse onun yerine geçer, değilse alınmaz.
+    /// - Dönen sayı kullanıcının listede göreceği kayıtlardır: çıpa sayılmaz
+    ///   (eskiden "6 kayıt eklendi" deyip listeye 5 kayıt koyuyordu).
     @discardableResult
     public func apply(_ sonuc: Backup.ImportResult, replace: Bool) throws -> Int {
         guard !sonuc.entries.isEmpty else { return 0 }
@@ -197,9 +219,10 @@ public final class VaultStore {
         // Çıpalar: gelenlerden yalnız en yenisi kalır.
         var gelen = sonuc.entries.filter { !$0.anchor }
         let yeniCapa = sonuc.entries.filter(\.anchor).max { $0.updatedAt < $1.updatedAt }
-        // Yalnız çıpa taşıyan zarf, "tümünü değiştir" ile kasayı boşaltamaz:
-        // kullanıcı için o zarf boştur ve boş zarf da hiçbir şey yapmaz.
-        if replace && gelen.isEmpty { return 0 }
+        // Yalnız çıpa taşıyan zarf boştur ve hiçbir şey yapmaz: "tümünü
+        // değiştir" ile kasayı boşaltamaz, "ekle" ile de yalnız çıpayı
+        // değiştirmez (Android ile aynı kural).
+        if gelen.isEmpty { return 0 }
 
         // 1. Kasaya dokunmadan önce: boyut denetimi ve şifreleme.
         var hazir: [(DecryptedEntry, String, Data)] = []
@@ -238,10 +261,10 @@ public final class VaultStore {
                 } else {
                     try store.insert(satir)
                 }
-                yazilan += 1
+                if !e.anchor { yazilan += 1 }
             }
         }
-        // Kasaya gerçekten yazılan satır sayısı: atlanan eski çıpa sayılmaz.
+        // Kasaya yazılan kayıt sayısı; çıpa sayılmaz.
         return yazilan
     }
 

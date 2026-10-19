@@ -9,7 +9,7 @@ gider. Sitenin ele geçirilmesi ihtimalinde bile içerik çözülemez — tek
 ## Güvenlik modelinin özeti
 
 - Zarf, telefondaki uygulamanın açtığı `.vaultbak` biçimidir:
-  PBKDF2-HMAC-SHA256 (310.000 tur) + AES-256-GCM, `iv || şifreli+tag`.
+  PBKDF2-HMAC-SHA256 (600.000 tur) + AES-256-GCM, `iv || şifreli+tag`.
 - Yanlış parola "rastgele çözme" üretmez: GCM etiketi tutmaz, içe aktarma
   "parola yanlış" der (2⁻¹²⁸ hata payı).
 - Relay tek görüntülemelik ve süreli: bağlantı ilk açılışta yanar, en geç
@@ -65,12 +65,12 @@ payload = json.dumps({"entries": [{
 }]}, ensure_ascii=False)
 
 salt = os.urandom(16)
-key = hashlib.pbkdf2_hmac("sha256", parola.encode(), salt, 310_000, 32)
+key = hashlib.pbkdf2_hmac("sha256", parola.encode(), salt, 600_000, 32)
 iv = os.urandom(12)
 blob = iv + AESGCM(key).encrypt(iv, payload.encode(), None)
 print(json.dumps({
     "app": "vault", "version": 1,
-    "kdf": {"algo": "PBKDF2WithHmacSHA256", "iterations": 310_000,
+    "kdf": {"algo": "PBKDF2WithHmacSHA256", "iterations": 600_000,
             "salt": base64.b64encode(salt).decode()},
     "cipher": "AES-256-GCM",
     "data": base64.b64encode(blob).decode(),

@@ -27,7 +27,8 @@ struct VaultStoreTests {
     @Test func androidYedegiAcilirEtiketlerKurulurCipaGizlenir() throws {
         let k = try kasa()
         let sonuc = try tamYedek()
-        #expect(try k.apply(sonuc, replace: false) == 7)
+        // Sayı çıpasız: kullanıcı listede 6 kayıt görür, bildirim de 6 der.
+        #expect(try k.apply(sonuc, replace: false) == 6)
 
         // Listede 6 kayıt: çıpa kendi düğmesinden açılır.
         let liste = try k.items()
@@ -107,9 +108,10 @@ struct VaultStoreTests {
             return DecryptedEntry(type: .note, title: "aktar.html", data: d, createdAt: zaman, updatedAt: zaman,
                                   noteKind: .parmakIzi, anchor: true)
         }
-        try k.apply(Backup.ImportResult(entries: [capa("eski", 10)], tagDefs: [:]), replace: false)
-        try k.apply(Backup.ImportResult(entries: [capa("daha-eski", 5)], tagDefs: [:]), replace: false)
-        try k.apply(Backup.ImportResult(entries: [capa("yeni", 20)], tagDefs: [:]), replace: false)
+        // Her zarfta bir kayıt da var: yalnız çıpa taşıyan zarf boş sayılır.
+        try k.apply(Backup.ImportResult(entries: [kayit("1"), capa("eski", 10)], tagDefs: [:]), replace: false)
+        try k.apply(Backup.ImportResult(entries: [kayit("2"), capa("daha-eski", 5)], tagDefs: [:]), replace: false)
+        try k.apply(Backup.ImportResult(entries: [kayit("3"), capa("yeni", 20)], tagDefs: [:]), replace: false)
         let capalar = try k.exportable().entries.filter(\.anchor)
         #expect(capalar.count == 1)
         #expect(capalar.first?.data.notes == "yeni")
@@ -234,15 +236,34 @@ extension VaultStoreTests {
         #expect(try k.items().map(\.title) == ["Kalsın"])
     }
 
-    @Test func geriYuklemeSayisiYazilanSatirlardir() throws {
+    @Test func geriYuklemeSayisiKayitlardirCipaSayilmaz() throws {
         let k = try kasa()
         func capa(_ zaman: Int64) -> DecryptedEntry {
             var d = EntryData(); d.notes = "x"
             return DecryptedEntry(type: .note, title: "aktar.html", data: d, createdAt: zaman, updatedAt: zaman,
                                   noteKind: .parmakIzi, anchor: true)
         }
-        try k.apply(Backup.ImportResult(entries: [capa(20)], tagDefs: [:]), replace: false)
-        // Eski çıpa atlanır, sayıya girmez; kayıt sayılır.
+        #expect(try k.apply(Backup.ImportResult(entries: [kayit("0"), capa(20)], tagDefs: [:]), replace: false) == 1)
+        // Eski çıpa atlanır; yeni çıpa yazılır ama o da sayılmaz.
         #expect(try k.apply(Backup.ImportResult(entries: [kayit("A"), capa(5)], tagDefs: [:]), replace: false) == 1)
+        #expect(try k.apply(Backup.ImportResult(entries: [kayit("B"), capa(30)], tagDefs: [:]), replace: true) == 1)
+        #expect(try k.exportable().entries.filter(\.anchor).map(\.updatedAt) == [30])
+    }
+
+    @Test func yalnizCipaTasiyanZarfEkleIleDeHicbirSeyYazmaz() throws {
+        let k = try kasa()
+        var d = EntryData(); d.notes = "sha"
+        let capa = DecryptedEntry(type: .note, title: "aktar.html", data: d, createdAt: 1, updatedAt: 1,
+                                  noteKind: .parmakIzi, anchor: true)
+        #expect(try k.apply(Backup.ImportResult(entries: [capa], tagDefs: [:]), replace: false) == 0)
+        #expect(try k.exportable().entries.isEmpty)
+    }
+
+    @Test func listeVeLogolarTekGecisteAyniSonucuVerir() throws {
+        let k = try kasa()
+        try k.apply(try tamYedek(), replace: false)
+        let (liste, markalar) = try k.itemsAndBrands()
+        #expect(liste == (try k.items()))
+        #expect(markalar == (try k.brandIds()))
     }
 }

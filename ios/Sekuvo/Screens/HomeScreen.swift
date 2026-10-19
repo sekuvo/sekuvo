@@ -38,6 +38,19 @@ struct HomeScreen: View {
         Binding(get: { kasa.restoredDraft }, set: { kasa.restoredDraft = $0 })
     }
 
+    /// Dosyalar'dan gelen yedek: biyometri önerisi ya da geri gelen taslak
+    /// açıksa o kapandıktan sonra. Aynı görünümden iki pencere birden
+    /// sunulamaz; çakışınca biri hiç açılmıyordu (ikinci tur denetim).
+    private var yedekBagi: Binding<VaultModel.IncomingFile?> {
+        Binding(
+            get: {
+                kasa.offerBiometric || kasa.offerBiometricPin != nil || kasa.restoredDraft != nil
+                    ? nil : kasa.incomingBackup
+            },
+            set: { kasa.incomingBackup = $0 }
+        )
+    }
+
     private func taslakEkrani(_ d: VaultModel.Draft) -> some View {
         let mevcut: DecryptedEntry? = d.existingId.flatMap { kasa.load(id: $0) }
         return NavigationStack { EditScreen(existing: mevcut, newType: d.type, draft: d) }
@@ -177,11 +190,8 @@ struct HomeScreen: View {
             }
             // Kilitlenirken saklanan düzenleme taslağı: kilit açılınca aynı ekran.
             .sheet(item: taslakBagi, content: taslakEkrani)
-            // Dosyalar'dan gelen yedek: biyometri önerisi açıksa o kapandıktan sonra.
-            .sheet(item: Binding(
-                get: { kasa.offerBiometric || kasa.offerBiometricPin != nil ? nil : kasa.incomingBackup },
-                set: { kasa.incomingBackup = $0 }
-            )) { f in
+            // Dosyalar'dan gelen yedek: önce öneri ve taslak (yedekBagi).
+            .sheet(item: yedekBagi) { f in
                 NavigationStack { ImportSheet(source: .file, envelope: f.data) }
             }
             .onAppear(perform: geriYukleGerekirse)

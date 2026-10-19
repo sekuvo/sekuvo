@@ -62,4 +62,24 @@ class VaultSessionTest {
         assertFalse(VaultSession.unlocked.value)
         assertNull(VaultSession.key())
     }
+
+    /**
+     * Kilit açma PBKDF2 sürerken ekran kapanırsa (kilit) türetmenin sonucu
+     * atılır: yoksa kasa kapalı ekranın arkasında açılırdı.
+     */
+    @Test
+    fun `bekleme sirasinda kilit olduysa acma sonucu atilir`() {
+        val nesil = VaultSession.generation
+        VaultSession.lock()
+        assertFalse(VaultSession.unlockIfCurrent(nesil, anahtar()))
+        assertFalse(VaultSession.isUnlocked)
+        assertFalse(VaultSession.unlocked.value)
+    }
+
+    @Test
+    fun `bekleme sirasinda kilit olmadiysa acma sonucu gecer`() {
+        val nesil = VaultSession.generation
+        assertTrue(VaultSession.unlockIfCurrent(nesil, anahtar()))
+        assertTrue(VaultSession.isUnlocked)
+    }
 }

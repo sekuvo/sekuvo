@@ -23,6 +23,8 @@ import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Numbers
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.TextFields
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
@@ -45,6 +47,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.afgover.vault.R
 import com.afgover.vault.core.FieldFormats
@@ -126,6 +130,7 @@ fun OzelAlanDialog(
     var deger by remember { mutableStateOf(baslangic.value) }
     var tur by remember { mutableStateOf(baslangic.type) }
     var uretici by remember { mutableStateOf(false) }
+    var gorunur by remember { mutableStateOf(false) }
 
     AlertDialog(
         onDismissRequest = onKapat,
@@ -144,8 +149,12 @@ fun OzelAlanDialog(
                 Spacer(Modifier.height(4.dp))
                 TurSecici(secili = tur, onSec = { tur = it })
                 // Tür, değer alanının nasıl davrandığını belirler: açılan
-                // klavye, tek/çok satır ve Şifre'de üretici.
+                // klavye, tek/çok satır ve Şifre'de üretici. Şifre, kaydın ana
+                // şifre alanı gibi maskeli ve gözlüdür; klavyesi de parola
+                // klavyesi kalır (otomatik düzeltme kapalı). CSV göçünde TOTP
+                // sırları da buraya Şifre olarak geliyor.
                 val epostaHatali = tur == CustomFieldType.EMAIL && !FieldFormats.epostaGecerliMi(deger)
+                val sifre = tur == CustomFieldType.PASSWORD
                 OutlinedTextField(
                     value = deger,
                     onValueChange = { deger = it },
@@ -156,14 +165,28 @@ fun OzelAlanDialog(
                     supportingText = if (epostaHatali) {
                         { Text(stringResource(R.string.edit_email_invalid)) }
                     } else null,
-                    keyboardOptions = KeyboardOptions(keyboardType = tur.klavye()),
-                    trailingIcon = if (tur == CustomFieldType.PASSWORD) {
+                    visualTransformation =
+                        if (sifre && !gorunur) PasswordVisualTransformation() else VisualTransformation.None,
+                    keyboardOptions = if (sifre)
+                        KeyboardOptions(keyboardType = KeyboardType.Password, autoCorrectEnabled = false)
+                    else KeyboardOptions(keyboardType = tur.klavye()),
+                    trailingIcon = if (sifre) {
                         {
-                            IconButton(onClick = { uretici = true }) {
-                                Icon(
-                                    Icons.Filled.Casino,
-                                    contentDescription = stringResource(R.string.edit_generate_password)
-                                )
+                            Row {
+                                IconButton(onClick = { gorunur = !gorunur }) {
+                                    Icon(
+                                        if (gorunur) Icons.Filled.VisibilityOff else Icons.Filled.Visibility,
+                                        contentDescription = stringResource(
+                                            if (gorunur) R.string.main_hide else R.string.main_show
+                                        )
+                                    )
+                                }
+                                IconButton(onClick = { uretici = true }) {
+                                    Icon(
+                                        Icons.Filled.Casino,
+                                        contentDescription = stringResource(R.string.edit_generate_password)
+                                    )
+                                }
                             }
                         }
                     } else null,

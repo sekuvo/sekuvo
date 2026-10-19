@@ -23,8 +23,12 @@ interface EntryDao {
     @Query("SELECT * FROM entries WHERE anchor = 0 ORDER BY id")
     suspend fun getVisible(): List<EntryEntity>
 
-    /** Kasadaki tek araç çıpası; henüz kurulmadıysa null. */
-    @Query("SELECT * FROM entries WHERE anchor = 1 LIMIT 1")
+    /**
+     * Kasadaki tek araç çıpası; henüz kurulmadıysa null. Eski sürümlerin
+     * "ekle" ile içe aktarmada açtığı fazladan çıpa satırları olabilir: en
+     * yenisi döner (çıpa ekranı ve güncelleme onu kullanır).
+     */
+    @Query("SELECT * FROM entries WHERE anchor = 1 ORDER BY updatedAt DESC, id DESC LIMIT 1")
     suspend fun getAnchor(): EntryEntity?
 
     /** Yedek ve toplam sayım için: çıpa dahil HER ŞEY. */

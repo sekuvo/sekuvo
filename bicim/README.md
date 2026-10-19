@@ -31,7 +31,8 @@ on-device wrap), so every file opens with the count it was written with:
 | Writer | Iterations |
 |---|---|
 | the apps: backups, the master-password wrap (since 1.3) | **600,000** |
-| the apps before 1.3; `aktar.html`; `tools/vault-clip.py` | 310,000 |
+| `aktar.html` and `tools/vault-clip.py` after v1.0.0 | **600,000** |
+| the apps before 1.3; the tools at v1.0.0 | 310,000 |
 | the PIN wrap (§6): fixed, its count is not stored | 310,000 |
 
 Readers accept 10,000–1,000,000 iterations and reject anything else (a
@@ -77,7 +78,7 @@ payload. UTF-8 JSON:
 {
   "app": "vault",
   "version": 1,
-  "kdf": { "algo": "PBKDF2WithHmacSHA256", "iterations": 310000, "salt": "<base64, 16 bytes>" },
+  "kdf": { "algo": "PBKDF2WithHmacSHA256", "iterations": 600000, "salt": "<base64, 16 bytes>" },
   "cipher": "AES-256-GCM",
   "data": "<base64 of blob>"
 }
@@ -118,6 +119,13 @@ The decrypted `data` is a JSON object:
 | `anchor` | bool — the tool anchor (SHA-256 of `aktar.html`), hidden from the list | `false`; written only when `true` |
 | `tags` | array of tag **names** (ids are device-local) | `[]`; written only when non-empty |
 | `data` | object, below | `{}` |
+
+An entry whose body is over 256 KiB (262,144 bytes) is refused on import.
+The apps measure the JSON they seal for the entry, the `data` object with
+`title` added, as they write it; both platforms write `/` as `\/`. A
+writer whose JSON leaves `/` unescaped (Python's `json`, `JSON.stringify`)
+counts each `/` twice to measure the same size, as `aktar.html` and
+`tools/vault-clip.py` do.
 
 ### `data`
 

@@ -19,7 +19,7 @@ Akış:
 
 Biçim, app/src/main/java/com/afgover/vault/backup/BackupManager.kt ile birebir:
     {"app":"vault","version":1,
-     "kdf":{"algo":"PBKDF2WithHmacSHA256","iterations":310000,"salt":b64},
+     "kdf":{"algo":"PBKDF2WithHmacSHA256","iterations":600000,"salt":b64},
      "cipher":"AES-256-GCM",
      "data":b64( iv(12) || şifreli+tag )}
 
@@ -53,7 +53,12 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "ven
 
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 
-KDF_ITERATIONS = 310_000
+# Uygulamaların 1.3'ten beri yazdığı sayı. Telefon 10.000–1.000.000 arasını
+# açar; tur sayısı zarfta yazılı olduğu için eski sürümler de okur.
+KDF_ITERATIONS = 600_000
+# --csv göç dosyası bütün bir dökümdür ve içe aktarılana kadar diskte durur:
+# uygulamanın kendi yedekleri gibi 600.000 turla yazılır.
+YEDEK_TURU = 600_000
 RELAY = "https://vault.gover.us"
 RELAY_KEYCHAIN_SERVICE = "vault.gover.us-relay"
 KEY_BYTES = 32
@@ -111,6 +116,17 @@ def clipboard_text():
 MAX_PLAIN_BYTES = 256 * 1024  # uygulamadaki kayıt sınırıyla aynı (B-040)
 
 
+def telefon_boyutu(metin):
+    """
+    Kaydın telefonda ölçülen boyutu (bayt). Uygulama kaydı JSON'a yazarken
+    `/` karakterini `\\/` yazar (Android org.json, iOS JSONSerialization);
+    Python yazmaz. Bu fark sınıra yakın bir kaydı araçtan geçirip telefonda,
+    QR kareleri okutulduktan sonra reddettiriyordu (250 KB'lık bir PEM metni
+    telefonda 264.008 bayt).
+    """
+    return len(metin.encode("utf-8")) + metin.count("/")
+
+
 def file_value(path):
     """
     Dosyayı okur: UTF-8 metinse olduğu gibi, ikiliyse base64 döner.
@@ -133,11 +149,19 @@ def file_value(path):
     except UnicodeDecodeError:
         pass
     name = os.path.basename(path)
+    kodlu = base64.b64encode(raw).decode("ascii")
+    # Base64 ~%33 şişer: sınır taşınacak metne göre, parola sorulmadan önce
+    # denetlenir (aktar.html'de dosya seçilince olduğu gibi).
+    if telefon_boyutu(kodlu) > MAX_PLAIN_BYTES:
+        die(
+            f"dosya base64 ile {telefon_boyutu(kodlu)//1024} KB — kayıt sınırı 256 KB. "
+            "Büyük dosyayı şifreli olarak diskte tut; kasaya yalnız parolasını koy."
+        )
     note = (
         "İkili dosya base64 olarak saklandı. Geri döndür: "
         f"base64 -d giris.txt > {name}  (macOS: base64 -D -i giris.txt -o {name})"
     )
-    return base64.b64encode(raw).decode("ascii"), note
+    return kodlu, note
 
 
 def ask_password():
@@ -280,7 +304,7 @@ def goc(args):
     if not kayitlar:
         die("CSV'den hiç kayıt çıkmadı")
     buyuk = [k["title"] for k in kayitlar
-             if len(json.dumps(k, ensure_ascii=False).encode("utf-8")) > MAX_PLAIN_BYTES]
+             if telefon_boyutu(json.dumps(k, ensure_ascii=False)) > MAX_PLAIN_BYTES]
     if buyuk:
         die("256 KB sınırını aşan kayıt(lar): " + ", ".join(buyuk))
     turler = {}
@@ -291,8 +315,16 @@ def goc(args):
     for a in atlanan:
         print("  atlandı — " + a)
     password = ask_password()
+    # Uygulama yedek alırken zayıf parolada sorar; bu dosya da bir döküm.
+    if parola_zayif(password):
+        try:
+            cevap = input("Parola kısa ya da tek tip görünüyor; döküm yine de bununla şifrelensin mi? [e/H] ")
+        except EOFError:
+            cevap = ""
+        if cevap.strip().lower() != "e":
+            die("iptal edildi — uzun bir parola kullan (ör. beş rastgele kelime)")
     payload = json.dumps({"entries": kayitlar}, ensure_ascii=False)
-    envelope = encrypt(payload, password)
+    envelope = encrypt(payload, password, YEDEK_TURU)
     path = args.cikti or os.path.expanduser(
         f"~/Desktop/vault-goc-{kaynak}-{time.strftime('%Y%m%d-%H%M%S')}.vaultbak")
     with open(path, "w", encoding="utf-8") as f:
@@ -335,9 +367,9 @@ def build_entry(args, value, note=None):
     }
 
 
-def encrypt(payload, password):
+def encrypt(payload, password, iterations=KDF_ITERATIONS):
     salt = os.urandom(16)
-    key = hashlib.pbkdf2_hmac("sha256", password.encode("utf-8"), salt, KDF_ITERATIONS, KEY_BYTES)
+    key = hashlib.pbkdf2_hmac("sha256", password.encode("utf-8"), salt, iterations, KEY_BYTES)
     iv = os.urandom(IV_BYTES)
     blob = iv + AESGCM(key).encrypt(iv, payload.encode("utf-8"), None)
     return {
@@ -345,7 +377,7 @@ def encrypt(payload, password):
         "version": 1,
         "kdf": {
             "algo": "PBKDF2WithHmacSHA256",
-            "iterations": KDF_ITERATIONS,
+            "iterations": iterations,
             "salt": base64.b64encode(salt).decode("ascii"),
         },
         "cipher": "AES-256-GCM",
@@ -525,8 +557,8 @@ def main():
 
     password = ask_password()
     payload = json.dumps({"entries": [build_entry(args, value, note)]}, ensure_ascii=False)
-    if len(payload.encode("utf-8")) > MAX_PLAIN_BYTES:
-        die("kayıt 256 KB sınırını aşıyor — içerik kısaltılmalı (B-040 uygulamada da reddeder)")
+    if telefon_boyutu(payload) > MAX_PLAIN_BYTES:
+        die("kayıt 256 KB sınırını aşıyor — içerik kısaltılmalı (uygulama da reddeder)")
     envelope = encrypt(payload, password)
 
     if args.qr:

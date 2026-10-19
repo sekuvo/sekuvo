@@ -183,6 +183,20 @@ final class VaultModel {
         }
     }
 
+    /// Sahibi kendini kanıtladı (ana parola, kasa açıkken doğrulanan PIN):
+    /// yanlış PIN sayacı sıfırlanır. Yalnız doğru PIN'de sıfırlandığında 10.
+    /// yanlış Face ID kaydını siliyor, kullanıcı ana parolayla açıp yeniden
+    /// kurunca sayaç 10'da kalıyor ve ilk yanlış PIN kaydı yine siliyordu
+    /// (ikinci tur denetim; Android'de aynı kural).
+    private func pinSayaciniSifirla() {
+        guard var kayit = pins.load(), kayit.fails != 0 || kayit.failAt != 0 || kayit.failAtMono != 0 else { return }
+        #if DEBUG
+        Log.kilit.notice("PIN sayacı sıfırlandı (\(kayit.fails) yanlış vardı)")
+        #endif
+        kayit.fails = 0; kayit.failAt = 0; kayit.failAtMono = 0
+        try? pins.save(kayit)
+    }
+
     func unlock(password: String) async {
         busy = true; defer { busy = false }
         let k = keys
@@ -208,6 +222,7 @@ final class VaultModel {
             try open(with: anahtar)
             // Ana parola tek başına açar: PIN yalnız biyometrik yolu korur.
             lockPrefs.markMasterPasswordUsed()
+            pinSayaciniSifirla()
         } catch { self.error = error.localizedDescription }
     }
 
@@ -242,7 +257,9 @@ final class VaultModel {
         if state == .needsPin { pendingInner = nil; state = .locked; return }
         guard state == .unlocked else { return }
         // Düzenleme taslağı kaybolmasın: dataKey silinmeden önce onunla mühürlenir.
-        if let d = liveDraft, let key = dataKey,
+        // Geri verilen taslağın ekranı henüz açılmadıysa (kilit açılır açılmaz
+        // yeniden arka plan) canlı taslak yoktur; o zaman geri verilen mühürlenir.
+        if let d = liveDraft ?? restoredDraft, let key = dataKey,
            let acik = try? JSONSerialization.data(withJSONObject: d.json()) {
             sealedDraft = try? Crypto.encrypt(acik, key: key)
             #if DEBUG
@@ -250,6 +267,8 @@ final class VaultModel {
             #endif
         }
         liveDraft = nil
+        // Geri verilen taslak da düz metin: kilitliyken bellekte kalmaz.
+        restoredDraft = nil
         store = nil
         dataKey = nil
         items = []
@@ -351,7 +370,7 @@ final class VaultModel {
         await debugUnlockDelay()
         guard nesil == unlockGeneration else { return }   // PIN çözülürken kilitlendi
         if let anahtar, anahtar.count == Crypto.keyBytes {
-            kayit.fails = 0; kayit.failAt = 0
+            kayit.fails = 0; kayit.failAt = 0; kayit.failAtMono = 0
             try? pins.save(kayit)
             pendingInner = nil
             do { try open(with: SymmetricKey(data: anahtar)) } catch { self.error = error.localizedDescription }
@@ -360,7 +379,7 @@ final class VaultModel {
         if pinDogru {
             // PIN doğru ama biyometrik kayıt bayat (PIN'den önce yazılmış):
             // sayaç bir güvenlik olayı değil; kayıt silinir, onarıma yönlendirilir.
-            kayit.fails = 0; kayit.failAt = 0
+            kayit.fails = 0; kayit.failAt = 0; kayit.failAtMono = 0
             try? pins.save(kayit)
             biometric.clear(); refreshLockOptions()
             pendingInner = nil; state = .locked
@@ -405,6 +424,7 @@ final class VaultModel {
             }.value
             busy = false
             guard let sarili else { error = L("vm_pin_wrong"); return false }
+            pinSayaciniSifirla()   // kasa açık ve PIN doğru
             icerik = sarili
         }
         let baglam = LAContext()
@@ -489,9 +509,11 @@ final class VaultModel {
 
     private func reload() throws {
         guard let store else { return }
-        items = sort.sorted(try store.items())
+        // Liste ve logolar tek geçişte: kasa ana iş parçacığında bir kez çözülür.
+        let (liste, markalar) = try store.itemsAndBrands()
+        items = sort.sorted(liste)
         tags = try store.tags()
-        brandIds = (try? store.brandIds()) ?? [:]
+        brandIds = markalar
     }
 
     func selectSort(_ s: EntrySort) {
