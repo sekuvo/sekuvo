@@ -752,10 +752,11 @@ class VaultViewModel(application: Application) : AndroidViewModel(application) {
                     val imported = BackupManager.import(kirpik.byteInputStream(), password.toCharArray())
                     // Boş zarfta HİÇBİR depo işlemi yapma: 'Tümünü değiştir' ile
                     // boş zarf, kasanın tamamını silerdi (denetim: kritik).
+                    // Yalnız çıpa taşıyan zarf da boştur; depo 0 döner. Sayı
+                    // çıpasız: kullanıcı çıpayı listede görmez.
                     if (imported.entries.isEmpty()) return@withContext 0
                     if (replace) repo.replaceAll(imported.entries, key, imported.tagDefs)
                     else repo.addAll(imported.entries, key, imported.tagDefs)
-                    imported.entries.size
                 }
                 if (count == 0) {
                     error = str(R.string.vm_envelope_empty)
@@ -804,9 +805,9 @@ class VaultViewModel(application: Application) : AndroidViewModel(application) {
                         ?: throw Exception(str(R.string.vm_file_open_failed))
                     val imported = BackupManager.import(input, password.toCharArray())
                     if (imported.entries.isEmpty()) return@withContext 0
+                    // Yalnız çıpa taşıyan yedek boştur (depo 0 döner); sayı çıpasız.
                     if (replace) repo.replaceAll(imported.entries, key, imported.tagDefs)
                     else repo.addAll(imported.entries, key, imported.tagDefs)
-                    imported.entries.size
                 }
                 if (count == 0) {
                     error = str(R.string.vm_backup_empty)
