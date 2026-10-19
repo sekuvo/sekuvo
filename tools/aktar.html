@@ -9,7 +9,7 @@
   Bu dosya DİSKTEN açılır (file://) — sunucudan kod inmez. Şifreleme bu
   sayfanın içinde, WebCrypto ile yapılır; vault.gover.us yalnız şifreli
   zarfı görür. Biçim, uygulamanın .vaultbak biçimiyle birebir aynıdır
-  (PBKDF2-HMAC-SHA256 310k + AES-256-GCM, iv||ct+tag).
+  (PBKDF2-HMAC-SHA256 600k + AES-256-GCM, iv||ct+tag).
   Güncel sürüm: afgover/Vault -> tools/aktar.html
 
   Sayfa İKİ DİLLİDİR (tr/en). Sebebi işlevsel: uygulama İngilizce
@@ -248,7 +248,7 @@ const S = {
     eSunucu: (kod, metin) => `Sunucu kabul etmedi: ${kod} ${metin}`,
     eDosyaBuyuk: (kb) => `Dosya ${kb} KB — kayıt sınırı 256 KB. Büyük dosyayı şifreli olarak diskte/Drive'da tut, buraya yalnız PAROLASINI koy.`,
     eKayitBuyuk: (kb) => `Kayıt ${kb} KB — uygulama sınırı 256 KB. Büyük dosyayı bölerek ekle.`,
-    eZarfBuyuk: (kb) => `Şifreli zarf ${kb} KB — relay sınırı 64 KB. Bu boyut için vault-clip'in dosya yolunu kullan (--cikti / --push).`,
+    eZarfBuyuk: (kb) => `Şifreli zarf ${kb} KB — relay sınırı 64 KB. Bu boyut için bu sayfada QR yolunu seç ya da vault-clip'in dosya yolunu kullan (--cikti / --push).`,
     sorAdsizAlan: "Adı boş bir ek alan var; değeri DOLU ama aktarılmayacak.\nYine de devam edeyim mi?",
     sorZayifParola: "Bu parola relay'e yüklenecek herkese açık zarf için ZAYIF görünüyor (kısa ya da tek karakter sınıfı). Üretilmiş güçlü bir parola önerilir.\nYine de yükleyeyim mi?",
     sorKomut: "İçerik bir KOMUT gibi görünüyor (pano kazası? L-009).\nYine de bunu aktarayım mı?",
@@ -308,7 +308,7 @@ const S = {
     eSunucu: (kod, metin) => `The server refused it: ${kod} ${metin}`,
     eDosyaBuyuk: (kb) => `The file is ${kb} KB — the entry limit is 256 KB. Keep a large file encrypted on disk or Drive and put only ITS PASSWORD here.`,
     eKayitBuyuk: (kb) => `The entry is ${kb} KB — the app's limit is 256 KB. Split the large file up.`,
-    eZarfBuyuk: (kb) => `The encrypted envelope is ${kb} KB — the relay's limit is 64 KB. Use vault-clip's file route for this size (--cikti / --push).`,
+    eZarfBuyuk: (kb) => `The encrypted envelope is ${kb} KB — the relay's limit is 64 KB. For this size pick the QR route on this page, or use vault-clip's file route (--cikti / --push).`,
     sorAdsizAlan: "One extra field has no name; its value is FILLED IN but will not be transferred.\nShall I continue anyway?",
     sorZayifParola: "For a publicly reachable envelope on the relay this password looks WEAK (short, or a single character class). A generated, strong password is recommended.\nShall I upload it anyway?",
     sorKomut: "The content looks like a COMMAND (a clipboard accident?).\nShall I transfer it anyway?",
@@ -345,7 +345,7 @@ $("dil").addEventListener("change", () => {
   dilUygula();
 });
 
-const KDF_ITERATIONS = 310000;
+const KDF_ITERATIONS = 600000;
 const RELAY = "https://vault.gover.us";
 const TYPES = { hesap:"LOGIN", gundelik:"EVERYDAY", kart:"CARD", not:"NOTE" };
 const DEFAULT_FIELD = { hesap:"password", gundelik:"address", kart:"cardNumber", not:"notes" };
@@ -478,6 +478,14 @@ $("alanEkle").addEventListener("click", () => {
    anahtarı girer — 256 KB kayıt sınırı uygulamadaki B-040 ile aynı). */
 const MAX_PLAIN = 256 * 1024;
 const MAX_ZARF = 64 * 1024;
+
+/* Kaydın telefonda ölçülen boyutu (bayt). Uygulama JSON'da "/" karakterini
+   "\/" yazar (Android org.json, iOS JSONSerialization), tarayıcı yazmaz; fark
+   sınıra yakın bir kaydı burada geçirip telefonda, QR kareleri okutulduktan
+   sonra reddettiriyordu. */
+function telefonBoyutu(metin) {
+  return new TextEncoder().encode(metin).length + (metin.match(/\//g) || []).length;
+}
 let ikiliDosyaAdi = null;
 
 /** Dosya içeriği türün ana alanına yazılır (nota, şifreye, kart no'ya…). */
@@ -502,8 +510,8 @@ $("dosya").addEventListener("change", async () => {
     // İkili dosya base64 ile ~%33 şişer; sınır ham boyuta değil taşınacak
     // metne göre, seçildiği anda denetlenir (gönderimde değil).
     const kodlu = b64(buf);
-    if (kodlu.length > MAX_PLAIN) {
-      $("hata").textContent = t("eDosyaBuyuk")((kodlu.length/1024).toFixed(0));
+    if (telefonBoyutu(kodlu) > MAX_PLAIN) {
+      $("hata").textContent = t("eDosyaBuyuk")((telefonBoyutu(kodlu)/1024).toFixed(0));
       $("dosya").value = ""; return;
     }
     hedefeYaz(kodlu);
@@ -639,7 +647,7 @@ $("gonder").addEventListener("click", async () => {
   if (adsizEkAlanVarMi() && !confirm(t("sorAdsizAlan"))) return;
   // Toplam kayıt boyutu uygulamadaki 256 KB sınırını aşarsa telefonda içe
   // alınamaz; şifrelemeden önce söyle (denetim).
-  const hamBoyut = new TextEncoder().encode(girdiyiKur()).length;
+  const hamBoyut = telefonBoyutu(girdiyiKur());
   if (hamBoyut > 256 * 1024) {
     $("hata").textContent = t("eKayitBuyuk")((hamBoyut/1024).toFixed(0));
     return;
