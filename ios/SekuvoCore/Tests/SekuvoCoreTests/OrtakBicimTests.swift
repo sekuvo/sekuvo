@@ -59,6 +59,22 @@ struct OrtakBicimTests {
                                key: SymmetricKey(data: Self.hex(bozuk["anahtar_hex"] as! String))) == nil)
     }
 
+    /// Cihazdaki biçim sürüm 2: mühür yalnız aynı AAD ile açılır (Android aynı değerleri sınar).
+    @Test func aadliMuhurYalnizAyniAadIleAcilir() throws {
+        let d = try Self.oku("aesgcm.json")
+        for v in Self.nesneler(d["aad"]) {
+            let anahtar = SymmetricKey(data: Self.hex(v["anahtar_hex"] as! String))
+            let blob = try Self.b64(v["blob"])
+            let aad = Data((v["aad"] as! String).utf8)
+            #expect(Crypto.decrypt(blob, key: anahtar, aad: aad) == Data((v["acik"] as! String).utf8))
+            #expect(Crypto.decrypt(blob, key: anahtar) == nil)
+            #expect(Crypto.decrypt(blob, key: anahtar, aad: aad + Data("0".utf8)) == nil)
+            // Ters yön: aynı IV ve AAD ile mühürlenen metin aynı baytları vermeli.
+            let yeniden = try Crypto.encrypt(Data((v["acik"] as! String).utf8), key: anahtar, iv: blob.prefix(12), aad: aad)
+            #expect(yeniden == blob)
+        }
+    }
+
     static func kayitEsit(_ b: [String: Any], _ e: DecryptedEntry) {
         let t = b["title"] as! String
         #expect(e.title == t)

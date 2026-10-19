@@ -8,7 +8,8 @@ import Security
 /// Android'deki `core/Crypto.kt`'nin karşılığı ve onunla **bayt bayt aynı**:
 /// - anahtar türetme PBKDF2-HMAC-SHA256, 32 bayt; yeni yazımlar 600.000 tur,
 ///   tur sayısı sargıda ve yedekte yazılı; parola UTF-8 baytlarıyla girer,
-/// - mühür `iv(12) || şifreli metin || etiket(16)`, AAD yok.
+/// - mühür `iv(12) || şifreli metin || etiket(16)`; zarf ve yedekte AAD yok,
+///   cihazdaki kayıtlar (biçim sürüm 2, `KayitBicimi`) AAD ile yerlerine bağlı.
 ///
 /// İkisi `bicim/vektorler/` değerleriyle sınanır; biçim tek yerde,
 /// `bicim/README.md`'de tarif edilir. Anahtar hiyerarşisi Keychain'e
@@ -73,23 +74,28 @@ public enum Crypto {
     }
 
     /// Çıktı: `iv(12) || şifreli veri || etiket(16)` — Android'in `encrypt` çıktısı.
-    public static func encrypt(_ plaintext: Data, key: SymmetricKey) throws -> Data {
-        try encrypt(plaintext, key: key, iv: randomBytes(ivBytes))
+    /// `aad` (ilişkili veri) verilirse mühür ona bağlanır: aynı baytlar
+    /// verilmeden açılmaz.
+    public static func encrypt(_ plaintext: Data, key: SymmetricKey, aad: Data? = nil) throws -> Data {
+        try encrypt(plaintext, key: key, iv: randomBytes(ivBytes), aad: aad)
     }
 
     /// Sabit IV'li mühür — yalnız testler ve biçim değerleri için. Aynı IV'yi
     /// aynı anahtarla iki kez kullanmak GCM'i kırar; uygulama kodu bunu çağırmaz.
-    static func encrypt(_ plaintext: Data, key: SymmetricKey, iv: Data) throws -> Data {
-        let kutu = try AES.GCM.seal(plaintext, using: key, nonce: AES.GCM.Nonce(data: iv))
+    static func encrypt(_ plaintext: Data, key: SymmetricKey, iv: Data, aad: Data? = nil) throws -> Data {
+        let nonce = try AES.GCM.Nonce(data: iv)
+        let kutu = try aad.map { try AES.GCM.seal(plaintext, using: key, nonce: nonce, authenticating: $0) }
+            ?? AES.GCM.seal(plaintext, using: key, nonce: nonce)
         guard let birlesik = kutu.combined else { throw CryptoError.sealFailed }
         return birlesik
     }
 
-    /// Girdi: `iv(12) || şifreli veri || etiket(16)`. Yanlış anahtar ya da bozuk
-    /// veri `nil` döner (Android: `decrypt` null).
-    public static func decrypt(_ blob: Data, key: SymmetricKey) -> Data? {
+    /// Girdi: `iv(12) || şifreli veri || etiket(16)`. Yanlış anahtar, bozuk veri
+    /// ya da mühürlenirkenkinden farklı `aad` `nil` döner (Android: `decrypt` null).
+    public static func decrypt(_ blob: Data, key: SymmetricKey, aad: Data? = nil) -> Data? {
         guard blob.count > ivBytes else { return nil }
         guard let kutu = try? AES.GCM.SealedBox(combined: blob) else { return nil }
+        if let aad { return try? AES.GCM.open(kutu, using: key, authenticating: aad) }
         return try? AES.GCM.open(kutu, using: key)
     }
 

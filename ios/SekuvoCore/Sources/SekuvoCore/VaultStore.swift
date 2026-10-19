@@ -17,7 +17,8 @@ public final class VaultStore {
         case entryTooLarge(title: String, bytes: Int)
     }
 
-    /// Listede gösterilen satır: şifre çözmeden okunabilen alanlar.
+    /// Listede gösterilen satır. Başlık şifreli gövdeden çözülür (biçim sürüm 2);
+    /// açılamayan satır listeden düşmez, `unreadableTitle` adıyla görünür.
     public struct Item: Identifiable, Equatable, Sendable {
         public let id: Int64
         public let type: EntryType
@@ -36,16 +37,23 @@ public final class VaultStore {
         }
     }
 
-    /// Etiket: ad ve görünüm (renk, ikon). Ad ve renk Android'deki gibi şifresiz
-    /// durur; süzgeç liste ekranında, şifre çözmeden çalışır.
+    /// Etiket: ad ve görünüm (renk, ikon). Ad şifreli durur (biçim sürüm 2) ve
+    /// burada çözülmüş döner; renk ve ikon açıktır.
     public typealias Tag = Backup.Tag
 
     private let store: EntryStore
     private let key: SymmetricKey
 
+    /// Açılamayan kaydın listedeki adı; arayüz kendi dilindeki metni koyar.
+    public var unreadableTitle = "?"
+
+    /// Kasayı açar. Biçim sürüm 1'den kalan satırlar (1.3 öncesi) burada bir
+    /// kez taşınır; taşıma başarısız olursa kasa yine açılır ve eski satırlar
+    /// eskisi gibi okunur, bir sonraki açılışta yeniden denenir.
     public init(file: URL, key: SymmetricKey) throws {
         store = try EntryStore(file: file)
         self.key = key
+        _ = try? upgradeStorage()
     }
 
     // MARK: Okuma
@@ -53,8 +61,9 @@ public final class VaultStore {
     /// Liste: araç çıpası hariç (o, kendi düğmesinden açılır).
     public func items() throws -> [Item] {
         try store.all().filter { !$0.anchor }.map { r in
-            Item(id: r.id, type: .of(r.type), title: r.title, noteKind: .of(r.noteKind), quick: r.quick,
-                 sortIndex: r.sortIndex, tagIds: TagIds.parse(r.tags), createdAt: r.createdAt, updatedAt: r.updatedAt)
+            let baslik = KayitBicimi.govdeyiAc(r, key: key)?.title ?? (r.title.isEmpty ? unreadableTitle : r.title)
+            return Item(id: r.id, type: .of(r.type), title: baslik, noteKind: .of(r.noteKind), quick: r.quick,
+                        sortIndex: r.sortIndex, tagIds: TagIds.parse(r.tags), createdAt: r.createdAt, updatedAt: r.updatedAt)
         }
     }
 
@@ -87,10 +96,10 @@ public final class VaultStore {
         return (cozulen, satirlar.count - cozulen.count)
     }
 
-    /// Etiketler ada göre (Android: `ORDER BY name COLLATE NOCASE`).
+    /// Etiketler, adları çözülmüş ve ada göre sıralı. Açılamayan etiket düşer.
     public func tags() throws -> [Tag] {
         try store.allTags()
-            .map { Tag(id: $0.id, name: $0.name, color: $0.color, icon: $0.icon) }
+            .compactMap { t in KayitBicimi.etiketAdi(t, key: key).map { Tag(id: t.id, name: $0, color: t.color, icon: t.icon) } }
             .sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
     }
 
@@ -116,11 +125,14 @@ public final class VaultStore {
         } else if !veri.password.isEmpty && veri.passwordChangedAt == 0 {
             veri.passwordChangedAt = now
         }
-        let blob = try muhurle(title: e.title, data: veri)
-        var satir = EntryStore.Row(id: e.id, type: e.type.rawValue, title: e.title, blob: blob,
+        // Sürüm 1 satırı düzenlenince sürüm 2'ye geçer (uid verilir).
+        let eskiUid = e.id == 0 ? "" : ((try? store.get(id: e.id))?.uid ?? "")
+        let uid = eskiUid.isEmpty ? KayitBicimi.yeniUid() : eskiUid
+        let blob = try muhurle(title: e.title, data: veri, uid: uid, type: e.type.rawValue, anchor: e.anchor)
+        var satir = EntryStore.Row(id: e.id, type: e.type.rawValue, title: "", blob: blob,
                                    createdAt: e.id == 0 ? now : e.createdAt, updatedAt: now,
                                    quick: e.quick, tags: TagIds.serialize(e.tagIds),
-                                   noteKind: e.noteKind.rawValue, sortIndex: e.sortIndex, anchor: e.anchor)
+                                   noteKind: e.noteKind.rawValue, sortIndex: e.sortIndex, anchor: e.anchor, uid: uid)
         if e.id == 0 {
             satir.id = try store.insert(satir)
         } else {
@@ -139,14 +151,18 @@ public final class VaultStore {
     @discardableResult
     public func addTag(name: String, color: Int32, icon: String = "") throws -> Int64 {
         let ad = name.trimmingCharacters(in: .whitespacesAndNewlines)
-        if let mevcut = try store.allTags().first(where: { $0.name.lowercased() == ad.lowercased() }) { return mevcut.id }
-        return try store.insertTag(name: ad, color: color, icon: TagIcons.normalize(icon))
+        if let mevcut = try tags().first(where: { $0.name.lowercased() == ad.lowercased() }) { return mevcut.id }
+        let yeni = EntryStore.TagRow(id: 0, name: "", color: color, icon: TagIcons.normalize(icon))
+        return try store.insertTag(try KayitBicimi.etiketiMuhurle(yeni, ad: ad, key: key))
     }
 
     public func updateTag(_ t: Tag) throws {
         let ad = t.name.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !ad.isEmpty else { return }
-        try store.updateTag(id: t.id, name: ad, color: t.color, icon: TagIcons.normalize(t.icon))
+        guard !ad.isEmpty, let mevcut = try store.allTags().first(where: { $0.id == t.id }) else { return }
+        var satir = mevcut
+        satir.color = t.color
+        satir.icon = TagIcons.normalize(t.icon)
+        try store.updateTag(try KayitBicimi.etiketiMuhurle(satir, ad: ad, key: key))
     }
 
     /// Etiketi siler ve taşıyan her kayıttan düşürür, tek işlemde. Kayıtların
@@ -186,19 +202,23 @@ public final class VaultStore {
         if replace && gelen.isEmpty { return 0 }
 
         // 1. Kasaya dokunmadan önce: boyut denetimi ve şifreleme.
-        var hazir: [(DecryptedEntry, Data)] = []
+        var hazir: [(DecryptedEntry, String, Data)] = []
         var yazilan = 0
         if let yeniCapa { gelen.append(yeniCapa) }
-        for e in gelen { hazir.append((e, try muhurle(title: e.title, data: e.data))) }
+        for e in gelen {
+            let uid = KayitBicimi.yeniUid()
+            hazir.append((e, uid, try muhurle(title: e.title, data: e.data, uid: uid, type: e.type.rawValue, anchor: e.anchor)))
+        }
 
         // 2. Tek işlem: etiketler, (gerekirse) silme, yazma.
         try store.transaction {
-            var adla = Dictionary(try store.allTags().map { ($0.name.lowercased(), $0.id) }, uniquingKeysWith: { a, _ in a })
+            var adla = Dictionary(try tags().map { ($0.name.lowercased(), $0.id) }, uniquingKeysWith: { a, _ in a })
             var sayi = adla.count
             for ad in Self.sirali(hazir.flatMap { $0.0.tagNames }) where adla[ad.lowercased()] == nil {
                 let tanim = sonuc.tagDefs[ad]
-                let id = try store.insertTag(name: ad, color: tanim?.color ?? TagPalette.color(for: sayi),
+                let yeni = EntryStore.TagRow(id: 0, name: "", color: tanim?.color ?? TagPalette.color(for: sayi),
                                              icon: TagIcons.normalize(tanim?.icon))
+                let id = try store.insertTag(try KayitBicimi.etiketiMuhurle(yeni, ad: ad, key: key))
                 adla[ad.lowercased()] = id
                 sayi += 1
             }
@@ -206,11 +226,11 @@ public final class VaultStore {
             var mevcutCapa: EntryStore.Row?
             if !replace { mevcutCapa = try store.all().first(where: \.anchor) }
             yazilan = 0
-            for (e, blob) in hazir {
-                var satir = EntryStore.Row(type: e.type.rawValue, title: e.title, blob: blob,
+            for (e, uid, blob) in hazir {
+                var satir = EntryStore.Row(type: e.type.rawValue, title: "", blob: blob,
                                            createdAt: e.createdAt, updatedAt: e.updatedAt, quick: e.quick,
                                            tags: TagIds.serialize(e.tagNames.compactMap { adla[$0.lowercased()] }),
-                                           noteKind: e.noteKind.rawValue, sortIndex: e.sortIndex, anchor: e.anchor)
+                                           noteKind: e.noteKind.rawValue, sortIndex: e.sortIndex, anchor: e.anchor, uid: uid)
                 if e.anchor, let mevcutCapa {
                     guard e.updatedAt >= mevcutCapa.updatedAt else { continue }
                     satir.id = mevcutCapa.id
@@ -225,19 +245,40 @@ public final class VaultStore {
         return yazilan
     }
 
+    // MARK: Biçim geçişi
+
+    /// Biçim sürüm 1 → 2 (1.3). Eski satırlar (uid boş) tek işlemde taşınır:
+    /// başlık ve etiket adı şifreli veriye girer, gövdeler satırlarına bağlanır.
+    /// Açılamayan satır olduğu gibi kalır. Bir şey taşındıysa dosya baştan
+    /// yazılır (VACUUM): yoksa eski başlıklar boş sayfalarda okunabilir kalırdı.
+    /// - Returns: taşınan satır sayısı (kayıt + etiket)
+    @discardableResult
+    public func upgradeStorage() throws -> Int {
+        var tasinan = 0
+        try store.transaction {
+            for r in try store.all() {
+                if let yeni = try KayitBicimi.tasi(r, key: key) { try store.update(yeni); tasinan += 1 }
+            }
+            for t in try store.allTags() {
+                if let yeni = try KayitBicimi.etiketiTasi(t, key: key) { try store.updateTag(yeni); tasinan += 1 }
+            }
+        }
+        if tasinan > 0 { try? store.vacuum() }
+        return tasinan
+    }
+
     // MARK: Yardımcılar
 
-    private func muhurle(title: String, data: EntryData) throws -> Data {
-        let acik = try JSONSerialization.data(withJSONObject: data.json())
+    /// Sürüm 2 gövdesi: başlık ve veri, satırına bağlı.
+    private func muhurle(title: String, data: EntryData, uid: String, type: String, anchor: Bool) throws -> Data {
+        let acik = try KayitBicimi.acikMetin(title: title, data: data)
         guard acik.count <= Self.maxEntryBytes else { throw Failure.entryTooLarge(title: title, bytes: acik.count) }
-        return try Crypto.encrypt(acik, key: key)
+        return try Crypto.encrypt(acik, key: key, aad: KayitBicimi.govdeAad(uid: uid, type: type, anchor: anchor))
     }
 
     private func cozulmus(_ r: EntryStore.Row) -> DecryptedEntry? {
-        guard let acik = Crypto.decrypt(r.blob, key: key),
-              let json = (try? JSONSerialization.jsonObject(with: acik)) as? [String: Any]
-        else { return nil }
-        return DecryptedEntry(id: r.id, type: .of(r.type), title: r.title, data: EntryData(json: json),
+        guard let c = KayitBicimi.govdeyiAc(r, key: key) else { return nil }
+        return DecryptedEntry(id: r.id, type: .of(r.type), title: c.title, data: c.data,
                               createdAt: r.createdAt, updatedAt: r.updatedAt, quick: r.quick,
                               tagIds: TagIds.parse(r.tags), noteKind: .of(r.noteKind),
                               sortIndex: r.sortIndex, anchor: r.anchor)
