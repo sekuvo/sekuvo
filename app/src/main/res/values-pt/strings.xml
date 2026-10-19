@@ -202,6 +202,7 @@
     <string name="home_search_hint">Pesquisar itens</string>
     <string name="home_manage_tags_cd">Gerenciar etiquetas</string>
     <string name="home_empty_vault">Seu cofre está pronto — adicione o primeiro item com o + no canto inferior direito.</string>
+    <string name="home_entry_unreadable">Item que não pode ser aberto</string>
     <string name="home_empty_filter">Nenhum item corresponde a estes filtros.</string>
     <string name="home_tag_new">Nova etiqueta</string>
     <string name="home_tag_edit">Editar etiqueta</string>

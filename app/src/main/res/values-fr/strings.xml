@@ -202,6 +202,7 @@
     <string name="home_search_hint">Rechercher des entrées</string>
     <string name="home_manage_tags_cd">Gérer les étiquettes</string>
     <string name="home_empty_vault">Ton coffre est prêt — ajoute ta première entrée avec le + en bas à droite.</string>
+    <string name="home_entry_unreadable">Entrée impossible à ouvrir</string>
     <string name="home_empty_filter">Aucune entrée ne correspond à ces filtres.</string>
     <string name="home_tag_new">Nouvelle étiquette</string>
     <string name="home_tag_edit">Modifier l\'étiquette</string>

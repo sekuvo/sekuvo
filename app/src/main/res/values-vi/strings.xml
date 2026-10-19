@@ -202,6 +202,7 @@
     <string name="home_search_hint">Tìm kiếm mục</string>
     <string name="home_manage_tags_cd">Quản lý thẻ</string>
     <string name="home_empty_vault">Kho lưu trữ của bạn đã sẵn sàng — hãy thêm mục đầu tiên bằng nút + ở góc dưới bên phải.</string>
+    <string name="home_entry_unreadable">Mục không mở được</string>
     <string name="home_empty_filter">Không có mục nào khớp với các bộ lọc này.</string>
     <string name="home_tag_new">Thẻ mới</string>
     <string name="home_tag_edit">Chỉnh sửa thẻ</string>

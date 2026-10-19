@@ -202,6 +202,7 @@
     <string name="home_search_hint">Cari entri</string>
     <string name="home_manage_tags_cd">Kelola label</string>
     <string name="home_empty_vault">Brankasmu siap — tambahkan entri pertama dengan tombol + di kanan bawah.</string>
+    <string name="home_entry_unreadable">Entri yang tidak bisa dibuka</string>
     <string name="home_empty_filter">Tidak ada entri yang cocok dengan filter ini.</string>
     <string name="home_tag_new">Label baru</string>
     <string name="home_tag_edit">Ubah label</string>

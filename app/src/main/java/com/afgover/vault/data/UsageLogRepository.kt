@@ -16,6 +16,11 @@ import javax.crypto.SecretKey
  *   taşır. Keystore anahtarı da yoksa olay kaydedilemez — bu boşluk arayüzde
  *   yazılıdır, sessizce "kayıt tam" gibi gösterilmez.
  *
+ * Mühürler tablolarına AAD ile bağlıdır ([KayitBicimi.GUNLUK_AAD],
+ * [KayitBicimi.TAMPON_AAD]): bir kaydın gövdesi günlüğe, günlük satırı
+ * kayıtlara taşınamaz. Eski (AAD'siz) satırlar okunmaya devam eder; kilit ilk
+ * açıldığında [VaultRepository.upgradeStorage] onları yeniden mühürler.
+ *
  * Günlüğün göremedikleri (kasıtlı ve bilinen): ekrandan okunan, fotoğrafı
  * çekilen ya da elle yazılan değerler; Android'in otomatik doldurmasında
  * kullanıcının hangi kaydı seçtiği (seçilen `Dataset` servise geri dönmüyor).
@@ -46,14 +51,14 @@ class UsageLogRepository(
         val key = VaultSession.key()
         return try {
             if (key != null) {
-                dao.insert(UsageLogEntity(blob = Crypto.encrypt(key, event.toBytes())))
+                dao.insert(UsageLogEntity(blob = Crypto.encrypt(key, event.toBytes(), KayitBicimi.GUNLUK_AAD)))
                 if (dao.count() > MAX_EVENTS) prune(key)
                 true
             } else {
                 val quickKey = keys.quickKey() ?: return false
                 dao.insertBuffered(
                     UsageBufferEntity(
-                        blob = Crypto.encryptWithGeneratedIv(quickKey, event.toBytes())
+                        blob = Crypto.encryptWithGeneratedIv(quickKey, event.toBytes(), KayitBicimi.TAMPON_AAD)
                     )
                 )
                 pruneBuffer()
@@ -75,9 +80,9 @@ class UsageLogRepository(
         val quickKey = keys.quickKey()
         var moved = 0
         buffered.forEach { row ->
-            val plain = quickKey?.let { Crypto.decrypt(it, row.blob) }
+            val plain = quickKey?.let { KayitBicimi.gunluguAc(it, row.blob, KayitBicimi.TAMPON_AAD) }
             if (plain != null && UsageEvent.fromBytes(plain) != null) {
-                dao.insert(UsageLogEntity(blob = Crypto.encrypt(key, plain)))
+                dao.insert(UsageLogEntity(blob = Crypto.encrypt(key, plain, KayitBicimi.GUNLUK_AAD)))
                 moved++
             }
         }
@@ -92,7 +97,7 @@ class UsageLogRepository(
     /** Tüm günlük, en yeni önce. Kilit açık değilse boş döner. */
     suspend fun events(key: SecretKey): List<UsageEvent> =
         dao.getAll().mapNotNull { row ->
-            Crypto.decrypt(key, row.blob)?.let { UsageEvent.fromBytes(it) }
+            ac(key, row.blob)?.let { UsageEvent.fromBytes(it) }
         }
 
     /** Tek kaydın olayları, en yeni önce. */
@@ -109,7 +114,7 @@ class UsageLogRepository(
     /** Kayıt silinince günlüğü de silinir: sahibi olmayan olay artık okunamaz. */
     suspend fun deleteFor(entryId: Long, key: SecretKey) {
         val ids = dao.getAll().filter { row ->
-            Crypto.decrypt(key, row.blob)
+            ac(key, row.blob)
                 ?.let { UsageEvent.fromBytes(it) }
                 ?.entryId == entryId
         }.map { it.id }
@@ -132,7 +137,7 @@ class UsageLogRepository(
         val perEntry = mutableMapOf<Long, Int>()
         val doomed = mutableListOf<Long>()
         rows.forEach { row ->
-            val event = Crypto.decrypt(key, row.blob)?.let { UsageEvent.fromBytes(it) }
+            val event = ac(key, row.blob)?.let { UsageEvent.fromBytes(it) }
             if (event == null) {
                 doomed.add(row.id) // çözülemeyen satır günlüğü büyütmekten başka iş görmez
                 return@forEach
@@ -153,6 +158,10 @@ class UsageLogRepository(
         }
         if (doomed.isNotEmpty()) dao.deleteByIds(doomed)
     }
+
+    /** Günlük satırı: önce AAD'li (sürüm 2), olmazsa eski biçim. */
+    private fun ac(key: SecretKey, blob: ByteArray): ByteArray? =
+        KayitBicimi.gunluguAc(key, blob, KayitBicimi.GUNLUK_AAD)
 
     private suspend fun pruneBuffer() {
         val rows = dao.getBuffered() // en eski önce

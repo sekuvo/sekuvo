@@ -9,13 +9,15 @@ import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 /**
- * Etiket tanımı. Ad ve renk veritabanında ŞİFRESİZ durur: filtreleme liste
- * ekranında çalışır ve başlık/tür ile aynı gerekçeye dayanır (SEC-013).
- * Bilinçli üstveri kabulü: SEC-021. Sır niteliğinde etiket adı kullanılmaz.
+ * Etiket tanımı. Ad [nameBlob]'da dataKey ile şifreli durur (biçim sürüm 2,
+ * [KayitBicimi]); renk ve ikon açıktır. Depo, kilit açıkken adı çözüp [name]'e
+ * koyarak döndürür. [uid] boşsa satır sürüm 1'dendir ve ad [name]'de açık
+ * durur; kilit ilk açıldığında taşınır.
  */
 @Entity(tableName = "tags")
 data class TagEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    /** Veritabanında sürüm 2'de boş; depodan dönen nesnede çözülmüş ad. */
     val name: String,
     /** ARGB; palet [TagPalette] içinden seçilir. */
     val color: Int,
@@ -26,8 +28,22 @@ data class TagEntity(
      * derlemeye kayar, isim kalıcıdır — yedekten dönen etiket yıllar sonra da
      * doğru ikonu bulur. Tanınmayan anahtar sessizce ikonsuza düşer.
      */
-    val icon: String = ""
-)
+    val icon: String = "",
+    /** Satırın kalıcı, rastgele kimliği; ad mühürü buna bağlıdır. Boş = sürüm 1. */
+    val uid: String = "",
+    /** Şifreli ad (sürüm 2). */
+    val nameBlob: ByteArray? = null
+) {
+    // Bayt dizisi içeren veri sınıfı: eşitlik içerikten, dizinin kimliğinden değil.
+    override fun equals(other: Any?): Boolean =
+        other is TagEntity && other.id == id && other.name == name && other.color == color &&
+            other.icon == icon && other.uid == uid && other.nameBlob.contentEqualsNullable(nameBlob)
+
+    override fun hashCode(): Int = listOf(id, name, color, icon, uid).hashCode()
+}
+
+private fun ByteArray?.contentEqualsNullable(other: ByteArray?): Boolean =
+    if (this == null) other == null else other != null && contentEquals(other)
 
 /**
  * Yedek dosyasında taşınan etiket görünümü: renk + ikon.
@@ -98,10 +114,11 @@ object TagIds {
 @Dao
 interface TagDao {
 
-    @Query("SELECT * FROM tags ORDER BY name COLLATE NOCASE")
+    // Ad şifreli olduğu için sıra bellekte, çözülmüş adla kurulur (depo).
+    @Query("SELECT * FROM tags ORDER BY id")
     fun observeAll(): Flow<List<TagEntity>>
 
-    @Query("SELECT * FROM tags ORDER BY name COLLATE NOCASE")
+    @Query("SELECT * FROM tags ORDER BY id")
     suspend fun getAll(): List<TagEntity>
 
     @Insert
@@ -109,6 +126,9 @@ interface TagDao {
 
     @Update
     suspend fun update(tag: TagEntity)
+
+    @Update
+    suspend fun updateAll(tags: List<TagEntity>)
 
     @Query("DELETE FROM tags WHERE id = :id")
     suspend fun deleteById(id: Long)

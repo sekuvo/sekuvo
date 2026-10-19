@@ -202,6 +202,7 @@
     <string name="home_search_hint">Search entries</string>
     <string name="home_manage_tags_cd">Manage tags</string>
     <string name="home_empty_vault">Your vault don ready — add your first entry with the + wey dey bottom right.</string>
+    <string name="home_entry_unreadable">Entry wey no fit open</string>
     <string name="home_empty_filter">No entry match dis filter dem.</string>
     <string name="home_tag_new">New tag</string>
     <string name="home_tag_edit">Edit tag</string>

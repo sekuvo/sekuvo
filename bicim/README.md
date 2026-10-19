@@ -53,7 +53,7 @@ carry ASCII passwords only.
 
 ## 2. Sealing
 
-AES-256-GCM, 12-byte random IV, 128-bit tag, no associated data.
+AES-256-GCM, 12-byte random IV, 128-bit tag.
 
 ```
 blob = iv (12 bytes) || ciphertext || tag (16 bytes)
@@ -61,6 +61,12 @@ blob = iv (12 bytes) || ciphertext || tag (16 bytes)
 
 A blob of 12 bytes or less, a wrong key and a modified byte all fail the same
 way: no plaintext.
+
+Envelopes and backups (§3) carry no associated data. On-device storage (§6)
+binds every seal to its place with associated data: the AAD is the UTF-8
+bytes of a path such as `sekuvo/v2/tags/<uid>/name`, and a seal opened with
+any other AAD, or with none, fails like a wrong key. `vektorler/aesgcm.json`
+pins both kinds (`vektorler` without AAD, `aad` with).
 
 ## 3. Envelope
 
@@ -158,8 +164,9 @@ Inflation stops at 4 MiB (zip bomb). The assembled text is an envelope (§3).
 
 ## 6. On-device keys (for reference, not exchanged)
 
-A random 32-byte `dataKey` seals each entry's `data` JSON (§2). A `KEK`
-derived from the master password (§1) seals the `dataKey`. Each platform
+A random 32-byte `dataKey` seals each entry's `data` JSON and, since 1.3,
+its title (§2, "Storage format 2" below). A `KEK` derived from the master
+password (§1) seals the `dataKey`. Each platform
 stores the wrapped key its own way, together with its salt and iteration
 count. A wrap written with fewer iterations than today's (a vault created
 before 1.3) is rewritten with a new salt and 600,000 iterations the next
@@ -169,6 +176,32 @@ PIN wrap the same `dataKey` again; the PIN is always derived with 310,000
 iterations, because neither the PIN wrap nor its check blob records a count.
 The master password always opens the vault on its own, so a backup needs
 nothing but the file and its password.
+
+### Storage format 2 (since 1.3)
+
+Nothing that names an account is stored in clear. Each row gets a `uid`: 16
+random bytes as 32 lowercase hex characters, fixed for the row's life.
+
+| Column | Sealed with | AAD |
+|---|---|---|
+| `entries.blob`: the `data` JSON (§4) plus `"title"` | `dataKey` | `sekuvo/v2/entries/<uid>/blob/<type>/<anchor 0 or 1>` |
+| `entries.quickBlob` (Android keyboard copy): the same plaintext | quick-access Keystore key | `sekuvo/v2/entries/<uid>/quick/<type>` |
+| `tags.nameBlob`: the tag name, UTF-8 | `dataKey` | `sekuvo/v2/tags/<uid>/name` |
+| `usage_log.blob` (Android) | `dataKey` | `sekuvo/v2/usage_log` |
+| `usage_buffer.blob` (Android) | quick-access Keystore key | `sekuvo/v2/usage_buffer` |
+
+`entries.title` and `tags.name` stay empty. A seal moved to another row,
+column or table does not open, and neither does an entry whose `type` or
+`anchor` column was changed. Type, note kind, flags, order, tag ids and dates
+stay in clear: the list cannot be drawn before unlocking anyway, so it is
+built in memory from the opened rows.
+
+A row with an empty `uid` is format 1: title or tag name in clear, no AAD
+(usage-log rows are told apart by trying the AAD first). Such rows are read
+as before and rewritten in format 2, all in one transaction, the first time
+the vault is unlocked; the database file is then rewritten (`VACUUM`) so
+that the cleared titles do not linger in free pages. A row that cannot be
+opened is left as it is. Backups are not affected.
 
 ## Changing the format
 

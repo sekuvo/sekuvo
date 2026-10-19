@@ -13,8 +13,11 @@ import androidx.room.PrimaryKey
 enum class EntryType { LOGIN, EVERYDAY, CARD, NOTE }
 
 /**
- * Veritabanında yalnızca başlık ve tür açık durur (liste/arama için);
- * tüm hassas alanlar [blob] içinde AES-256-GCM ile şifrelidir.
+ * Kaydın başlığı ve bütün hassas alanları [blob] içinde AES-256-GCM ile
+ * şifrelidir (biçim sürüm 2, [KayitBicimi]); açık duranlar tür, not türü,
+ * bayraklar, sıra, etiket kimlikleri ve tarihlerdir. [uid] boşsa satır
+ * sürüm 1'dendir: başlık [title] sütununda açık durur ve kilit ilk açıldığında
+ * taşınır.
  *
  * [quick] işaretli kayıtlar klavyede kasa kilitliyken de kullanılabilir.
  * Bunun için aynı içeriğin ikinci bir kopyası [quickBlob] içinde, Keystore'daki
@@ -51,7 +54,13 @@ data class EntryEntity(
      * Tür gibi şifresiz: hangi satırın çıpa olduğu kilit açmadan bilinmeli
      * ki liste sorgusu onu dışarıda bırakabilsin (SEC-013/SEC-021 ailesi).
      */
-    val anchor: Boolean = false
+    val anchor: Boolean = false,
+    /**
+     * Satırın kalıcı, rastgele kimliği (sürüm 2). Şifreli gövde ve hızlı
+     * erişim kopyası buna AAD ile bağlıdır: başka satıra taşınan gövde
+     * açılmaz. Boş = sürüm 1 satırı.
+     */
+    val uid: String = ""
 ) {
     override fun equals(other: Any?): Boolean =
         other is EntryEntity && other.id == id && other.updatedAt == updatedAt

@@ -209,6 +209,7 @@
     <string name="home_search_hint">Search entries</string>
     <string name="home_manage_tags_cd">Manage tags</string>
     <string name="home_empty_vault">Your vault is ready — add your first entry with the + at the bottom right.</string>
+    <string name="home_entry_unreadable">Entry that cannot be opened</string>
     <string name="home_empty_filter">No entries match these filters.</string>
     <string name="home_tag_new">New tag</string>
     <string name="home_tag_edit">Edit tag</string>

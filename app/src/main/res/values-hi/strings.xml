@@ -202,6 +202,7 @@
     <string name="home_search_hint">एंट्री खोजें</string>
     <string name="home_manage_tags_cd">टैग प्रबंधित करें</string>
     <string name="home_empty_vault">आपकी तिजोरी तैयार है — नीचे दाईं ओर + से अपनी पहली एंट्री जोड़ें।</string>
+    <string name="home_entry_unreadable">एंट्री जो खुल नहीं सकती</string>
     <string name="home_empty_filter">इन फ़िल्टरों से कोई एंट्री मेल नहीं खाती।</string>
     <string name="home_tag_new">नया टैग</string>
     <string name="home_tag_edit">टैग संपादित करें</string>

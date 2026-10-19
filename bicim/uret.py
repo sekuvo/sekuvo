@@ -44,9 +44,9 @@ def kdf(parola, tuz, tur):
     return hashlib.pbkdf2_hmac("sha256", parola.encode("utf-8"), tuz, tur, 32)
 
 
-def muhurle(anahtar, iv, acik):
+def muhurle(anahtar, iv, acik, aad=None):
     """iv(12) || şifreli metin || etiket(16) — uygulamanın Crypto.encrypt çıktısı."""
-    return iv + AESGCM(anahtar).encrypt(iv, acik, None)
+    return iv + AESGCM(anahtar).encrypt(iv, acik, aad)
 
 
 def zarf(parola, icerik_metni, tuz, iv, tur=TUR):
@@ -95,6 +95,17 @@ GCM = [
     {"aciklama": "kısa ASCII", "acik": "Sekuvo"},
     {"aciklama": "boş içerik — yalnız etiket", "acik": ""},
     {"aciklama": "UTF-8 ve emoji", "acik": "Şifre: çok-gizli 🔐 · ğüşıöç"},
+]
+
+# Cihazdaki kayıt biçimi sürüm 2 (§6): mühür yerine AAD ile bağlıdır. AAD,
+# metnin UTF-8 baytlarıdır.
+GCM_AAD = [
+    {"aciklama": "kaydın gövdesi: başlık ve veri, satırına bağlı",
+     "acik": '{"password":"çok-gizli","title":"Banka"}',
+     "aad": "sekuvo/v2/entries/00112233445566778899aabbccddeeff/blob/LOGIN/0"},
+    {"aciklama": "etiket adı",
+     "acik": "kripto",
+     "aad": "sekuvo/v2/tags/00112233445566778899aabbccddeeff/name"},
 ]
 
 # ── 3. Yedek içeriği: her tür, her alan, bilinmeyen değerler ────────────────
@@ -239,11 +250,20 @@ def main():
         iv = sira(100 + i * 12, 12)
         gcm.append({"aciklama": v["aciklama"], "anahtar_hex": anahtar.hex(), "acik": v["acik"],
                     "blob": b64(muhurle(anahtar, iv, v["acik"].encode("utf-8")))})
+    gcm_aad = []
+    for i, v in enumerate(GCM_AAD):
+        iv = sira(136 + i * 12, 12)
+        gcm_aad.append({"aciklama": v["aciklama"], "anahtar_hex": anahtar.hex(), "acik": v["acik"],
+                        "aad": v["aad"],
+                        "blob": b64(muhurle(anahtar, iv, v["acik"].encode("utf-8"), v["aad"].encode("utf-8")))})
     bozuk = bytearray(base64.b64decode(gcm[0]["blob"]))
     bozuk[-1] ^= 0x01
     yaz("aesgcm.json", {
-        "aciklama": "AES-256-GCM; blob = iv(12) || şifreli metin || etiket(16), base64. AAD yok.",
+        "aciklama": "AES-256-GCM; blob = iv(12) || şifreli metin || etiket(16), base64. "
+                    "vektorler: AAD yok (zarf, yedek). aad: cihazdaki sürüm 2 biçimi, AAD = metnin UTF-8 baytları; "
+                    "AAD'siz ya da başka AAD'yle açılmamalı.",
         "vektorler": gcm,
+        "aad": gcm_aad,
         "bozuk": {"aciklama": "etiketin son biti çevrildi — çözme başarısız olmalı",
                   "anahtar_hex": anahtar.hex(), "blob": b64(bytes(bozuk))},
     })
