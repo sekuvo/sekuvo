@@ -22,7 +22,8 @@ from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 
 KOK = pathlib.Path(__file__).parent
 HEDEF = KOK / "vektorler"
-TUR = 310_000          # uygulamanın kullandığı PBKDF2 tur sayısı
+TUR = 310_000          # 1.3'ten önceki yazıcıların ve araçların tur sayısı
+YENI_TUR = 600_000     # uygulamaların 1.3'ten beri yazdığı tur sayısı
 QR_ONEK = "VLT1"
 QR_PARCA = 1200        # uygulamadaki QrTransfer.CHUNK, aktar.html ve vault-clip ile aynı
 
@@ -85,6 +86,7 @@ KDF = [
     {"parola": "correct horse battery staple", "tuz": sira(0, 16), "tur": TUR},
     {"parola": "yedek-parolasi-123", "tuz": sira(16, 16), "tur": TUR},
     {"parola": "Kasa!2026", "tuz": sira(32, 16), "tur": 10_000},
+    {"parola": "Uzun bir yedek cumlesi 2026", "tuz": sira(48, 16), "tur": YENI_TUR},
 ]
 
 # ── 2. AES-256-GCM ───────────────────────────────────────────────────────────

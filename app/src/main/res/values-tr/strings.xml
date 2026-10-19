@@ -327,6 +327,8 @@
     <string name="settings_keyboard_open">Klavye ayarlarını aç</string>
     <string name="settings_export_pw_title">Yedek parolası belirle</string>
     <string name="settings_export_pw_desc">Bu parola olmadan yedek dosyası AÇILAMAZ. Ana parolandan FARKLI olsun: yedek parolası bilgisayarlarda yazılabiliyor, ana parola hiçbir bilgisayara girmiyor.</string>
+    <string name="settings_export_pw_weak">Bu parola zayıf görünüyor: 16 karakterden kısa ya da tek tür karakterden oluşuyor. Yedek dosyası telefonun dışında saklanır; dosyayı ele geçiren biri parolayı çevrimdışı deneyebilir. Birkaç kelimelik uzun bir cümle hem güçlü hem akılda kalır.</string>
+    <string name="settings_export_save_anyway">Yine de kaydet</string>
     <string name="settings_biometric_pin_title">Parmak izini PIN\'e bağla</string>
     <string name="settings_biometric_pin_desc">Parmak izi kaydı PIN ile şifrelenecek: açılışta önce parmak izi, sonra bu PIN sorulur.</string>
     <string name="settings_label_pin">PIN</string>

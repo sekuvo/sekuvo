@@ -26,8 +26,12 @@ import javax.crypto.spec.SecretKeySpec
  */
 object PinLock {
 
-    /** PIN kısa olduğu için tur sayısı ana paroladakiyle aynı tutulur. */
-    const val ITERATIONS = Crypto.KDF_ITERATIONS
+    /**
+     * Sabit: PIN sargısı ve doğrulama blobu tur sayısını saklamaz, yani bu
+     * sayı değişirse bugünkü PIN'ler açılmaz. Ana parolanın tur sayısından
+     * bağımsızdır; PIN'i asıl koruyan Keystore anahtarıdır, tur sayısı değil.
+     */
+    const val ITERATIONS = Crypto.LEGACY_KDF_ITERATIONS
 
     const val MIN_LENGTH = 4
     const val MAX_LENGTH = 12

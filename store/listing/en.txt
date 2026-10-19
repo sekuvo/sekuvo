@@ -20,7 +20,7 @@ WHAT IT STORES
 
 ENCRYPTION
 Every sensitive field is sealed with AES-256-GCM. The key is derived from your
-master password with PBKDF2-HMAC-SHA256 at 310,000 rounds, on your phone, every
+master password with PBKDF2-HMAC-SHA256 at 600,000 rounds, on your phone, every
 time you unlock. There is no recovery backdoor: if you forget the master
 password, the data is gone. That is the design.
 

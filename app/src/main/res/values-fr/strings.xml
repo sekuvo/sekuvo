@@ -326,6 +326,8 @@
     <string name="settings_keyboard_open">Ouvrir les paramètres du clavier</string>
     <string name="settings_export_pw_title">Définir le mot de passe de sauvegarde</string>
     <string name="settings_export_pw_desc">Sans ce mot de passe, le fichier de sauvegarde NE PEUT PAS être ouvert. Choisis-le DIFFÉRENT de ton mot de passe principal : le mot de passe de sauvegarde finit par être saisi sur des ordinateurs, le mot de passe principal ne touche jamais un ordinateur.</string>
+    <string name="settings_export_pw_weak">Ce mot de passe semble faible : moins de 16 caractères, ou un seul type de caractère. Le fichier de sauvegarde est conservé hors du téléphone ; quiconque le récupère peut essayer des mots de passe hors ligne. Une longue phrase de plusieurs mots est solide et facile à retenir.</string>
+    <string name="settings_export_save_anyway">Enregistrer quand même</string>
     <string name="settings_biometric_pin_title">Lier l\'empreinte à un PIN</string>
     <string name="settings_biometric_pin_desc">L\'empreinte biométrique sera chiffrée avec le PIN : au déverrouillage, l\'empreinte est demandée en premier, puis ce PIN.</string>
     <string name="settings_label_pin">PIN</string>

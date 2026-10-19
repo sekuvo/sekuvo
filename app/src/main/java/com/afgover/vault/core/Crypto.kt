@@ -17,7 +17,21 @@ import javax.crypto.spec.SecretKeySpec
  */
 object Crypto {
 
-    const val KDF_ITERATIONS = 310_000
+    /**
+     * Yeni yazılan kasa sargısı ve yedeklerin tur sayısı (OWASP'ın güncel
+     * önerisi). Tur sayısı hem sargıda hem yedekte yazılı olduğu için eski
+     * kayıtlar kendi sayılarıyla açılır; okuyucular 1.000.000'a kadar kabul
+     * eder, yani eski sürümler de yeni yedekleri açar.
+     */
+    const val KDF_ITERATIONS = 600_000
+
+    /**
+     * 1.3'ten önce her şey bu sayıyla yazıldı. Tur sayısı yazılmamış bir
+     * kayıt bununla okunur; PIN sargısı sayıyı hiç saklamadığı için hep
+     * bununla türetilir ([PinLock.ITERATIONS]).
+     */
+    const val LEGACY_KDF_ITERATIONS = 310_000
+
     const val KEY_BITS = 256
     private const val GCM_IV_BYTES = 12
     private const val GCM_TAG_BITS = 128
@@ -27,6 +41,9 @@ object Crypto {
     fun randomBytes(count: Int): ByteArray = ByteArray(count).also { random.nextBytes(it) }
 
     fun randomKey(): SecretKey = SecretKeySpec(randomBytes(KEY_BITS / 8), "AES")
+
+    /** Bu tur sayısıyla yazılmış bir sargı bugünkü sayıyla yeniden sarılmalı mı? */
+    fun needsKdfUpgrade(storedIterations: Int): Boolean = storedIterations < KDF_ITERATIONS
 
     fun deriveKey(password: CharArray, salt: ByteArray, iterations: Int = KDF_ITERATIONS): SecretKey {
         val spec = PBEKeySpec(password, salt, iterations, KEY_BITS)

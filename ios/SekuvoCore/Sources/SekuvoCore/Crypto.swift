@@ -6,8 +6,8 @@ import Security
 /// Tüm şifreleme burada: AES-256-GCM + PBKDF2-HMAC-SHA256.
 ///
 /// Android'deki `core/Crypto.kt`'nin karşılığı ve onunla **bayt bayt aynı**:
-/// - anahtar türetme PBKDF2-HMAC-SHA256, 310.000 tur, 32 bayt; parola UTF-8
-///   baytlarıyla girer,
+/// - anahtar türetme PBKDF2-HMAC-SHA256, 32 bayt; yeni yazımlar 600.000 tur,
+///   tur sayısı sargıda ve yedekte yazılı; parola UTF-8 baytlarıyla girer,
 /// - mühür `iv(12) || şifreli metin || etiket(16)`, AAD yok.
 ///
 /// İkisi `bicim/vektorler/` değerleriyle sınanır; biçim tek yerde,
@@ -15,7 +15,18 @@ import Security
 /// bağımlı değildir: yedek dosyası cihaz değişse de yalnız parolayla açılır.
 public enum Crypto {
 
-    public static let kdfIterations = 310_000
+    /// Yeni yazılan kasa sargısı ve yedeklerin tur sayısı (OWASP'ın güncel
+    /// önerisi). Eski kayıtlar kendi yazılı sayılarıyla açılır; okuyucular
+    /// 1.000.000'a kadar kabul eder, yani eski sürümler de yeni yedeği açar.
+    public static let kdfIterations = 600_000
+
+    /// 1.3'ten önce her şey bu sayıyla yazıldı. Tur sayısı yazılmamış kayıt
+    /// bununla okunur; PIN sargısı sayıyı saklamadığı için hep bununla
+    /// türetilir (`PinLock.iterations`).
+    public static let legacyKdfIterations = 310_000
+
+    /// Bu tur sayısıyla yazılmış bir sargı bugünkü sayıyla yeniden sarılmalı mı?
+    public static func needsKdfUpgrade(_ storedIterations: Int) -> Bool { storedIterations < kdfIterations }
     public static let keyBytes = 32
     static let ivBytes = 12
     static let tagBytes = 16

@@ -37154,6 +37154,208 @@
         }
       }
     },
+    "settings_export_pw_weak": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This password looks weak: shorter than 16 characters, or only one kind of character. The backup file is kept off the phone, so anyone who gets hold of it can try passwords offline. A long sentence of several words is both strong and easy to remember."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bu parola zayıf görünüyor: 16 karakterden kısa ya da tek tür karakterden oluşuyor. Yedek dosyası telefonun dışında saklanır; dosyayı ele geçiren biri parolayı çevrimdışı deneyebilir. Birkaç kelimelik uzun bir cümle hem güçlü hem akılda kalır."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Esta contraseña parece débil: tiene menos de 16 caracteres o un solo tipo de carácter. El archivo de copia se guarda fuera del teléfono; quien lo consiga puede probar contraseñas sin conexión. Una frase larga de varias palabras es segura y fácil de recordar."
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "यह पासवर्ड कमज़ोर लगता है: 16 अक्षरों से छोटा है, या इसमें एक ही तरह के अक्षर हैं। बैकअप फ़ाइल फ़ोन से बाहर रखी जाती है; जिसके हाथ यह लगे, वह ऑफ़लाइन पासवर्ड आज़मा सकता है। कई शब्दों वाला एक लंबा वाक्य मज़बूत भी होता है और याद रखने में आसान भी।"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تبدو كلمة المرور هذه ضعيفة: أقصر من 16 محرفًا أو من نوع واحد من المحارف. يُحفظ ملف النسخة الاحتياطية خارج الهاتف، ويمكن لمن يحصل عليه تجربة كلمات المرور دون اتصال. الجملة الطويلة المؤلفة من عدة كلمات قوية وسهلة التذكر."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "此密码看起来较弱：少于 16 个字符，或只有一种字符。备份文件保存在手机之外，拿到它的人可以离线尝试密码。由几个词组成的长句既安全又好记。"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ce mot de passe semble faible : moins de 16 caractères, ou un seul type de caractère. Le fichier de sauvegarde est conservé hors du téléphone ; quiconque le récupère peut essayer des mots de passe hors ligne. Une longue phrase de plusieurs mots est solide et facile à retenir."
+          }
+        },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "এই পাসওয়ার্ডটি দুর্বল মনে হচ্ছে: ১৬ অক্ষরের চেয়ে ছোট, অথবা একই ধরনের অক্ষর দিয়ে তৈরি। ব্যাকআপ ফাইল ফোনের বাইরে রাখা হয়; এটি যার হাতে যাবে সে অফলাইনে পাসওয়ার্ড চেষ্টা করতে পারে। কয়েকটি শব্দের একটি দীর্ঘ বাক্য শক্তিশালী এবং মনে রাখাও সহজ।"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Esta senha parece fraca: tem menos de 16 caracteres ou um só tipo de caractere. O arquivo de backup fica fora do telefone; quem o obtiver pode testar senhas offline. Uma frase longa de várias palavras é forte e fácil de lembrar."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Этот пароль выглядит слабым: короче 16 символов или из символов одного вида. Файл резервной копии хранится вне телефона; тот, кто его получит, может подбирать пароли офлайн. Длинная фраза из нескольких слов и надёжна, и легко запоминается."
+          }
+        },
+        "ur": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "یہ پاس ورڈ کمزور لگتا ہے: 16 حروف سے چھوٹا ہے یا صرف ایک قسم کے حروف پر مشتمل ہے۔ بیک اپ فائل فون سے باہر رکھی جاتی ہے؛ جس کے ہاتھ یہ لگے وہ آف لائن پاس ورڈ آزما سکتا ہے۔ کئی الفاظ پر مشتمل لمبا جملہ مضبوط بھی ہوتا ہے اور یاد رکھنا بھی آسان۔"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kata sandi ini tampak lemah: kurang dari 16 karakter, atau hanya satu jenis karakter. File cadangan disimpan di luar ponsel; siapa pun yang mendapatkannya bisa mencoba kata sandi secara offline. Kalimat panjang dari beberapa kata itu kuat sekaligus mudah diingat."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dieses Passwort wirkt schwach: kürzer als 16 Zeichen oder nur eine Art von Zeichen. Die Backup-Datei liegt außerhalb des Telefons; wer sie in die Hände bekommt, kann Passwörter offline durchprobieren. Ein langer Satz aus mehreren Wörtern ist stark und leicht zu merken."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "このパスワードは弱いようです。16文字未満か、1種類の文字だけでできています。バックアップファイルは端末の外に保管されるため、手に入れた人はオフラインでパスワードを試せます。いくつかの単語を並べた長い文は、強くて覚えやすいパスワードになります。"
+          }
+        },
+        "pcm": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dis password be like say e weak: e no reach 16 characters, or na only one kind of character dey inside. The backup file dey stay outside the phone, so anybody wey hold am fit try passwords offline. Long sentence wey get plenty words strong and e easy to remember."
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mật khẩu này có vẻ yếu: ngắn hơn 16 ký tự hoặc chỉ có một loại ký tự. Tệp sao lưu được cất ngoài điện thoại; ai có được tệp đều có thể thử mật khẩu ngoại tuyến. Một câu dài gồm vài từ vừa mạnh vừa dễ nhớ."
+          }
+        }
+      }
+    },
+    "settings_export_save_anyway": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save anyway"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yine de kaydet"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Guardar de todos modos"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "फिर भी सहेजें"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "الحفظ رغم ذلك"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "仍然保存"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enregistrer quand même"
+          }
+        },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "তবুও সংরক্ষণ করুন"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Salvar mesmo assim"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Всё равно сохранить"
+          }
+        },
+        "ur": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "پھر بھی محفوظ کریں"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tetap simpan"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trotzdem speichern"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "それでも保存"
+          }
+        },
+        "pcm": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save am anyway"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vẫn lưu"
+          }
+        }
+      }
+    },
     "settings_import_confirm": {
       "extractionState": "manual",
       "localizations": {

@@ -19,8 +19,10 @@ import Foundation
 /// başına açar.
 public enum PinLock {
 
-    /// PIN kısa olduğu için tur sayısı ana paroladakiyle aynı tutulur.
-    public static let iterations = Crypto.kdfIterations
+    /// Sabit: PIN sargısı ve doğrulama blobu tur sayısını saklamaz, yani bu
+    /// sayı değişirse bugünkü PIN'ler açılmaz. Ana parolanın tur sayısından
+    /// bağımsızdır; PIN'i asıl koruyan Keychain/Secure Enclave'dir.
+    public static let iterations = Crypto.legacyKdfIterations
     public static let minLength = 4
     public static let maxLength = 12
     static let checkText = "vault-pin-ok"

@@ -326,6 +326,8 @@
     <string name="settings_keyboard_open">কীবোর্ড সেটিংস খুলুন</string>
     <string name="settings_export_pw_title">ব্যাকআপ পাসওয়ার্ড সেট করুন</string>
     <string name="settings_export_pw_desc">এই পাসওয়ার্ড ছাড়া ব্যাকআপ ফাইল খোলা যাবে না। এটি মূল পাসওয়ার্ড থেকে আলাদা রাখুন: ব্যাকআপ পাসওয়ার্ড কম্পিউটারে টাইপ করা হয়, মূল পাসওয়ার্ড কখনো কম্পিউটার স্পর্শ করে না।</string>
+    <string name="settings_export_pw_weak">এই পাসওয়ার্ডটি দুর্বল মনে হচ্ছে: ১৬ অক্ষরের চেয়ে ছোট, অথবা একই ধরনের অক্ষর দিয়ে তৈরি। ব্যাকআপ ফাইল ফোনের বাইরে রাখা হয়; এটি যার হাতে যাবে সে অফলাইনে পাসওয়ার্ড চেষ্টা করতে পারে। কয়েকটি শব্দের একটি দীর্ঘ বাক্য শক্তিশালী এবং মনে রাখাও সহজ।</string>
+    <string name="settings_export_save_anyway">তবুও সংরক্ষণ করুন</string>
     <string name="settings_biometric_pin_title">ফিঙ্গারপ্রিন্টকে PIN-এর সাথে যুক্ত করুন</string>
     <string name="settings_biometric_pin_desc">ফিঙ্গারপ্রিন্ট রেকর্ডটি PIN দিয়ে এনক্রিপ্ট হবে: আনলকের সময় আগে ফিঙ্গারপ্রিন্ট, তারপর এই PIN চাওয়া হবে।</string>
     <string name="settings_label_pin">PIN</string>

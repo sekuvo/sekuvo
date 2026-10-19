@@ -118,6 +118,9 @@ struct BackupPasswordSheet: View {
     @State private var parola = ""
     @State private var tekrar = ""
 
+    /// Zayıf parola uyarılır, yasaklanmaz (kural `Backup.isWeakPassword`).
+    private var zayif: Bool { !parola.isEmpty && Backup.isWeakPassword(parola) }
+
     var body: some View {
         Form {
             Section {
@@ -125,7 +128,10 @@ struct BackupPasswordSheet: View {
                 SecureFieldRow(placeholder: L("settings_label_password"), text: $parola, contentType: .sekuvoNone)
                 SecureFieldRow(placeholder: L("settings_label_password_again"), text: $tekrar, contentType: .sekuvoNone)
             } footer: {
-                if let hata = kasa.error { Text(hata).foregroundStyle(Theme.error) }
+                VStack(alignment: .leading, spacing: 6) {
+                    if zayif { Text(L("settings_export_pw_weak")).foregroundStyle(Theme.error) }
+                    if let hata = kasa.error { Text(hata).foregroundStyle(Theme.error) }
+                }
             }
         }
         .scrollContentBackground(.hidden)
@@ -144,7 +150,7 @@ struct BackupPasswordSheet: View {
                         }
                     }
                 } label: {
-                    if kasa.busy { ProgressView() } else { Text(L("settings_ok")) }
+                    if kasa.busy { ProgressView() } else { Text(zayif ? L("settings_export_save_anyway") : L("settings_ok")) }
                 }
                 .disabled(kasa.busy || parola.isEmpty)
             }

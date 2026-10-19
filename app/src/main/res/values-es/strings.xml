@@ -326,6 +326,8 @@
     <string name="settings_keyboard_open">Abrir ajustes del teclado</string>
     <string name="settings_export_pw_title">Definir contraseña de copia</string>
     <string name="settings_export_pw_desc">Sin esta contraseña el archivo de copia NO se puede abrir. Que sea DISTINTA de tu contraseña maestra: la de copia acaba escribiéndose en ordenadores, la maestra nunca toca un ordenador.</string>
+    <string name="settings_export_pw_weak">Esta contraseña parece débil: tiene menos de 16 caracteres o un solo tipo de carácter. El archivo de copia se guarda fuera del teléfono; quien lo consiga puede probar contraseñas sin conexión. Una frase larga de varias palabras es segura y fácil de recordar.</string>
+    <string name="settings_export_save_anyway">Guardar de todos modos</string>
     <string name="settings_biometric_pin_title">Vincular la huella a un PIN</string>
     <string name="settings_biometric_pin_desc">El registro de huella se cifrará con el PIN: al desbloquear se pide primero la huella y luego este PIN.</string>
     <string name="settings_label_pin">PIN</string>

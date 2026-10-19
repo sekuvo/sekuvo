@@ -288,7 +288,11 @@ class VaultViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             busy = true
             val payload = withContext(Dispatchers.Default) {
-                keyManager.unlockStage1(password.toCharArray())
+                keyManager.unlockStage1(password.toCharArray())?.also { p ->
+                    // Eski tur sayısıyla sarılmış kasa, parola elde varken bugünkü
+                    // sayıyla yeniden sarılır (bir kez; ilk açılış biraz uzar).
+                    if (p.size == 32) keyManager.upgradeKdf(password.toCharArray(), p)
+                }
             }
             busy = false
             if (payload == null) {

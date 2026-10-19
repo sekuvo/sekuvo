@@ -326,6 +326,8 @@
     <string name="settings_keyboard_open">Mở cài đặt bàn phím</string>
     <string name="settings_export_pw_title">Thiết lập mật khẩu sao lưu</string>
     <string name="settings_export_pw_desc">Không có mật khẩu này, tệp sao lưu HOÀN TOÀN không thể mở được. Hãy đặt nó KHÁC với mật khẩu chính của bạn: mật khẩu sao lưu là mật khẩu cuối cùng sẽ được gõ trên máy tính, còn mật khẩu chính không bao giờ chạm vào máy tính.</string>
+    <string name="settings_export_pw_weak">Mật khẩu này có vẻ yếu: ngắn hơn 16 ký tự hoặc chỉ có một loại ký tự. Tệp sao lưu được cất ngoài điện thoại; ai có được tệp đều có thể thử mật khẩu ngoại tuyến. Một câu dài gồm vài từ vừa mạnh vừa dễ nhớ.</string>
+    <string name="settings_export_save_anyway">Vẫn lưu</string>
     <string name="settings_biometric_pin_title">Liên kết vân tay với PIN</string>
     <string name="settings_biometric_pin_desc">Bản ghi vân tay sẽ được mã hóa bằng PIN: khi mở khóa, hệ thống sẽ hỏi vân tay trước, sau đó là mã PIN này.</string>
     <string name="settings_label_pin">PIN</string>

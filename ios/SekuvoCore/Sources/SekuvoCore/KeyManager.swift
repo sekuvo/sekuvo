@@ -4,9 +4,9 @@ import Foundation
 /// Anahtar hiyerarşisi — Android'deki `core/KeyManager.kt` ile aynı:
 ///
 ///  - `dataKey`: rastgele 256 bit; bütün kayıtları şifreler.
-///  - `KEK`: ana paroladan PBKDF2 ile türetilir (310.000 tur); `dataKey`'i
-///    AES-GCM ile sarar. GCM doğrulaması sayesinde yanlış parola açılırken
-///    belli olur.
+///  - `KEK`: ana paroladan PBKDF2 ile türetilir (tur sayısı sargıda yazılı;
+///    yeni sargılar 600.000); `dataKey`'i AES-GCM ile sarar. GCM doğrulaması
+///    sayesinde yanlış parola açılırken belli olur.
 ///
 /// Sargı, uygulamanın kendi kabındaki küçük bir dosyada durur (Android'de
 /// SharedPreferences). Keychain'e bilerek konmadı: Keychain kaydı uygulama
@@ -37,14 +37,33 @@ public struct KeyManager: Sendable {
 
     /// Ana parola doğruysa `dataKey`.
     public func unlock(password: String) -> SymmetricKey? {
-        guard let veri = try? Data(contentsOf: file),
-              let w = try? JSONDecoder().decode(Wrapped.self, from: veri),
+        guard let w = wrapped(),
               let tuz = Data(base64Encoded: w.salt),
               let sargi = Data(base64Encoded: w.wrappedKey)
         else { return nil }
         let kek = Crypto.deriveKey(password: password, salt: tuz, iterations: w.iterations)
         guard let ham = Crypto.decrypt(sargi, key: kek), ham.count == Crypto.keyBytes else { return nil }
         return SymmetricKey(data: ham)
+    }
+
+    /// Sargının tur sayısı; dosya yoksa ya da okunamıyorsa `nil`.
+    public var storedIterations: Int? { wrapped()?.iterations }
+
+    /// Sargı bugünkü tur sayısından azıyla yazılmışsa (1.3'ten önceki
+    /// kasalar) aynı `dataKey` yeni tuz ve `Crypto.kdfIterations` ile yeniden
+    /// sarılır. Yalnız ana parola elde varken yapılabilir: Face ID yolu
+    /// parolayı görmez, yükseltme ilk parolalı açılışa kalır. `dataKey`,
+    /// `unlock(password:)`'ın aynı parolayla az önce döndürdüğüdür.
+    @discardableResult
+    public func upgradeIfNeeded(password: String, dataKey: SymmetricKey) throws -> Bool {
+        guard let tur = storedIterations, Crypto.needsKdfUpgrade(tur) else { return false }
+        try store(password: password, payload: dataKey.withUnsafeBytes { Data($0) })
+        return true
+    }
+
+    private func wrapped() -> Wrapped? {
+        guard let veri = try? Data(contentsOf: file) else { return nil }
+        return try? JSONDecoder().decode(Wrapped.self, from: veri)
     }
 
     /// Ana parolayı değiştirir: `dataKey` aynı kalır, yalnız sargı yenilenir.

@@ -47,11 +47,39 @@ object BackupManager {
     /**
      * PBKDF2 tur sayısı için kabul aralığı. Düşman bir zarf iterations alanına
      * çok büyük bir değer koyup türetmeyi dakikalarca kilitleyebilir (denetim:
-     * DoS). Kendi ürettiğimiz zarf her zaman 310.000 kullanır; aralık makul
-     * bir tavan bırakır.
+     * DoS). Uygulama 600.000, araçlar (aktar.html, vault-clip.py) 310.000
+     * yazar; aralık makul bir tavan bırakır. Taban düşük turlu bir zarfı
+     * açtırır ama parola telefondan çıkmaz: anahtar burada türetilir ve kalır.
      */
     const val MIN_ITERATIONS = 10_000
     const val MAX_ITERATIONS = 1_000_000
+
+    /**
+     * Yedek parolası zayıf mı? Araçlardaki sezgiyle aynı kural: 16 karakterden
+     * kısa ya da tek tür karakter (yalnız küçük harf, yalnız rakam…). ASCII'de
+     * aktar.html ve vault-clip.py ile birebir; büyük-küçük harfi olmayan
+     * yazılar (Arapça, Çince…) kendi türlerini sayar. Yedek dosyası telefonun
+     * dışında saklanır ve ele geçirilirse parola çevrimdışı denenir; bu yüzden
+     * zayıf parola uyarılır, yasaklanmaz.
+     */
+    fun isWeakPassword(password: String): Boolean {
+        if (password.codePointCount(0, password.length) < 16) return true
+        var kucuk = false
+        var buyuk = false
+        var harf = false
+        var rakam = false
+        var diger = false
+        password.codePoints().forEach { c ->
+            when {
+                Character.isLowerCase(c) -> kucuk = true
+                Character.isUpperCase(c) -> buyuk = true
+                Character.isDigit(c) -> rakam = true
+                Character.isLetter(c) -> harf = true
+                else -> diger = true
+            }
+        }
+        return listOf(kucuk, buyuk, harf, rakam, diger).count { it } < 2
+    }
 
     /** İçe aktarma sonucu: kayıtlar + yedekteki etiket renkleri (ad → ARGB). */
     data class ImportResult(
@@ -187,7 +215,9 @@ object BackupManager {
         } catch (e: Exception) {
             throw InvalidFormatException()
         }
-        val iterations = kdf.optInt("iterations", Crypto.KDF_ITERATIONS)
+        // Alanı olmayan zarf ilk sürümlerin sayısıyla okunur; bugünkü yazma
+        // sayısı (KDF_ITERATIONS) eski bir zarfa varsayılan olamaz.
+        val iterations = kdf.optInt("iterations", Crypto.LEGACY_KDF_ITERATIONS)
         if (iterations < MIN_ITERATIONS || iterations > MAX_ITERATIONS) {
             throw InvalidFormatException()
         }

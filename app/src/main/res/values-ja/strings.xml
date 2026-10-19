@@ -326,6 +326,8 @@
     <string name="settings_keyboard_open">キーボードの設定を開く</string>
     <string name="settings_export_pw_title">バックアップパスワードを設定</string>
     <string name="settings_export_pw_desc">このパスワードがないと、バックアップファイルはまったく開けません。マスターパスワードとは異なるものにしてください。バックアップパスワードは最終的にコンピューターに入力されますが、マスターパスワードがコンピューターに触れることは決してありません。</string>
+    <string name="settings_export_pw_weak">このパスワードは弱いようです。16文字未満か、1種類の文字だけでできています。バックアップファイルは端末の外に保管されるため、手に入れた人はオフラインでパスワードを試せます。いくつかの単語を並べた長い文は、強くて覚えやすいパスワードになります。</string>
+    <string name="settings_export_save_anyway">それでも保存</string>
     <string name="settings_biometric_pin_title">指紋をPINと連携</string>
     <string name="settings_biometric_pin_desc">指紋データがPINで暗号化されます。ロック解除時には、まず指紋、次にこのPINが求められます。</string>
     <string name="settings_label_pin">PIN</string>

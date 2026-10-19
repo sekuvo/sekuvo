@@ -26,8 +26,32 @@ public enum Backup {
     /// Girdi tavanı: yanlış seçilen dev bir dosya belleği doldurmasın.
     public static let maxEnvelopeBytes = 16 * 1024 * 1024
     /// Düşman bir zarf tur sayısını şişirip türetmeyi kilitleyemesin.
+    /// Uygulama 600.000, araçlar (aktar.html, vault-clip.py) 310.000 yazar.
+    /// Taban düşük turlu bir zarfı açtırır ama parola cihazdan çıkmaz.
     public static let minIterations = 10_000
     public static let maxIterations = 1_000_000
+
+    /// Yedek parolası zayıf mı? Araçlardaki sezgiyle aynı kural: 16
+    /// karakterden kısa ya da tek tür karakter. ASCII'de aktar.html,
+    /// vault-clip.py ve Android'le birebir; büyük-küçük harfi olmayan
+    /// yazılar (Arapça, Çince…) kendi türlerini sayar. Karakterler Unicode
+    /// kod noktasıyla sayılır (Python `len`, Kotlin `codePointCount`).
+    /// Yedek dosyası cihazın dışında saklanır; zayıf parola uyarılır,
+    /// yasaklanmaz.
+    public static func isWeakPassword(_ password: String) -> Bool {
+        let skalerler = password.unicodeScalars
+        if skalerler.count < 16 { return true }
+        var turler = Set<Int>()
+        for s in skalerler {
+            let o = s.properties
+            if o.isLowercase { turler.insert(0) }
+            else if o.isUppercase { turler.insert(1) }
+            else if o.numericType == .decimal { turler.insert(2) }
+            else if o.isAlphabetic { turler.insert(3) }
+            else { turler.insert(4) }
+        }
+        return turler.count < 2
+    }
 
     public struct ImportResult: Equatable, Sendable {
         public var entries: [DecryptedEntry]
@@ -77,7 +101,7 @@ public enum Backup {
         return try seal(payload: JSONSerialization.data(withJSONObject: icerik), password: password)
     }
 
-    /// İçeriği zarfa koyar: yeni tuz, 310.000 tur, rastgele IV.
+    /// İçeriği zarfa koyar: yeni tuz, `Crypto.kdfIterations` tur, rastgele IV.
     public static func seal(payload: Data, password: String) throws -> Data {
         let tuz = Crypto.randomBytes(16)
         let anahtar = Crypto.deriveKey(password: password, salt: tuz)
@@ -116,7 +140,7 @@ public enum Backup {
               let kdf = zarf["kdf"] as? [String: Any],
               let tuz = base64(JSON.string(kdf, "salt"))
         else { throw Failure.invalidFormat }
-        let tur = JSON.int(kdf, "iterations", Crypto.kdfIterations)
+        let tur = JSON.int(kdf, "iterations", Crypto.legacyKdfIterations)
         guard (minIterations...maxIterations).contains(tur),
               let blob = base64(JSON.string(zarf, "data"))
         else { throw Failure.invalidFormat }
