@@ -2,6 +2,7 @@ package com.afgover.vault.core
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import java.util.concurrent.atomic.AtomicInteger
 import javax.crypto.SecretKey
 
 /**
@@ -36,12 +37,33 @@ object VaultSession {
     private val _unlocked = MutableStateFlow(false)
     val unlocked: StateFlow<Boolean> = _unlocked
 
+    /**
+     * Kilit nesli: her [lock]'ta artar. Kilit açma PBKDF2 yüzünden saniyeler
+     * sürer; o arada ekran kapanırsa kilit olayı boşa gider (oturum zaten
+     * kilitli) ve türetme bitince kasa, kapanmış ekranın arkasında açılırdı.
+     * Kilit açan, beklemeden önce nesli alır ve anahtarı [unlockIfCurrent] ile
+     * verir: arada kilit olduysa anahtar atılır (iOS'taki `unlockGeneration`).
+     */
+    private val _generation = AtomicInteger(0)
+    val generation: Int get() = _generation.get()
+
+    @Synchronized
     fun unlock(key: SecretKey) {
         dataKey = key
         _unlocked.value = true
     }
 
+    /** [generation] alındığından beri kilit olmadıysa açar; olduysa `false`. */
+    @Synchronized
+    fun unlockIfCurrent(generation: Int, key: SecretKey): Boolean {
+        if (generation != _generation.get()) return false
+        unlock(key)
+        return true
+    }
+
+    @Synchronized
     fun lock() {
+        _generation.incrementAndGet()
         dataKey = null
         _unlocked.value = false
     }

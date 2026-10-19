@@ -98,6 +98,7 @@ class KeyManager(context: Context) {
         val dataKey = PinLock.unwrap(inner, pin, salt) ?: return false
         storePayload(password, dataKey.encoded)
         prefs.edit().remove(PREF_PIN_SALT).remove(PREF_PIN_CHECK).remove(PREF_PIN_CHECK_KS).apply()
+        resetPinFailures()
         clearBiometric()
         return true
     }
@@ -106,8 +107,13 @@ class KeyManager(context: Context) {
     //
     // PIN 4-12 hane; kilitlenme olmadan bir saldırgan (parmak izini bir kez
     // geçtikten sonra) tüm PIN'leri sırayla deneyebiliyordu. Kalıcı bir sayaç +
-    // üssel bekleme bunu kapatır; sayaç yalnız doğru PIN'de sıfırlanır ve
-    // süreç ölümünden etkilenmez (SharedPreferences).
+    // üssel bekleme bunu kapatır; süreç ölümünden etkilenmez (SharedPreferences).
+    //
+    // Sayaç, sahibinin kendini kanıtladığı her yerde sıfırlanır: doğru PIN,
+    // ana parolayla açılış, kasa açıkken parmak izi kurulurken doğrulanan PIN,
+    // PIN'in açılıp kapanması. Yalnız doğru PIN'de sıfırlandığında 10. yanlış
+    // parmak izini siliyor, kullanıcı ana parolayla açıp yeniden kurunca sayaç
+    // 10'da kalıyor ve ilk yanlış PIN kaydı yine siliyordu (ikinci tur denetim).
 
     /**
      * Şu an denemeye izin verilene kadar kalan süre (ms); 0 = serbest.
@@ -184,6 +190,7 @@ class KeyManager(context: Context) {
             .putString(PREF_PIN_CHECK, b64(stored))
             .putBoolean(PREF_PIN_CHECK_KS, ks)
             .apply()
+        resetPinFailures()
         clearBiometric()
         return true
     }
@@ -197,6 +204,7 @@ class KeyManager(context: Context) {
     fun disablePin(password: CharArray): Boolean {
         unlockWithPassword(password) ?: return false
         prefs.edit().remove(PREF_PIN_SALT).remove(PREF_PIN_CHECK).remove(PREF_PIN_CHECK_KS).apply()
+        resetPinFailures()
         clearBiometric()
         return true
     }
@@ -206,6 +214,8 @@ class KeyManager(context: Context) {
         if (!isPinEnabled) return dataKey.encoded
         val salt = pinSalt() ?: return null
         if (pin == null || !verifyPin(pin)) return null
+        // Kasa açık ve PIN doğru: sahibidir, yanlış PIN sayacı sıfırlanır.
+        resetPinFailures()
         return PinLock.wrap(dataKey, pin, salt)
     }
 

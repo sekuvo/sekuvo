@@ -275,9 +275,17 @@ class VaultViewModel(application: Application) : AndroidViewModel(application) {
      * Kilit açıldığında hızlı erişim kopyaları da tazelenir: Keystore anahtarı
      * kaybolmuş ya da kopya hiç üretilememişse kaydın aslından yeniden yazılır.
      * Kilitliyken biriken kullanım olayları da bu anda günlüğe taşınır.
+     *
+     * [nesil], kilit açma başlamadan önce alınan oturum neslidir
+     * ([VaultSession.generation]). PBKDF2 sürerken ekran kapandıysa kilit
+     * olmuştur: anahtar atılır, arayüz kilitli kalır ve `false` döner. Yoksa
+     * kasa kapalı ekranın arkasında açılırdı (iOS'ta ilk denetimde kapanan yarış).
      */
-    private fun onUnlocked(key: javax.crypto.SecretKey) {
-        VaultSession.unlock(key)
+    private fun onUnlocked(key: javax.crypto.SecretKey, nesil: Int = VaultSession.generation): Boolean {
+        if (!VaultSession.unlockIfCurrent(nesil, key)) {
+            lockState = LockState.LOCKED
+            return false
+        }
         lockState = LockState.UNLOCKED
         viewModelScope.launch(Dispatchers.IO) {
             // Önce biçim geçişi (sürüm 1 → 2, bir kez), sonra onarım: onarım
@@ -286,6 +294,7 @@ class VaultViewModel(application: Application) : AndroidViewModel(application) {
             repo.repairQuickCopies(key)
             usageLog.foldBuffer(key)
         }
+        return true
     }
 
     private fun SecretKeySpec(bytes: ByteArray, algo: String) =
@@ -300,6 +309,7 @@ class VaultViewModel(application: Application) : AndroidViewModel(application) {
             error = str(R.string.vm_passwords_mismatch)
             return
         }
+        val nesil = VaultSession.generation
         viewModelScope.launch {
             busy = true
             val key = withContext(Dispatchers.Default) {
@@ -307,7 +317,8 @@ class VaultViewModel(application: Application) : AndroidViewModel(application) {
             }
             busy = false
             keyManager.markMasterPasswordUsed()
-            onUnlocked(key)
+            // Kurulum sürerken ekran kapandıysa kasa kurulu ama kilitli kalır.
+            if (!onUnlocked(key, nesil)) return@launch
             // Teklif kurulumun hemen ardından yapılır: sonraya bırakılırsa
             // kullanıcı ana parolayı her açılışta yeniden yazmak zorunda kalır
             // ve özelliğin var olduğunu çoğu zaman hiç fark etmez.
@@ -317,6 +328,7 @@ class VaultViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun unlock(password: String) {
+        val nesil = VaultSession.generation
         viewModelScope.launch {
             busy = true
             val payload = withContext(Dispatchers.Default) {
@@ -345,7 +357,9 @@ class VaultViewModel(application: Application) : AndroidViewModel(application) {
             }
             // Ana parola tek başına açar: PIN yalnız parmak izi yolunu korur.
             keyManager.markMasterPasswordUsed()
-            onUnlocked(SecretKeySpec(payload, "AES"))
+            // Ana parolayı bilen sahibidir: yanlış PIN sayacı sıfırlanır.
+            keyManager.resetPinFailures()
+            onUnlocked(SecretKeySpec(payload, "AES"), nesil)
         }
     }
 
@@ -365,6 +379,7 @@ class VaultViewModel(application: Application) : AndroidViewModel(application) {
             error = cogul(R.plurals.vm_pin_locked_wait, (kalan / 1000).coerceAtLeast(1).toInt())
             return
         }
+        val nesil = VaultSession.generation
         viewModelScope.launch {
             busy = true
             val key = withContext(Dispatchers.Default) { keyManager.unlockWithPin(inner, pin) }
@@ -372,7 +387,7 @@ class VaultViewModel(application: Application) : AndroidViewModel(application) {
             if (key != null) {
                 keyManager.resetPinFailures()
                 pendingInner = null
-                onUnlocked(key)
+                onUnlocked(key, nesil)
                 return@launch
             }
             if (keyManager.verifyPin(pin)) {
