@@ -166,8 +166,8 @@ object AutofillResponses {
         }
         val title = entry.title.lowercase()
         if (target != null) {
-            val core = target.substringBeforeLast('.').substringAfterLast('.')
-            if (core.length >= 3 && (title.contains(core) || core.contains(title))) return 80
+            val core = cekirdek(target)
+            if (core != null && core.length >= 3 && (title.contains(core) || core.contains(title))) return 80
         }
         val tokens = parsed.packageName.split('.')
             .filter { it.length >= 3 && it !in IGNORED_PACKAGE_TOKENS }
@@ -187,6 +187,27 @@ object AutofillResponses {
             .lowercase()
             .takeIf { it.isNotEmpty() }
     }
+
+    /**
+     * Alan adının kayıtlı adı: `garanti.com.tr` → "garanti", `bbc.co.uk` →
+     * "bbc", `accounts.google.com` → "google". Ülke uzantısının önündeki `com`,
+     * `gov`, `co` gibi ikinci düzey uzantı da atlanır. Eskiden yalnız son
+     * parça atılıyordu: `.com.tr` adreslerinde çekirdek "com" çıkıyor, başlığında
+     * "com" geçen her kayıt 80 puanla öne geçiyordu (ikinci tur denetim).
+     */
+    internal fun cekirdek(host: String): String? {
+        val parcalar = host.split('.').filter { it.isNotEmpty() }
+        if (parcalar.size < 2) return null
+        var i = parcalar.size - 2
+        if (parcalar.size >= 3 && parcalar.last().length == 2 && parcalar[i] in IKINCI_DUZEY) i--
+        return parcalar[i]
+    }
+
+    /** Ülke uzantılarının önünde görülen ikinci düzey uzantılar (com.tr, co.uk, gov.tr…). */
+    private val IKINCI_DUZEY = setOf(
+        "com", "co", "org", "net", "gov", "edu", "ac", "k12", "gen", "biz", "info", "web",
+        "av", "bel", "pol", "tsk", "dr", "bbs", "tel", "name", "tv", "mil", "or", "ne", "go"
+    )
 
     private val IGNORED_PACKAGE_TOKENS =
         setOf("com", "org", "net", "android", "app", "apps", "mobile", "www", "www2", "tr", "io")
