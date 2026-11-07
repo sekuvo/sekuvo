@@ -14,6 +14,10 @@ import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.doOnAttach
 import com.afgover.vault.R
 import com.afgover.vault.VaultApp
 import com.afgover.vault.core.VaultSession
@@ -142,6 +146,81 @@ class VaultImeService : InputMethodService() {
 
     private fun color(res: Int): Int = ContextCompat.getColor(this, res)
 
+    /**
+     * Klavye, sistemin alttaki çubuğunun (3 tuşlu gezinme, jest çizgisi ya
+     * da klavye açıkken çıkan geri/klavye değiştir çubuğu) ÜSTÜNDE durur.
+     *
+     * Android 15'ten beri targetSdk 35+ uygulamaların klavye penceresi de
+     * kenardan kenara çiziliyor: sistem alttaki çubuk kadar boşluğu artık
+     * kendisi bırakmıyor ve arama açıkken son tuş sırası çubuğun altında
+     * kalıyordu. Boşluk sabit bir dp değil, cihazın o an bildirdiği değer;
+     * markaya, gezinme kipine, yatay ekrana ve çentiğe göre değişiyor.
+     * Boşluğu sistemin kendisi bıraktığı eski sürümlerde buraya boşluk
+     * ulaşmaz (Android 14'te klavye eskisiyle piksel piksel aynı), çift
+     * boşluk olmaz.
+     */
+    private fun sistemCubuklarininUstundeDur(v: View) {
+        val kenar = dp(8)
+        ViewCompat.setOnApplyWindowInsetsListener(v) { gorunum, insets ->
+            // systemBars: gezinme çubuğu ve klavyenin kendi geri/değiştir
+            // çubuğu (captionBar olarak gelir). Yatay ekranda çubuk ve
+            // çentik yanda kalabilir.
+            val cubuk = insets.getInsets(
+                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+            )
+            // Çubuğu gizlenmiş jest kipinde de alttan kaydırma alanı
+            // sistemindir; tuşlar oraya oturmasın. Yalnız Android 15+:
+            // öncesinde bu alanı sistem zaten boş bırakıyordu ve eski
+            // sürümler jest alanını tüketmeden de iletebildiği için boşluk
+            // iki kez sayılabilirdi.
+            val jest = if (Build.VERSION.SDK_INT >= 35) {
+                insets.getInsets(WindowInsetsCompat.Type.mandatorySystemGestures()).bottom
+            } else 0
+            gorunum.setPadding(
+                kenar + cubuk.left,
+                kenar,
+                kenar + cubuk.right,
+                kenar + maxOf(cubuk.bottom, jest)
+            )
+            // Alttaki düğmeleri sistem mi çiziyor? Dokunulabilir alan var ama
+            // klavyenin kendi çubuğu (captionBar) yoksa evet: 3 tuşlu
+            // gezinme. Jest kipinde klavyenin kendi çubuğu da dokunulabilir
+            // sayıldığı için tappableElement tek başına yetmiyor (ölçüldü).
+            cubukSimgeleriniUydur(
+                sistemDugmeleri =
+                    insets.getInsets(WindowInsetsCompat.Type.tappableElement()).bottom > 0 &&
+                        insets.getInsets(WindowInsetsCompat.Type.captionBar()).bottom == 0
+            )
+            WindowInsetsCompat.CONSUMED
+        }
+        // setInputView ile sonradan takılan görünüm de boşlukları alsın.
+        v.doOnAttach { ViewCompat.requestApplyInsets(it) }
+    }
+
+    /**
+     * Çubuk simgeleri klavye zemininde okunsun. Yalnız Android 15+: klavye
+     * zemini çubuğun arkasına orada uzanıyor. Öncesinde çubuğu sistem kendi
+     * zemininde çiziyor; ona dokunulmaz.
+     *
+     * Jest kipinde geri/klavye değiştir çubuğunu klavye penceresi kendisi
+     * çizer ve simge rengini buradan alır: açık temada koyu simge. 3 tuşlu
+     * gezinmede düğmeleri sistem ya da başlatıcı çizer; Pixel başlatıcısı
+     * klavye açıkken onları her durumda beyaz çiziyor (Gboard'da da aynı) ve
+     * açık zeminde kayboluyorlardı. Orada sistemin varsayılanı kalır:
+     * çubuğun arkasında koyu yarı saydam perde, açık simge.
+     */
+    private fun cubukSimgeleriniUydur(sistemDugmeleri: Boolean) {
+        if (Build.VERSION.SDK_INT < 35) return
+        val w = window?.window ?: return
+        val koyuSimge = !sistemDugmeleri &&
+            geceKipi() != android.content.res.Configuration.UI_MODE_NIGHT_YES
+        val denetci = WindowCompat.getInsetsController(w, w.decorView)
+        // isAppearanceLightNavigationBars: açık çubuk = koyu simge.
+        if (denetci.isAppearanceLightNavigationBars != koyuSimge) {
+            denetci.isAppearanceLightNavigationBars = koyuSimge
+        }
+    }
+
     override fun onCreateInputView(): View {
         uygulananDil = AppLocale.currentTag(this)
         uygulananGece = geceKipi()
@@ -156,6 +235,7 @@ class VaultImeService : InputMethodService() {
             setBackgroundColor(color(R.color.ime_background))
             setPadding(dp(8), dp(8), dp(8), dp(8))
         }
+        sistemCubuklarininUstundeDur(root)
 
         // Üst çubuk
         val header = LinearLayout(this).apply {
@@ -213,8 +293,11 @@ class VaultImeService : InputMethodService() {
             orientation = LinearLayout.VERTICAL
         }
         scroll = ScrollView(this).apply {
+            // Ağırlık yalnız taşmada iş görür: klavye sığmazsa (yatay ekran,
+            // kısa telefon) en alttaki tuşlar ve çubuk boşluğu kesilmez,
+            // liste kısalır. Sığdığında yükseklik aynen 220 dp kalır.
             layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, dp(220)
+                LinearLayout.LayoutParams.MATCH_PARENT, dp(220), 1f
             )
             addView(content)
         }
@@ -416,9 +499,11 @@ class VaultImeService : InputMethodService() {
         val visible = searching && selected == null
         searchRow.visibility = if (visible) View.VISIBLE else View.GONE
         keyGrid.visibility = if (visible) View.VISIBLE else View.GONE
+        // Ağırlık: sığmayınca kısalan liste olsun, tuşlar değil (onCreateInputView).
         scroll.layoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
-            if (visible) dp(120) else dp(220)
+            if (visible) dp(120) else dp(220),
+            1f
         )
         updateSearchLabel()
     }
